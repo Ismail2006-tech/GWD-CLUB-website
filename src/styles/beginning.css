@@ -161,7 +161,9 @@
   object-position: center 15%;
   display: block;
   pointer-events: none;
-  filter: contrast(1.04) brightness(1.02);
+  opacity: 0;
+  transform: scale(0.94);
+  filter: brightness(0.35) contrast(1.18);
   transform-origin: center 45%;
   will-change: opacity, transform, filter, -webkit-mask-image;
 }

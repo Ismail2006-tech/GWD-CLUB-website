@@ -59,8 +59,12 @@ export default function BeginningSection() {
   const [nameVisible, setNameVisible] = useState(false);
   const [roleVisible, setRoleVisible] = useState(false);
 
-  // DOM ref for direct, unhindered 60fps/120fps hardware-accelerated animation
+  // DOM refs
+  const sectionRef = useRef(null);
   const heroImgRef = useRef(null);
+
+  // Flag to ensure initial President reveal only triggers ONCE on first viewport entry
+  const hasTriggeredInitialRevealRef = useRef(false);
 
   // Animation frame and timer tracking
   const rafIdRef = useRef(null);
@@ -87,7 +91,7 @@ export default function BeginningSection() {
     const el = heroImgRef.current;
     if (!el) return;
 
-    // Reset styles for emergence
+    // Reset styles for emergence starting from hidden state
     el.style.transition = 'none';
     el.style.opacity = '0';
     el.style.transform = 'scale(0.94)';
@@ -185,22 +189,58 @@ export default function BeginningSection() {
     timersRef.current.push(tExit);
   }, [activeStageIndex, nameVisible, roleVisible, runEmergenceAnimation]);
 
-  // Initial emergence sequence on mount for Phase 01
+  // Initial President emergence: triggers automatically when Chapter 01 enters viewport
   useEffect(() => {
-    const thisTransition = ++transitionIdRef.current;
-    const tInit = setTimeout(() => {
-      runEmergenceAnimation(thisTransition);
-    }, 100);
-    timersRef.current.push(tInit);
+    const sectionEl = sectionRef.current;
+    if (!sectionEl) return;
 
-    return () => {
-      if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
-      clearAllTimers();
-    };
+    // If IntersectionObserver is supported
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          const entry = entries[0];
+          if (entry.isIntersecting && !hasTriggeredInitialRevealRef.current) {
+            hasTriggeredInitialRevealRef.current = true;
+            observer.disconnect(); // Never replay on subsequent scroll movements
+
+            // Short pause (120ms) after entering so the visitor clearly experiences the dark state first
+            const thisTransition = ++transitionIdRef.current;
+            const tStart = setTimeout(() => {
+              runEmergenceAnimation(thisTransition);
+            }, 120);
+            timersRef.current.push(tStart);
+          }
+        },
+        {
+          threshold: 0.2, // Triggers when 20% of Chapter 01 enters the viewport
+          rootMargin: '0px 0px -50px 0px'
+        }
+      );
+
+      observer.observe(sectionEl);
+
+      return () => {
+        observer.disconnect();
+        if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
+        clearAllTimers();
+      };
+    } else {
+      // Fallback if observer is unavailable
+      const thisTransition = ++transitionIdRef.current;
+      const tInit = setTimeout(() => {
+        runEmergenceAnimation(thisTransition);
+      }, 200);
+      timersRef.current.push(tInit);
+
+      return () => {
+        if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
+        clearAllTimers();
+      };
+    }
   }, [runEmergenceAnimation]);
 
   return (
-    <section id="beginning" className="beginning-section" aria-label="Chapter 01: The Beginning">
+    <section ref={sectionRef} id="beginning" className="beginning-section" aria-label="Chapter 01: The Beginning">
       <div className="section-container">
         {/* Section Header */}
         <header className="beginning-header">
@@ -232,6 +272,11 @@ export default function BeginningSection() {
                   src={currentLeader.photoUrl}
                   alt={currentLeader.alt}
                   className="emergence-hero-img"
+                  style={{
+                    opacity: 0,
+                    transform: 'scale(0.94)',
+                    filter: 'brightness(0.35) contrast(1.18)'
+                  }}
                   loading="eager"
                   decoding="async"
                 />
