@@ -39,14 +39,14 @@ const PHASE_LEADERS = [
 export default function BeginningSection() {
   const data = STAGE_1_DATA.beginning;
 
-  // Active phase tab selection
+  // Active phase tab selection (0, 1, or 2)
   const [activeStageIndex, setActiveStageIndex] = useState(0);
 
   // Currently displayed leader in DOM (strictly ONLY ONE leader at a time)
   const [displayedStageIndex, setDisplayedStageIndex] = useState(0);
 
-  // Phase transition state: 'exiting' | 'darkness' | 'searching' | 'revealed' | 'identity'
-  const [phaseState, setPhaseState] = useState('searching');
+  // Phase transition state: 'exiting' | 'darkness' | 'emerging' | 'revealed' | 'showName' | 'settled'
+  const [phaseState, setPhaseState] = useState('emerging');
 
   // Narrative description reveal
   const [showDesc, setShowDesc] = useState(false);
@@ -62,14 +62,14 @@ export default function BeginningSection() {
 
   const currentLeader = PHASE_LEADERS[displayedStageIndex];
 
-  // Unified discovery sequence manager
-  const startDiscoverySequence = useCallback((targetIdx, isInitial = false) => {
+  // Sequence manager for photographic emergence from darkness
+  const startEmergenceSequence = useCallback((targetIdx, isInitial = false) => {
     clearAllTimers();
     const thisTransition = ++transitionIdRef.current;
 
     if (isInitial) {
       setDisplayedStageIndex(0);
-      setPhaseState('searching');
+      setPhaseState('emerging');
       setShowDesc(false);
 
       const t1 = setTimeout(() => {
@@ -78,61 +78,74 @@ export default function BeginningSection() {
 
         const t2 = setTimeout(() => {
           if (transitionIdRef.current !== thisTransition) return;
-          setPhaseState('identity');
-          setShowDesc(true);
-        }, 220);
+          setPhaseState('showName');
+
+          const t3 = setTimeout(() => {
+            if (transitionIdRef.current !== thisTransition) return;
+            setPhaseState('settled');
+            setShowDesc(true);
+          }, 180);
+          timersRef.current.push(t3);
+        }, 200);
         timersRef.current.push(t2);
-      }, 700);
+      }, 1100);
       timersRef.current.push(t1);
       return;
     }
 
-    // Step 1: Previous leader exits smoothly into darkness
+    // Step 1: Previous leader dissolves smoothly into total darkness
     setPhaseState('exiting');
     setShowDesc(false);
 
-    // Step 2: Brief quiet darkness transition
+    // Step 2: Brief quiet darkness
     const tExit = setTimeout(() => {
       if (transitionIdRef.current !== thisTransition) return;
       setDisplayedStageIndex(targetIdx);
       setPhaseState('darkness');
 
-      // Step 3: Searching light signal sweeps across the darkness
+      // Step 3: Photo begins emerging from behind the black
       const tDark = setTimeout(() => {
         if (transitionIdRef.current !== thisTransition) return;
-        setPhaseState('searching');
+        setPhaseState('emerging');
 
-        // Step 4: Photo revealed progressively from darkness and settles
-        const tSearch = setTimeout(() => {
+        // Step 4: Photo fully emerges & settles into the black
+        const tEmerge = setTimeout(() => {
           if (transitionIdRef.current !== thisTransition) return;
           setPhaseState('revealed');
 
-          // Step 5: Identity (Name & Role) reveals cinematically
-          const tId = setTimeout(() => {
+          // Step 5: Name reveals
+          const tName = setTimeout(() => {
             if (transitionIdRef.current !== thisTransition) return;
-            setPhaseState('identity');
-            setShowDesc(true);
-          }, 220);
-          timersRef.current.push(tId);
-        }, 700);
-        timersRef.current.push(tSearch);
-      }, 180);
+            setPhaseState('showName');
+
+            // Step 6: Role reveals & scene settles
+            const tRole = setTimeout(() => {
+              if (transitionIdRef.current !== thisTransition) return;
+              setPhaseState('settled');
+              setShowDesc(true);
+            }, 180);
+            timersRef.current.push(tRole);
+          }, 200);
+          timersRef.current.push(tName);
+        }, 1100);
+        timersRef.current.push(tEmerge);
+      }, 220);
       timersRef.current.push(tDark);
-    }, 220);
+    }, 280);
     timersRef.current.push(tExit);
   }, []);
 
   const handlePhaseChange = (idx) => {
-    if (idx === activeStageIndex && phaseState === 'identity') return;
+    if (idx === activeStageIndex && phaseState === 'settled') return;
     setActiveStageIndex(idx);
-    startDiscoverySequence(idx, false);
+    startEmergenceSequence(idx, false);
   };
 
-  // Initial discovery sequence on mount for Phase 01
+  // Initial emergence sequence on mount for Phase 01
   useEffect(() => {
-    startDiscoverySequence(0, true);
+    startEmergenceSequence(0, true);
     return () => clearAllTimers();
-  }, [startDiscoverySequence]);
+  }, [startEmergenceSequence]);
 
   return (
     <section id="beginning" className="beginning-section" aria-label="Chapter 01: The Beginning">
@@ -155,35 +168,33 @@ export default function BeginningSection() {
           </div>
         </header>
 
-        {/* Visual Metaphor / Leader Discovery Centerpiece */}
+        {/* Visual Metaphor / Emergence from Darkness Centerpiece */}
         <div className="metaphor-wrapper">
-          <div className={`discovery-stage is-${phaseState}`}>
-            {/* Subtle atmospheric ambient glow */}
-            <div className="discovery-ambient-glow" />
-
-            {/* Floating Hero Photograph: Pure, borderless, frameless, directly in the scene */}
-            <div className={`discovery-photo-wrapper state-${phaseState}`}>
-              {/* Searching Light / Signal Beam */}
-              <div className="discovery-search-beam" />
-
-              {/* The Single Hero Photograph */}
-              <img
-                src={currentLeader.photoUrl}
-                alt={currentLeader.alt}
-                className="discovery-hero-img"
-                loading="eager"
-                decoding="async"
-              />
+          <div className={`emergence-stage stage-state-${phaseState}`}>
+            {/* The Frameless, Borderless Floating Photograph */}
+            <div className={`emergence-photo-stage state-${phaseState}`}>
+              {/* Feathered mask frame: center is sharp, corners & edges dissolve into black */}
+              <div className="emergence-photo-frame">
+                <img
+                  src={currentLeader.photoUrl}
+                  alt={currentLeader.alt}
+                  className="emergence-hero-img"
+                  loading="eager"
+                  decoding="async"
+                />
+                {/* Organic darkness veil that dissolves outward */}
+                <div className="emergence-black-veil" />
+              </div>
             </div>
 
-            {/* Revealed Identity: Discovered Status, Name & Role */}
-            <div className={`discovery-identity ${phaseState === 'identity' ? 'identity-visible' : ''}`}>
-              <div className="discovery-signal-indicator">
-                <span className="signal-dot" />
-                <span className="signal-label">{data.milestones[displayedStageIndex].stage} // DISCOVERED</span>
-              </div>
-              <h3 className="discovery-name">{currentLeader.name}</h3>
-              <span className="discovery-role">{currentLeader.role}</span>
+            {/* Revealed Identity: Name then Role with spacious vertical rhythm */}
+            <div className={`emergence-identity-block identity-state-${phaseState}`}>
+              <h3 className={`emergence-leader-name ${phaseState === 'showName' || phaseState === 'settled' ? 'name-visible' : ''}`}>
+                {currentLeader.name}
+              </h3>
+              <span className={`emergence-leader-role ${phaseState === 'settled' ? 'role-visible' : ''}`}>
+                {currentLeader.role}
+              </span>
             </div>
 
             {/* Phase Navigation Pills */}
