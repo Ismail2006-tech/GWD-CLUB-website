@@ -36,6 +36,13 @@ const PHASE_LEADERS = [
   }
 ];
 
+// Smooth cinematic easing: gentle start, continuous momentum, seamless settle
+function easeCinematic(t) {
+  return t < 0.5 
+    ? 4 * t * t * t 
+    : 1 - Math.pow(-2 * t + 2, 3) / 2;
+}
+
 export default function BeginningSection() {
   const data = STAGE_1_DATA.beginning;
 
@@ -45,13 +52,18 @@ export default function BeginningSection() {
   // Currently displayed leader in DOM (strictly ONLY ONE leader at a time)
   const [displayedStageIndex, setDisplayedStageIndex] = useState(0);
 
-  // Phase transition state: 'exiting' | 'darkness' | 'emerging' | 'revealed' | 'showName' | 'settled'
-  const [phaseState, setPhaseState] = useState('emerging');
-
   // Narrative description reveal
   const [showDesc, setShowDesc] = useState(false);
 
-  // Cancellation and timer ref to handle rapid clicking cleanly
+  // Identity visibility flags for staggered reveal
+  const [nameVisible, setNameVisible] = useState(false);
+  const [roleVisible, setRoleVisible] = useState(false);
+
+  // DOM ref for direct, unhindered 60fps/120fps hardware-accelerated animation
+  const heroImgRef = useRef(null);
+
+  // Animation frame and timer tracking
+  const rafIdRef = useRef(null);
   const transitionIdRef = useRef(0);
   const timersRef = useRef([]);
 
@@ -62,90 +74,130 @@ export default function BeginningSection() {
 
   const currentLeader = PHASE_LEADERS[displayedStageIndex];
 
-  // Sequence manager for photographic emergence from darkness
-  const startEmergenceSequence = useCallback((targetIdx, isInitial = false) => {
+  // Eagerly pre-cache all leadership photos immediately on mount
+  useEffect(() => {
+    PHASE_LEADERS.forEach((l) => {
+      const img = new Image();
+      img.src = l.photoUrl;
+    });
+  }, []);
+
+  // Unified single-progress emergence animation runner (0 → 1 continuous motion)
+  const runEmergenceAnimation = useCallback((thisTransition) => {
+    const el = heroImgRef.current;
+    if (!el) return;
+
+    // Reset styles for emergence
+    el.style.transition = 'none';
+    el.style.opacity = '0';
+    el.style.transform = 'scale(0.94)';
+    el.style.filter = 'brightness(0.35) contrast(1.18)';
+
+    const initialMask = `radial-gradient(ellipse at 50% 45%, #000 0%, #000 0%, rgba(0,0,0,0.55) 8%, transparent 18%)`;
+    el.style.webkitMaskImage = initialMask;
+    el.style.maskImage = initialMask;
+
+    const duration = 1400; // 1.4s continuous cinematic reveal
+    const startTime = performance.now();
+
+    const frameStep = (now) => {
+      if (transitionIdRef.current !== thisTransition) return;
+
+      const elapsed = now - startTime;
+      const u = Math.min(1, elapsed / duration);
+      const p = easeCinematic(u);
+
+      if (heroImgRef.current) {
+        // Organic expanding feathered reveal from center (50% 45%) outward
+        const inner = (p * 72).toFixed(1);
+        const mid = (p * 92 + 8).toFixed(1);
+        const outer = (p * 115 + 18).toFixed(1);
+        const maskStr = `radial-gradient(ellipse at 50% 45%, #000 0%, #000 ${inner}%, rgba(0,0,0,0.55) ${mid}%, transparent ${outer}%)`;
+
+        heroImgRef.current.style.webkitMaskImage = maskStr;
+        heroImgRef.current.style.maskImage = maskStr;
+        heroImgRef.current.style.opacity = Math.min(1, p * 1.35).toFixed(3);
+        heroImgRef.current.style.filter = `brightness(${(0.35 + p * 0.67).toFixed(3)}) contrast(${(1.18 - p * 0.14).toFixed(3)})`;
+        heroImgRef.current.style.transform = `scale(${(0.94 + p * 0.06).toFixed(4)})`;
+      }
+
+      if (u < 1) {
+        rafIdRef.current = requestAnimationFrame(frameStep);
+      } else {
+        // Complete & fully settled: remove temporary reveal mask so the permanent soft edge feathering takes over
+        if (heroImgRef.current) {
+          heroImgRef.current.style.webkitMaskImage = '';
+          heroImgRef.current.style.maskImage = '';
+          heroImgRef.current.style.opacity = '1';
+          heroImgRef.current.style.filter = 'brightness(1.02) contrast(1.04)';
+          heroImgRef.current.style.transform = 'scale(1)';
+        }
+
+        // Reveal Name smoothly
+        setNameVisible(true);
+
+        // Then reveal Role 180ms later
+        const tRole = setTimeout(() => {
+          if (transitionIdRef.current !== thisTransition) return;
+          setRoleVisible(true);
+          setShowDesc(true);
+        }, 180);
+        timersRef.current.push(tRole);
+      }
+    };
+
+    rafIdRef.current = requestAnimationFrame(frameStep);
+  }, []);
+
+  // Handle phase changes with clean sequential transitions
+  const handlePhaseChange = useCallback((targetIdx) => {
+    if (targetIdx === activeStageIndex && nameVisible && roleVisible) return;
+    setActiveStageIndex(targetIdx);
+
+    if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
     clearAllTimers();
+
     const thisTransition = ++transitionIdRef.current;
 
-    if (isInitial) {
-      setDisplayedStageIndex(0);
-      setPhaseState('emerging');
-      setShowDesc(false);
-
-      const t1 = setTimeout(() => {
-        if (transitionIdRef.current !== thisTransition) return;
-        setPhaseState('revealed');
-
-        const t2 = setTimeout(() => {
-          if (transitionIdRef.current !== thisTransition) return;
-          setPhaseState('showName');
-
-          const t3 = setTimeout(() => {
-            if (transitionIdRef.current !== thisTransition) return;
-            setPhaseState('settled');
-            setShowDesc(true);
-          }, 180);
-          timersRef.current.push(t3);
-        }, 200);
-        timersRef.current.push(t2);
-      }, 1100);
-      timersRef.current.push(t1);
-      return;
-    }
-
-    // Step 1: Previous leader dissolves smoothly into total darkness
-    setPhaseState('exiting');
+    setNameVisible(false);
+    setRoleVisible(false);
     setShowDesc(false);
 
-    // Step 2: Brief quiet darkness
+    // Step 1: Current photo smoothly dissolves into black (220ms)
+    if (heroImgRef.current) {
+      heroImgRef.current.style.transition = 'opacity 0.22s ease, transform 0.22s ease, filter 0.22s ease';
+      heroImgRef.current.style.opacity = '0';
+      heroImgRef.current.style.transform = 'scale(0.95)';
+      heroImgRef.current.style.filter = 'brightness(0.2)';
+    }
+
     const tExit = setTimeout(() => {
       if (transitionIdRef.current !== thisTransition) return;
       setDisplayedStageIndex(targetIdx);
-      setPhaseState('darkness');
 
-      // Step 3: Photo begins emerging from behind the black
+      // Step 2: Brief clean dark transition (180ms)
       const tDark = setTimeout(() => {
         if (transitionIdRef.current !== thisTransition) return;
-        setPhaseState('emerging');
-
-        // Step 4: Photo fully emerges & settles into the black
-        const tEmerge = setTimeout(() => {
-          if (transitionIdRef.current !== thisTransition) return;
-          setPhaseState('revealed');
-
-          // Step 5: Name reveals
-          const tName = setTimeout(() => {
-            if (transitionIdRef.current !== thisTransition) return;
-            setPhaseState('showName');
-
-            // Step 6: Role reveals & scene settles
-            const tRole = setTimeout(() => {
-              if (transitionIdRef.current !== thisTransition) return;
-              setPhaseState('settled');
-              setShowDesc(true);
-            }, 180);
-            timersRef.current.push(tRole);
-          }, 200);
-          timersRef.current.push(tName);
-        }, 1100);
-        timersRef.current.push(tEmerge);
-      }, 220);
+        runEmergenceAnimation(thisTransition);
+      }, 180);
       timersRef.current.push(tDark);
-    }, 280);
+    }, 220);
     timersRef.current.push(tExit);
-  }, []);
-
-  const handlePhaseChange = (idx) => {
-    if (idx === activeStageIndex && phaseState === 'settled') return;
-    setActiveStageIndex(idx);
-    startEmergenceSequence(idx, false);
-  };
+  }, [activeStageIndex, nameVisible, roleVisible, runEmergenceAnimation]);
 
   // Initial emergence sequence on mount for Phase 01
   useEffect(() => {
-    startEmergenceSequence(0, true);
-    return () => clearAllTimers();
-  }, [startEmergenceSequence]);
+    const thisTransition = ++transitionIdRef.current;
+    const tInit = setTimeout(() => {
+      runEmergenceAnimation(thisTransition);
+    }, 100);
+    timersRef.current.push(tInit);
+
+    return () => {
+      if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
+      clearAllTimers();
+    };
+  }, [runEmergenceAnimation]);
 
   return (
     <section id="beginning" className="beginning-section" aria-label="Chapter 01: The Beginning">
@@ -170,29 +222,28 @@ export default function BeginningSection() {
 
         {/* Visual Metaphor / Emergence from Darkness Centerpiece */}
         <div className="metaphor-wrapper">
-          <div className={`emergence-stage stage-state-${phaseState}`}>
+          <div className="emergence-stage">
             {/* The Frameless, Borderless Floating Photograph */}
-            <div className={`emergence-photo-stage state-${phaseState}`}>
-              {/* Feathered mask frame: center is sharp, corners & edges dissolve into black */}
+            <div className="emergence-photo-stage">
+              {/* Permanent feathered mask frame: center sharp, corners & edges dissolve into pure black */}
               <div className="emergence-photo-frame">
                 <img
+                  ref={heroImgRef}
                   src={currentLeader.photoUrl}
                   alt={currentLeader.alt}
                   className="emergence-hero-img"
                   loading="eager"
                   decoding="async"
                 />
-                {/* Organic darkness veil that dissolves outward */}
-                <div className="emergence-black-veil" />
               </div>
             </div>
 
             {/* Revealed Identity: Name then Role with spacious vertical rhythm */}
-            <div className={`emergence-identity-block identity-state-${phaseState}`}>
-              <h3 className={`emergence-leader-name ${phaseState === 'showName' || phaseState === 'settled' ? 'name-visible' : ''}`}>
+            <div className="emergence-identity-block">
+              <h3 className={`emergence-leader-name ${nameVisible ? 'name-visible' : ''}`}>
                 {currentLeader.name}
               </h3>
-              <span className={`emergence-leader-role ${phaseState === 'settled' ? 'role-visible' : ''}`}>
+              <span className={`emergence-leader-role ${roleVisible ? 'role-visible' : ''}`}>
                 {currentLeader.role}
               </span>
             </div>
