@@ -184,7 +184,7 @@ export default function PeopleLeadersSection() {
               <span className="eyebrow-divider">—</span>
               <span className="eyebrow-theme">AUTHENTIC ECHOES</span>
             </div>
-            <h2 className="voices-title reveal-title">VOICES OF GWD<span className="title-accent-dot">.</span></h2>
+            <h2 className="voices-title reveal-title">VOICES OF GWD CLUB<span className="title-accent-dot">.</span></h2>
           </header>
 
           <div className="voices-grid">

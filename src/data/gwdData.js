@@ -20,7 +20,7 @@ export const CHAPTERS = [
   { id: "02", key: "why", title: "WHY GWD EXISTS", subtitle: "Purpose beyond titles" },
   { id: "03", key: "people", title: "THE PEOPLE", subtitle: "Built by people, not a logo" },
   { id: "04", key: "leaders", title: "THE LEADERS", subtitle: "Current Leadership" },
-  { id: "05", key: "voices", title: "VOICES OF GWD", subtitle: "Authentic Words" },
+  { id: "05", key: "voices", title: "VOICES OF GWD CLUB", subtitle: "Authentic Words" },
   { id: "06", key: "core-team", title: "THE CORE TEAM", subtitle: "One Club. Many Minds." },
   { id: "07", key: "structure", title: "THE STRUCTURE", subtitle: "The Living Constellation" },
   { id: "08", key: "members", title: "THE MEMBERS", subtitle: "The Digital Archive" },
