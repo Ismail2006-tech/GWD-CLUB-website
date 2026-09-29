@@ -1,5 +1,5 @@
 /* ============================================================
-   01 — THE BEGINNING STYLES (Dynamic Photo Metaphor & Extended Lines)
+   01 — THE BEGINNING STYLES (Leader Discovery / Phase Reveal)
    ============================================================ */
 
 .beginning-section {
@@ -84,195 +84,263 @@
   color: var(--color-white);
 }
 
-/* Visual Metaphor Interactive Centerpiece */
+/* Visual Metaphor / Discovery Centerpiece */
 .metaphor-wrapper {
   margin: 40px 0 60px;
-  background: rgba(12, 12, 12, 0.6);
+  background: rgba(10, 10, 10, 0.8);
   border: 1px solid var(--color-border-subtle);
   border-radius: 4px;
   position: relative;
   overflow: hidden;
 }
 
-.metaphor-canvas-container {
+/* ─────────────────────────────────────────────
+   DISCOVERY STAGE
+   ───────────────────────────────────────────── */
+.discovery-stage {
   position: relative;
   width: 100%;
-  height: 480px;
+  min-height: 560px;
   background: radial-gradient(
-    ellipse at center,
-    rgba(0, 81, 46, 0.08) 0%,
-    rgba(10, 10, 10, 0.95) 75%
+    ellipse at 50% 36%,
+    rgba(22, 12, 14, 0.75) 0%,
+    rgba(8, 8, 8, 0.98) 65%,
+    #050505 100%
   );
   overflow: hidden;
-}
-
-.metaphor-canvas {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-/* OVERLAY PHOTO NODES IN A MANNER */
-.metaphor-photos-layer {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 20; /* High z-index ensures canvas lines stay behind faces */
-}
-
-.metaphor-person-node {
-  position: absolute;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
+  padding: 44px 24px 84px;
+  transition: background 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Atmospheric subtle ambient backdrop glow */
+.discovery-ambient-glow {
+  position: absolute;
+  top: 36%;
+  left: 50%;
   transform: translate(-50%, -50%);
-  transition: all 0.8s var(--ease-cinematic);
-  pointer-events: auto;
-  cursor: pointer;
-  animation: nodePopIn 0.7s var(--ease-cinematic) forwards;
-  z-index: 25;
-}
-
-@keyframes nodePopIn {
-  0% {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0.6);
-  }
-  100% {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
-}
-
-/* Positioning based on phase */
-/* President (Aldrin Paul) */
-.node-president.phase-0 {
-  left: 50%;
-  top: 42%;
-}
-
-.node-president.phase-1 {
-  left: 24%;
-  top: 44%;
-}
-
-.node-president.phase-2 {
-  left: 50%;
-  top: 22%;
-}
-
-/* VP (Mohd Ismail) */
-.node-vp.phase-1 {
-  left: 76%;
-  top: 44%;
-}
-
-.node-vp.phase-2 {
-  left: 20%;
-  top: 65%;
-}
-
-/* General Secretary (G. Sravya) */
-.node-gs.phase-2 {
-  left: 80%;
-  top: 65%;
-}
-
-/* Photo Disc Styling - High Clarity & Zero Line Overlays */
-.node-photo-disc {
-  position: relative;
-  width: 96px;
-  height: 96px;
+  width: 440px;
+  height: 440px;
   border-radius: 50%;
-  border: 2.5px solid var(--color-red);
-  background: #000000;
-  box-shadow: 0 0 28px var(--color-red-glow), 0 0 10px var(--color-red);
-  overflow: visible; /* Keeps outer aura outside */
+  background: radial-gradient(
+    circle,
+    rgba(255, 27, 60, 0.08) 0%,
+    rgba(255, 27, 60, 0.02) 45%,
+    transparent 70%
+  );
+  pointer-events: none;
+  filter: blur(45px);
+  z-index: 1;
+  transition: opacity 0.5s ease;
+}
+
+.discovery-stage.is-darkness .discovery-ambient-glow {
+  opacity: 0.05;
+}
+
+/* ─────────────────────────────────────────────
+   HERO PHOTOGRAPH PRESENTATION
+   Strictly NO border, NO frame, NO card, NO box,
+   NO glassmorphism container, NO decorative outline.
+   The photo itself floats directly as the hero.
+   ───────────────────────────────────────────── */
+.discovery-photo-wrapper {
+  position: relative;
+  width: 290px;
+  height: 380px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.3s ease, border-color 0.3s ease;
-  z-index: 26;
+  z-index: 5;
+  margin-bottom: 20px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
 }
 
-.node-photo-disc.emerald {
-  border-color: #00a859;
-  box-shadow: 0 0 28px rgba(0, 168, 89, 0.45), 0 0 10px #00a859;
-}
-
-.metaphor-person-node:hover .node-photo-disc {
-  transform: scale(1.08);
-  border-color: #ffffff;
-}
-
-.node-img {
+.discovery-hero-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 50%;
-  position: relative;
-  z-index: 5;
-  filter: contrast(1.04) brightness(1.02);
-  image-rendering: auto;
+  object-position: center 15%;
+  display: block;
   pointer-events: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  /* Soft photographic edge falloff melting seamlessly into the dark atmosphere */
+  mask-image: radial-gradient(ellipse 92% 94% at 50% 50%, black 80%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 92% 94% at 50% 50%, black 80%, transparent 100%);
+  filter: contrast(1.05) brightness(1.02);
+  transition: opacity 0.25s ease, transform 0.4s ease, filter 0.3s ease;
 }
 
-/* Subtle external aura ring outside the photo disc (never passes over faces) */
-.node-radar-sweep {
+/* ─────────────────────────────────────────────
+   DISCOVERY ANIMATION & REVEAL STATES
+   ───────────────────────────────────────────── */
+
+/* Exit state: smooth cinematic fade-to-black */
+.discovery-photo-wrapper.state-exiting .discovery-hero-img {
+  opacity: 0;
+  transform: scale(0.97);
+  filter: brightness(0.5);
+  transition: opacity 0.22s ease, transform 0.22s ease, filter 0.22s ease;
+}
+
+/* Total darkness state: completely invisible */
+.discovery-photo-wrapper.state-darkness .discovery-hero-img {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Searching state: progressive reveal from darkness behind sweeping light beam */
+.discovery-photo-wrapper.state-searching .discovery-hero-img {
+  opacity: 1;
+  visibility: visible;
+  animation: photoCinematicUnveil 0.7s cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
+}
+
+/* Revealed and Identity states: fully settled and pristine */
+.discovery-photo-wrapper.state-revealed .discovery-hero-img,
+.discovery-photo-wrapper.state-identity .discovery-hero-img {
+  opacity: 1;
+  visibility: visible;
+  clip-path: inset(0 0 0 0);
+  transform: scale(1);
+}
+
+@keyframes photoCinematicUnveil {
+  0% {
+    clip-path: inset(0 100% 0 0);
+    filter: brightness(1.25) contrast(1.1);
+  }
+  70% {
+    clip-path: inset(0 0 0 0);
+    filter: brightness(1.08) contrast(1.04);
+  }
+  100% {
+    clip-path: inset(0 0 0 0);
+    filter: brightness(1.02) contrast(1.05);
+  }
+}
+
+/* Subtle red light / search signal beam */
+.discovery-search-beam {
   position: absolute;
-  inset: -8px;
-  border-radius: 50%;
-  border: 1.5px solid rgba(255, 27, 60, 0.35);
-  animation: rotateSweep 9s linear infinite;
+  top: -4%;
+  bottom: -4%;
+  width: 2px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(255, 27, 60, 0.3) 15%,
+    #ff1b3c 50%,
+    rgba(255, 27, 60, 0.3) 85%,
+    transparent 100%
+  );
+  box-shadow: 0 0 14px #ff1b3c, 0 0 32px rgba(255, 27, 60, 0.65);
   pointer-events: none;
-  z-index: 1;
+  z-index: 10;
+  opacity: 0;
 }
 
-.node-photo-disc.emerald .node-radar-sweep {
-  border-color: rgba(0, 168, 89, 0.4);
+.discovery-photo-wrapper.state-searching .discovery-search-beam {
+  animation: searchBeamSweep 0.7s cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
 }
 
-@keyframes rotateSweep {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+@keyframes searchBeamSweep {
+  0% {
+    left: -2%;
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    left: 102%;
+    opacity: 0;
+  }
 }
 
-.node-info-tag {
+/* ─────────────────────────────────────────────
+   TYPOGRAPHY REVEAL (IDENTITY)
+   ───────────────────────────────────────────── */
+.discovery-identity {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: rgba(8, 8, 8, 0.92);
-  border: 1px solid var(--color-border-subtle);
-  border-radius: 3px;
-  padding: 5px 12px;
-  white-space: nowrap;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.85);
-  position: relative;
-  z-index: 27;
+  gap: 8px;
+  text-align: center;
+  z-index: 6;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  min-height: 94px;
 }
 
-.tag-role {
+.discovery-identity.identity-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.discovery-signal-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   font-family: var(--font-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.18em;
+  font-size: 0.64rem;
+  letter-spacing: 0.24em;
   color: var(--color-red);
-  font-weight: 700;
+  margin-bottom: 2px;
 }
 
-.tag-name {
-  font-family: var(--font-heading);
-  font-size: 0.85rem;
-  font-weight: 700;
+.signal-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--color-red);
+  box-shadow: 0 0 8px var(--color-red);
+  animation: signalPulse 2s ease-in-out infinite;
+}
+
+@keyframes signalPulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.3); }
+}
+
+.discovery-name {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4.5vw, 2.7rem);
+  font-weight: 800;
+  letter-spacing: 0.12em;
   color: var(--color-white);
-  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin: 0;
+  line-height: 1.1;
+  text-shadow: 0 0 24px rgba(255, 255, 255, 0.12);
 }
 
-/* Stage controls */
+.discovery-role {
+  font-family: var(--font-mono);
+  font-size: clamp(0.72rem, 1.6vw, 0.86rem);
+  font-weight: 600;
+  letter-spacing: 0.26em;
+  color: var(--color-grey-muted);
+  text-transform: uppercase;
+}
+
+/* ─────────────────────────────────────────────
+   PHASE NAVIGATION PILLS
+   ───────────────────────────────────────────── */
 .metaphor-stage-pills {
   position: absolute;
-  bottom: 20px;
+  bottom: 22px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -312,12 +380,6 @@
   outline-offset: 3px;
 }
 
-.metaphor-person-node:focus-visible {
-  outline: 2px solid var(--color-red);
-  outline-offset: 6px;
-  border-radius: 50%;
-}
-
 .stage-pill.active {
   background: rgba(255, 27, 60, 0.15);
   border-color: var(--color-border-red);
@@ -330,6 +392,9 @@
   font-weight: 700;
 }
 
+/* ─────────────────────────────────────────────
+   ACTIVE PHASE NARRATIVE DETAIL
+   ───────────────────────────────────────────── */
 .metaphor-active-detail {
   padding: 24px 32px;
   border-top: 1px solid var(--color-border-subtle);
@@ -356,7 +421,6 @@
   letter-spacing: 0.01em;
 }
 
-/* Cinematic text reveal */
 .phase-desc-reveal {
   opacity: 0;
   transform: translateY(10px);
@@ -368,8 +432,9 @@
   transform: translateY(0);
 }
 
-
-/* Founding Story Archive Container */
+/* ─────────────────────────────────────────────
+   FOUNDING STORY ARCHIVE CONTAINER (PRESERVED)
+   ───────────────────────────────────────────── */
 .founding-story-archive {
   position: relative;
   background: rgba(14, 14, 14, 0.7);
@@ -454,29 +519,40 @@
   letter-spacing: 0.05em;
 }
 
+/* ─────────────────────────────────────────────
+   MOBILE RESPONSIVENESS
+   ───────────────────────────────────────────── */
 @media (max-width: 768px) {
   .beginning-section {
     padding: 90px 18px 70px;
   }
-  .metaphor-canvas-container {
-    height: 420px;
+  .discovery-stage {
+    min-height: 480px;
+    padding: 30px 16px 74px;
   }
-  .node-photo-disc {
-    width: 64px;
-    height: 64px;
+  .discovery-photo-wrapper {
+    width: 220px;
+    height: 290px;
+    margin-bottom: 16px;
   }
-  .tag-role {
-    font-size: 0.52rem;
+  .discovery-name {
+    font-size: 1.65rem;
   }
-  .tag-name {
-    font-size: 0.72rem;
+  .discovery-role {
+    font-size: 0.7rem;
+  }
+  .discovery-identity {
+    min-height: 80px;
   }
   .metaphor-stage-pills {
     width: 92%;
     justify-content: space-around;
+    padding: 5px 10px;
+    bottom: 16px;
   }
   .stage-pill {
     padding: 6px 10px;
-    font-size: 0.6rem;
+    font-size: 0.62rem;
+    gap: 5px;
   }
 }
