@@ -1,0 +1,251 @@
+/* ============================================================
+   GWD CLUB — UI/UX MICRO-INTERACTION & MOTION SYSTEM
+   Cinematic, Subtle, Responsive & Accessible
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   1. Typography Micro-Interactions (Scroll Reveal)
+   ------------------------------------------------------------ */
+.reveal-title {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: 
+    opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    letter-spacing 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-title.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-fade {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: 
+    opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-fade.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ------------------------------------------------------------
+   2. Global Button UX & Interactive Feedback
+   ------------------------------------------------------------ */
+button,
+[role="button"],
+.interactive-cta {
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: 
+    transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+    background 0.22s ease,
+    border-color 0.22s ease,
+    box-shadow 0.22s ease,
+    color 0.22s ease;
+}
+
+button:active,
+[role="button"]:active {
+  transform: scale(0.97) !important;
+}
+
+button:focus-visible,
+[role="button"]:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--color-red) !important;
+  outline-offset: 3px !important;
+}
+
+/* ------------------------------------------------------------
+   3. Image UI/UX: Subtle Scale, Depth & Sheen
+   ------------------------------------------------------------ */
+.leader-photo-viewport,
+.node-photo-disc,
+.group-photo-viewport,
+.member-photo-frame,
+.doc-photo-box,
+.proj-photo-frame,
+.memory-photo-box,
+.cohort-photo-slot {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Light sheen pseudo-element */
+.leader-photo-viewport::after,
+.node-photo-disc::after,
+.member-photo-frame::after,
+.doc-photo-box::after,
+.proj-photo-frame::after,
+.memory-photo-box::after,
+.cohort-photo-slot::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    115deg,
+    transparent 0%,
+    transparent 40%,
+    rgba(255, 27, 60, 0.12) 50%,
+    transparent 60%,
+    transparent 100%
+  );
+  transform: skewX(-20deg);
+  transition: left 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* On hover: sheen sweeps gently across image */
+.leader-monolith-card:hover .leader-photo-viewport::after,
+.metaphor-person-node:hover .node-photo-disc::after,
+.member-editorial-card:hover .member-photo-frame::after,
+.documentary-feature:hover .doc-photo-box::after,
+.project-story-card:hover .proj-photo-frame::after,
+.memory-frame:hover .memory-photo-box::after,
+.cohort-card:hover .cohort-photo-slot::after {
+  left: 200%;
+}
+
+/* Smooth zoom on images */
+.leader-actual-img,
+.node-img {
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
+  will-change: transform;
+}
+
+.leader-monolith-card:hover .leader-actual-img {
+  transform: scale(1.03);
+}
+
+.metaphor-person-node:hover .node-img {
+  transform: scale(1.08);
+}
+
+/* ------------------------------------------------------------
+   4. Section Card & Station Micro-Interactions
+   ------------------------------------------------------------ */
+.system-station {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+}
+
+.system-station:hover {
+  transform: translateX(6px);
+}
+
+.system-station:hover .node-glow-ring {
+  transform: scale(1.35);
+  box-shadow: 0 0 16px var(--color-red);
+}
+
+.voice-card {
+  transition: 
+    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.voice-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 27, 60, 0.3);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 27, 60, 0.08);
+}
+
+.member-editorial-card {
+  transition: 
+    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.member-editorial-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(255, 27, 60, 0.35);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7);
+}
+
+.project-story-card {
+  transition: 
+    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.project-story-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 27, 60, 0.35);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.7), 0 0 20px rgba(255, 27, 60, 0.06);
+}
+
+.cohort-card {
+  transition: 
+    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.3s ease;
+}
+
+.cohort-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255, 27, 60, 0.3);
+}
+
+/* ------------------------------------------------------------
+   5. Timeline Node Marker Ping Intensify
+   ------------------------------------------------------------ */
+.timeline-node-row {
+  transition: transform 0.3s ease;
+}
+
+.timeline-node-row:hover .marker-ping {
+  border-color: var(--color-red);
+  transform: scale(2.2);
+}
+
+.timeline-content-card {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+}
+
+.timeline-content-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255, 27, 60, 0.35);
+}
+
+/* ------------------------------------------------------------
+   6. Accessibility & Reduced Motion
+   ------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  .reveal-title,
+  .reveal-fade,
+  .system-station,
+  .voice-card,
+  .member-editorial-card,
+  .project-story-card,
+  .cohort-card,
+  .timeline-content-card,
+  .leader-actual-img,
+  .node-img {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .leader-photo-viewport::after,
+  .node-photo-disc::after,
+  .member-photo-frame::after,
+  .doc-photo-box::after,
+  .proj-photo-frame::after,
+  .memory-photo-box::after,
+  .cohort-photo-slot::after {
+    display: none !important;
+  }
+}

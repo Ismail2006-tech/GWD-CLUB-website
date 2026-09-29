@@ -1,0 +1,96 @@
+:root {
+  /* ============================================================
+     COLOR IDENTITY (Strict Prompt Specifications)
+     Black: 70-75% | Red: 15-20% | Green: 5-10%
+     ============================================================ */
+  --color-void: #0a0a0a;
+  --color-void-deep: #050505;
+  --color-void-surface: #101010;
+  --color-void-card: rgba(16, 16, 16, 0.7);
+
+  /* Primary Accent: Intense Crimson Red */
+  --color-red: #ff1b3c;
+  --color-red-glow: rgba(255, 27, 60, 0.35);
+  --color-red-subtle: rgba(255, 27, 60, 0.12);
+  --color-red-dark: #b80f27;
+
+  /* Secondary Subtle Atmosphere: Deep/Dim Emerald Green */
+  --color-green-emerald: #00512e;
+  --color-green-glow: rgba(0, 81, 46, 0.3);
+  --color-green-subtle: rgba(0, 81, 46, 0.1);
+  --color-green-line: rgba(0, 81, 46, 0.4);
+
+  /* Supporting Neutrals */
+  --color-white: #f2f2f2;
+  --color-grey-muted: #8a8a8a;
+  --color-grey-dim: #444444;
+  --color-border-subtle: rgba(242, 242, 242, 0.08);
+  --color-border-red: rgba(255, 27, 60, 0.28);
+  --color-border-green: rgba(0, 81, 46, 0.3);
+
+  /* Typography */
+  --font-display: 'Orbitron', -apple-system, sans-serif;
+  --font-heading: 'Rajdhani', -apple-system, sans-serif;
+  --font-mono: 'Space Grotesk', monospace;
+  --font-body: 'Inter', -apple-system, sans-serif;
+
+  /* Transitions */
+  --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 1.2s var(--ease-cinematic);
+  --transition-med: 0.6s var(--ease-cinematic);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: var(--color-void);
+  color: var(--color-white);
+  font-family: var(--font-body);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+body {
+  background-color: var(--color-void);
+  color: var(--color-white);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+  user-select: none;
+}
+
+::selection {
+  background: var(--color-red);
+  color: var(--color-void);
+}
+
+/* Scrollbar Minimalist */
+::-webkit-scrollbar {
+  width: 3px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-void-deep);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-red);
+  border-radius: 2px;
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

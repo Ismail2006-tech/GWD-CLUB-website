@@ -1,0 +1,364 @@
+/* ============================================================
+   06, 07, 08 — CORE TEAM, STRUCTURE, AND MEMBERS
+   ============================================================ */
+
+.structure-flow {
+  position: relative;
+  width: 100vw;
+  background-color: var(--color-void);
+  border-top: 1px solid var(--color-border-subtle);
+  overflow: hidden;
+}
+
+/* 06 — CORE TEAM STAGE */
+.core-team-stage {
+  position: relative;
+  padding: 100px 24px 120px;
+}
+
+.core-team-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.core-team-statement {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 6.5vw, 4.8rem);
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  line-height: 1.15;
+  color: var(--color-white);
+  text-transform: uppercase;
+  margin-top: 14px;
+}
+
+.core-team-group-frame {
+  position: relative;
+  max-width: 1050px;
+  margin: 0 auto;
+  aspect-ratio: 16 / 9;
+  background: #080808;
+  border: 1px solid rgba(255, 27, 60, 0.25);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 35px rgba(255, 27, 60, 0.08);
+  overflow: hidden;
+}
+
+.group-frame-corner {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-color: var(--color-red);
+  z-index: 5;
+}
+
+.group-photo-viewport {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.group-placeholder-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(255, 27, 60, 0.06) 0%, rgba(0, 81, 46, 0.04) 45%, #050505 85%);
+  text-align: center;
+  padding: 40px;
+}
+
+.group-icon {
+  color: var(--color-red);
+}
+
+.strict-photo-label.large {
+  font-family: var(--font-mono);
+  font-size: clamp(1.1rem, 2.4vw, 1.6rem);
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  color: var(--color-red);
+  text-shadow: 0 0 16px var(--color-red-glow);
+}
+
+/* 07 — THE STRUCTURE (Constellation) */
+.living-structure-stage {
+  position: relative;
+  padding: 100px 24px 120px;
+  border-top: 1px solid var(--color-border-subtle);
+  background: radial-gradient(circle at 70% 30%, rgba(0, 81, 46, 0.08) 0%, transparent 60%);
+}
+
+.structure-header {
+  margin-bottom: 50px;
+}
+
+.structure-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 7vw, 5.5rem);
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  color: var(--color-white);
+  text-transform: uppercase;
+  margin: 12px 0 16px;
+}
+
+.structure-desc {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  color: var(--color-grey-muted);
+  max-width: 650px;
+  line-height: 1.6;
+}
+
+.constellation-viewer {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 32px;
+  background: rgba(12, 12, 12, 0.85);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 4px;
+  padding: 24px;
+}
+
+.constellation-canvas-frame {
+  position: relative;
+  height: 520px;
+  background: #080808;
+  border: 1px solid rgba(242, 242, 242, 0.05);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.network-canvas {
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+}
+
+.canvas-interaction-hint {
+  position: absolute;
+  bottom: 14px;
+  left: 18px;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  color: var(--color-grey-dim);
+}
+
+.branch-inspector-panel {
+  background: rgba(16, 16, 16, 0.9);
+  border: 1px solid var(--color-border-subtle);
+  border-top: 2px solid var(--color-red);
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.inspector-badge {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  color: var(--color-red);
+}
+
+.inspector-leader-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ins-pos {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  color: var(--color-grey-muted);
+}
+
+.ins-name {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--color-white);
+  letter-spacing: 0.06em;
+}
+
+.ins-domain {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  color: var(--color-red);
+}
+
+.ins-photo-preview {
+  background: #080808;
+  border: 1px dashed var(--color-border-subtle);
+  padding: 30px 14px;
+  text-align: center;
+}
+
+.ins-photo-tag {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  color: var(--color-grey-muted);
+}
+
+.ins-connections {
+  border-top: 1px solid var(--color-border-subtle);
+  padding-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.conn-title {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  color: var(--color-white);
+  font-weight: 600;
+}
+
+.conn-desc {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  color: var(--color-grey-muted);
+  line-height: 1.5;
+}
+
+/* 08 — THE MEMBERS ARCHIVE */
+.members-archive-stage {
+  position: relative;
+  padding: 100px 24px 120px;
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.members-header {
+  margin-bottom: 50px;
+}
+
+.members-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 7vw, 5.5rem);
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  color: var(--color-white);
+  text-transform: uppercase;
+  margin: 12px 0 16px;
+}
+
+.members-desc {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  color: var(--color-grey-muted);
+  max-width: 650px;
+}
+
+.members-editorial-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+.member-editorial-card {
+  background: rgba(14, 14, 14, 0.7);
+  border: 1px solid var(--color-border-subtle);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: all 0.3s ease;
+}
+
+.member-editorial-card:hover {
+  border-color: rgba(255, 27, 60, 0.3);
+  transform: translateY(-4px);
+}
+
+.member-photo-frame {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: #080808;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(242, 242, 242, 0.05);
+}
+
+.member-placeholder-box {
+  text-align: center;
+  padding: 20px;
+}
+
+.member-placeholder-tag {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  color: var(--color-grey-dim);
+}
+
+.member-meta-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.member-team-tag {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  color: var(--color-red);
+}
+
+.member-title {
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--color-white);
+}
+
+.members-notice-archive {
+  margin-top: 48px;
+  background: rgba(16, 16, 16, 0.6);
+  border: 1px solid var(--color-border-subtle);
+  border-left: 2px solid var(--color-green-emerald);
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.notice-tag {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  color: var(--color-white);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.notice-text {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--color-grey-muted);
+}
+
+@media (max-width: 1024px) {
+  .constellation-viewer {
+    grid-template-columns: 1fr;
+  }
+  .members-editorial-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .members-editorial-grid {
+    grid-template-columns: 1fr;
+  }
+}

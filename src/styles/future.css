@@ -1,0 +1,496 @@
+/* ============================================================
+   12, 13, 14, 15 — MEMORIES, ACHIEVEMENTS, TODAY, AND THE FUTURE
+   ============================================================ */
+
+.future-flow {
+  position: relative;
+  width: 100vw;
+  background-color: var(--color-void);
+  border-top: 1px solid var(--color-border-subtle);
+  overflow: hidden;
+}
+
+/* 12 — MEMORIES ARCHIVE */
+.memories-archive-stage {
+  position: relative;
+  padding: 100px 24px 130px;
+}
+
+.memories-header {
+  margin-bottom: 50px;
+}
+
+.memories-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 7vw, 5.5rem);
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  color: var(--color-white);
+  text-transform: uppercase;
+  margin: 12px 0 16px;
+}
+
+.memories-sub {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  color: var(--color-grey-muted);
+  max-width: 650px;
+}
+
+.memories-viewport-space {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 36px;
+  align-items: start;
+}
+
+.memories-grid-cluster {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.memory-frame {
+  background: rgba(14, 14, 14, 0.85);
+  border: 1px solid var(--color-border-subtle);
+  padding: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.memory-frame:hover, .memory-frame.active {
+  border-color: var(--color-red);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 15px var(--color-red-subtle);
+}
+
+.memory-photo-box {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: #080808;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(242, 242, 242, 0.05);
+}
+
+.mem-tag {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  color: var(--color-grey-dim);
+}
+
+.memory-quick-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--color-grey-muted);
+}
+
+.active-memory-spotlight {
+  background: rgba(16, 16, 16, 0.95);
+  border: 1px solid var(--color-border-subtle);
+  border-top: 3px solid var(--color-red);
+  padding: 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  position: sticky;
+  top: 100px;
+}
+
+.spotlight-badge {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  color: var(--color-red);
+}
+
+.spotlight-title {
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--color-white);
+  letter-spacing: 0.06em;
+}
+
+.spotlight-date {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  color: var(--color-grey-muted);
+}
+
+.spotlight-caption-box {
+  background: #090909;
+  border-left: 2px solid var(--color-green-emerald);
+  padding: 16px 20px;
+}
+
+.caption-tag {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  color: var(--color-grey-muted);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.caption-text {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--color-white);
+}
+
+.spotlight-photo-frame {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #080808;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed var(--color-border-subtle);
+}
+
+.spotlight-placeholder {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.2em;
+  color: var(--color-red);
+}
+
+/* 13 — THE ACHIEVEMENTS */
+.achievements-stage {
+  position: relative;
+  padding: 100px 24px 130px;
+  border-top: 1px solid var(--color-border-subtle);
+  background: linear-gradient(to bottom, var(--color-void), #080808);
+}
+
+.achievements-header {
+  margin-bottom: 50px;
+}
+
+.achievements-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 7vw, 5.5rem);
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  color: var(--color-white);
+  text-transform: uppercase;
+  margin-top: 12px;
+}
+
+.achievements-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.metric-monolith {
+  position: relative;
+  background: rgba(14, 14, 14, 0.85);
+  border: 1px solid var(--color-border-subtle);
+  border-bottom: 2px solid var(--color-red);
+  padding: 40px 24px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.metric-monolith:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 27, 60, 0.08);
+}
+
+.metric-tick {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 6px;
+  height: 6px;
+  background: var(--color-red);
+}
+
+.metric-number-placeholder {
+  font-family: var(--font-mono);
+  font-size: clamp(1rem, 2.2vw, 1.4rem);
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--color-red);
+  text-shadow: 0 0 15px var(--color-red-glow);
+}
+
+.metric-label {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--color-white);
+}
+
+.metric-subtext {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  color: var(--color-grey-dim);
+}
+
+/* 14 — GWD TODAY */
+.gwd-today-stage {
+  position: relative;
+  padding: 100px 24px 140px;
+  border-top: 1px solid var(--color-border-subtle);
+  background: radial-gradient(circle at 50% 10%, rgba(0, 81, 46, 0.09) 0%, transparent 60%);
+}
+
+.today-header {
+  margin-bottom: 50px;
+}
+
+.today-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 7vw, 5.5rem);
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  color: var(--color-white);
+  text-transform: uppercase;
+  margin: 12px 0 16px;
+}
+
+.today-sub {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  color: var(--color-grey-muted);
+  max-width: 650px;
+}
+
+.current-cohort-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.cohort-card {
+  background: rgba(14, 14, 14, 0.8);
+  border: 1px solid var(--color-border-subtle);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.cohort-card:hover {
+  border-color: rgba(255, 27, 60, 0.3);
+  transform: translateY(-3px);
+}
+
+.cohort-photo-slot {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background: #080808;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(242, 242, 242, 0.05);
+}
+
+.cohort-photo-tag {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  color: var(--color-grey-muted);
+}
+
+.cohort-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cohort-role {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  color: var(--color-red);
+  text-transform: uppercase;
+}
+
+.cohort-name {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-white);
+  letter-spacing: 0.05em;
+}
+
+.cohort-status {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  color: var(--color-green-emerald);
+  margin-top: 6px;
+}
+
+/* 15 — THE FUTURE (Mirrors The Void) */
+.the-future-stage {
+  position: relative;
+  width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-void-deep);
+  border-top: 1px solid var(--color-border-subtle);
+  overflow: hidden;
+  padding: 80px 24px;
+}
+
+.future-abyss-aura {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 700px;
+  height: 700px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 27, 60, 0.06) 0%, rgba(0, 81, 46, 0.04) 50%, transparent 75%);
+  filter: blur(100px);
+  pointer-events: none;
+}
+
+.future-red-beacon {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--color-red);
+  box-shadow: 0 0 15px 4px var(--color-red);
+  animation: pulseBeacon 4s infinite ease-in-out;
+}
+
+@keyframes pulseBeacon {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.6); }
+}
+
+.future-core-message {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 800px;
+}
+
+.future-logo-wrapper {
+  margin-bottom: 36px;
+}
+
+.future-gwd-emblem {
+  width: auto;
+  max-width: 150px;
+  height: auto;
+  max-height: 95px;
+  filter: drop-shadow(0 0 25px rgba(255, 27, 60, 0.45));
+}
+
+.future-narrative-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 48px;
+}
+
+.future-step {
+  font-family: var(--font-heading);
+  font-size: clamp(1.4rem, 3.2vw, 2.2rem);
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: var(--color-white);
+  text-transform: uppercase;
+}
+
+.step-one { opacity: 0.6; }
+.step-two { opacity: 0.85; }
+.step-three {
+  color: var(--color-red);
+  text-shadow: 0 0 30px var(--color-red-glow);
+}
+
+.future-final-brand {
+  margin-bottom: 48px;
+}
+
+.final-gwd-name {
+  font-family: var(--font-display);
+  font-size: clamp(3.2rem, 8vw, 6rem);
+  font-weight: 900;
+  letter-spacing: 0.22em;
+  line-height: 1;
+  display: flex;
+  gap: 20px;
+}
+
+.f-gwd { color: var(--color-white); }
+.f-club { color: var(--color-red); text-shadow: 0 0 35px var(--color-red); }
+
+.final-manifesto-sub {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.45em;
+  color: var(--color-grey-muted);
+  display: block;
+  margin-top: 14px;
+}
+
+.terminal-silence-marker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.22em;
+  color: var(--color-grey-dim);
+}
+
+.silence-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--color-red);
+  border-radius: 50%;
+}
+
+@media (max-width: 1024px) {
+  .memories-viewport-space {
+    grid-template-columns: 1fr;
+  }
+  .achievements-metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .current-cohort-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .achievements-metrics-grid {
+    grid-template-columns: 1fr;
+  }
+  .current-cohort-grid {
+    grid-template-columns: 1fr;
+  }
+  .memories-grid-cluster {
+    grid-template-columns: 1fr;
+  }
+}

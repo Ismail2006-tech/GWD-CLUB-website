@@ -1,0 +1,493 @@
+/* ============================================================
+   CHAPTER 02 — PURPOSE & ETHOS (WHY GWD EXISTS)
+   A Unified Cinematic Visual System (Non-Card Architecture)
+   ============================================================ */
+
+.why-section {
+  position: relative;
+  width: 100vw;
+  min-height: 100vh;
+  padding: 130px 24px 140px;
+  background-color: var(--color-void);
+  border-top: 1px solid var(--color-border-subtle);
+  overflow: hidden;
+}
+
+/* Atmospheric Ambient Refraction */
+.why-emerald-refraction {
+  position: absolute;
+  top: 20%;
+  right: -8%;
+  width: 550px;
+  height: 550px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(0, 81, 46, 0.12) 0%,
+    rgba(0, 81, 46, 0.04) 50%,
+    transparent 70%
+  );
+  filter: blur(85px);
+  pointer-events: none;
+}
+
+.why-red-faint-glow {
+  position: absolute;
+  bottom: 15%;
+  left: -10%;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 27, 60, 0.05) 0%,
+    transparent 65%
+  );
+  filter: blur(90px);
+  pointer-events: none;
+}
+
+.why-header {
+  margin-bottom: 72px;
+}
+
+.why-huge-title {
+  font-family: var(--font-display);
+  font-size: clamp(3.8rem, 10vw, 8rem);
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  line-height: 1;
+  color: var(--color-white);
+  text-transform: uppercase;
+  margin: 12px 0 28px;
+}
+
+.title-interrogation {
+  color: var(--color-red);
+  text-shadow: 0 0 35px var(--color-red-glow), 0 0 10px var(--color-red);
+}
+
+/* Central Manifesto Message: Visually Connected Core Philosophy */
+.why-central-manifesto {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 24px 36px;
+  background: rgba(12, 12, 12, 0.7);
+  border: 1px solid rgba(242, 242, 242, 0.06);
+  border-left: 2px solid var(--color-red);
+  margin-top: 8px;
+}
+
+.manifesto-lead-bracket {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-color: var(--color-red);
+}
+
+.manifesto-lead-bracket.tl {
+  top: -1px;
+  left: -1px;
+  border-top: 2px solid var(--color-red);
+  border-left: 2px solid var(--color-red);
+}
+
+.manifesto-lead-bracket.br {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 2px solid var(--color-red);
+  border-right: 2px solid var(--color-red);
+}
+
+.manifesto-line {
+  font-family: var(--font-heading);
+  font-size: clamp(1.3rem, 3.2vw, 2.2rem);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+.manifesto-line.primary {
+  color: var(--color-white);
+}
+
+.manifesto-line.accent {
+  color: var(--color-red);
+  text-shadow: 0 0 25px var(--color-red-subtle);
+}
+
+.manifesto-connector-pulse {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 2px 0;
+}
+
+.connector-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--color-red);
+  box-shadow: 0 0 6px var(--color-red);
+}
+
+.connector-line {
+  width: 40px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--color-red), transparent);
+}
+
+/* ============================================================
+   ONE INTEGRATED VISUAL SYSTEM: PURPOSE → VALUES → VISION
+   (Non-Card Architecture: Integrated Linear Constellation)
+   ============================================================ */
+
+.why-unified-system {
+  position: relative;
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 36px;
+  margin: 70px 0 90px;
+}
+
+/* Central Continuous Backbone Track */
+.system-backbone-track {
+  position: relative;
+  width: 48px;
+  display: flex;
+  justify-content: center;
+}
+
+.backbone-line {
+  position: absolute;
+  top: 24px;
+  bottom: 24px;
+  width: 2px;
+  background: linear-gradient(
+    to bottom,
+    var(--color-red) 0%,
+    rgba(255, 27, 60, 0.6) 35%,
+    var(--color-green-emerald) 65%,
+    rgba(0, 81, 46, 0.4) 100%
+  );
+  box-shadow: 0 0 10px rgba(255, 27, 60, 0.35);
+}
+
+.backbone-pulse-node {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-red);
+  box-shadow: 0 0 8px var(--color-red);
+}
+
+.backbone-pulse-node.top { top: 24px; }
+.backbone-pulse-node.middle {
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--color-red);
+  box-shadow: 0 0 10px var(--color-red);
+}
+.backbone-pulse-node.bottom {
+  bottom: 24px;
+  background: #00874c;
+  box-shadow: 0 0 10px #00874c;
+}
+
+/* Stations */
+.system-stations {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+.system-station {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  padding: 32px 36px;
+  background: linear-gradient(
+    90deg,
+    rgba(16, 16, 16, 0.85) 0%,
+    rgba(10, 10, 10, 0.6) 100%
+  );
+  border-left: 2px solid transparent;
+  transition: all 0.4s var(--ease-cinematic);
+}
+
+.system-station.station-1 {
+  border-left-color: var(--color-red);
+}
+
+.system-station.station-2 {
+  border-left-color: rgba(255, 27, 60, 0.8);
+}
+
+.system-station.station-3 {
+  border-left-color: #00874c;
+  background: linear-gradient(
+    90deg,
+    rgba(14, 18, 16, 0.85) 0%,
+    rgba(10, 10, 10, 0.6) 100%
+  );
+}
+
+.system-station:hover {
+  transform: translateX(8px);
+  background: linear-gradient(
+    90deg,
+    rgba(20, 20, 20, 0.95) 0%,
+    rgba(14, 14, 14, 0.75) 100%
+  );
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.6);
+}
+
+/* Station Anchor */
+.station-node-anchor {
+  position: relative;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.node-glow-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid var(--color-red);
+  box-shadow: 0 0 10px var(--color-red-glow);
+}
+
+.station-3 .node-glow-ring {
+  border-color: #00874c;
+  box-shadow: 0 0 10px rgba(0, 135, 76, 0.4);
+}
+
+.node-inner-point {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-red);
+}
+
+.station-3 .node-inner-point {
+  background: #00874c;
+}
+
+/* Content Body */
+.station-content-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.station-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+}
+
+.station-tag {
+  color: var(--color-red);
+  font-weight: 700;
+}
+
+.station-3 .station-tag {
+  color: #00a859;
+}
+
+.station-step-indicator {
+  color: var(--color-grey-muted);
+}
+
+.station-title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.4rem, 3.2vw, 2.3rem);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: var(--color-white);
+  text-transform: uppercase;
+}
+
+.station-narrative {
+  font-family: var(--font-body);
+  font-size: clamp(0.95rem, 1.8vw, 1.15rem);
+  line-height: 1.65;
+  color: var(--color-grey-muted);
+  max-width: 840px;
+}
+
+/* ============================================================
+   CINEMATIC ENDING: LEARNING → IMPLEMENTING → BUILDING → FUTURE
+   ============================================================ */
+
+.why-cinematic-ending {
+  position: relative;
+  margin-top: 90px;
+  padding: 60px 0 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 40px;
+}
+
+.ending-horizon-line {
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 27, 60, 0.4) 30%,
+    rgba(0, 81, 46, 0.5) 70%,
+    transparent 100%
+  );
+}
+
+.ending-progression-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.evolution-milestone {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 22px;
+  background: rgba(14, 14, 14, 0.8);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 2px;
+  min-width: 140px;
+  transition: all 0.3s ease;
+}
+
+.evolution-milestone:hover {
+  border-color: rgba(255, 27, 60, 0.4);
+  transform: translateY(-2px);
+}
+
+.evolution-milestone.future-highlight {
+  border-color: var(--color-red);
+  background: rgba(255, 27, 60, 0.08);
+  box-shadow: 0 0 25px var(--color-red-subtle);
+}
+
+.evo-num {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  color: var(--color-red);
+  font-weight: 700;
+}
+
+.evo-label {
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--color-white);
+  text-transform: uppercase;
+}
+
+.evolution-milestone.future-highlight .evo-label {
+  color: var(--color-white);
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+}
+
+.evo-glow-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--color-grey-dim);
+  margin-top: 2px;
+}
+
+.evolution-milestone.future-highlight .evo-glow-dot {
+  background: var(--color-red);
+  box-shadow: 0 0 8px var(--color-red);
+}
+
+.evolution-vector-arrow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-red);
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  user-select: none;
+  opacity: 0.6;
+}
+
+.vector-beam {
+  width: 18px;
+  height: 1px;
+  background: var(--color-red);
+}
+
+.vector-tip {
+  line-height: 1;
+}
+
+.ending-manifesto-subtle {
+  max-width: 650px;
+}
+
+.subtle-line {
+  font-family: var(--font-mono);
+  font-size: clamp(0.85rem, 1.6vw, 1.02rem);
+  letter-spacing: 0.12em;
+  color: var(--color-grey-muted);
+  line-height: 1.7;
+}
+
+.subtle-highlight {
+  color: var(--color-white);
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .why-section {
+    padding: 90px 18px 80px;
+  }
+  .why-unified-system {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .system-backbone-track {
+    display: none;
+  }
+  .system-station {
+    padding: 24px 20px;
+  }
+  .evolution-vector-arrow {
+    display: none;
+  }
+  .ending-progression-row {
+    gap: 12px;
+  }
+  .evolution-milestone {
+    min-width: 120px;
+    padding: 10px 16px;
+  }
+}

@@ -1,0 +1,63 @@
+.gwd-journey-experience {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--color-void);
+  color: var(--color-white);
+  overflow-x: hidden;
+}
+
+.story-stream {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Stage 1 Boundary Milestone Notice */
+.stage-boundary-notice {
+  position: relative;
+  width: 100%;
+  padding: 80px 24px 100px;
+  background: var(--color-void-deep);
+  border-top: 1px solid var(--color-border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.boundary-inner {
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.boundary-tag {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.3em;
+  color: var(--color-red);
+  background: rgba(255, 27, 60, 0.08);
+  border: 1px solid var(--color-border-red);
+  padding: 4px 14px;
+  border-radius: 2px;
+}
+
+.boundary-text {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--color-white);
+  text-transform: uppercase;
+}
+
+.boundary-sub {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  color: var(--color-grey-muted);
+}

@@ -1,0 +1,508 @@
+/* ============================================================
+   09, 10, 11 — THE JOURNEY, EVENTS, AND PROJECTS
+   ============================================================ */
+
+.journey-flow {
+  position: relative;
+  width: 100vw;
+  background-color: var(--color-void);
+  border-top: 1px solid var(--color-border-subtle);
+  overflow: hidden;
+}
+
+/* 09 — THE JOURNEY TIMELINE */
+.journey-timeline-stage {
+  position: relative;
+  padding: 100px 24px 130px;
+}
+
+.journey-header {
+  margin-bottom: 60px;
+}
+
+.journey-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 7vw, 5.5rem);
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  color: var(--color-white);
+  text-transform: uppercase;
+  margin: 12px 0 16px;
+}
+
+.journey-sub {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  color: var(--color-grey-muted);
+  max-width: 650px;
+}
+
+.vertical-timeline-track {
+  position: relative;
+  max-width: 900px;
+  margin: 60px auto 0;
+  padding: 40px 0;
+}
+
+.central-timeline-laser {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--color-red) 15%,
+    var(--color-red) 85%,
+    transparent
+  );
+  box-shadow: 0 0 12px var(--color-red-glow);
+}
+
+.timeline-node-row {
+  position: relative;
+  width: 50%;
+  padding: 24px 40px;
+  margin-bottom: 40px;
+}
+
+.timeline-node-row.left {
+  left: 0;
+  text-align: right;
+  padding-right: 50px;
+}
+
+.timeline-node-row.right {
+  left: 50%;
+  text-align: left;
+  padding-left: 50px;
+}
+
+.node-marker {
+  position: absolute;
+  top: 36px;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.timeline-node-row.left .node-marker {
+  right: -8px;
+}
+
+.timeline-node-row.right .node-marker {
+  left: -8px;
+}
+
+.marker-core {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-red);
+  box-shadow: 0 0 10px var(--color-red);
+  position: relative;
+  z-index: 2;
+}
+
+.marker-ping {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid var(--color-red);
+  animation: pingGlow 2s infinite ease-out;
+}
+
+@keyframes pingGlow {
+  0% { transform: scale(0.5); opacity: 1; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+.timeline-content-card {
+  background: rgba(14, 14, 14, 0.85);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 3px;
+  padding: 28px;
+  transition: all 0.3s ease;
+}
+
+.timeline-content-card:hover {
+  border-color: rgba(255, 27, 60, 0.4);
+  transform: translateY(-3px);
+}
+
+.timeline-meta-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+}
+
+.timeline-node-row.left .timeline-meta-bar {
+  justify-content: flex-end;
+}
+
+.timeline-era-tag {
+  color: var(--color-red);
+  font-weight: 700;
+  letter-spacing: 0.15em;
+}
+
+.timeline-phase-tag {
+  color: var(--color-grey-muted);
+  letter-spacing: 0.15em;
+}
+
+.timeline-node-title {
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--color-white);
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+
+.timeline-node-desc {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--color-grey-muted);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.timeline-photo-slot {
+  background: #080808;
+  border: 1px dashed var(--color-border-subtle);
+  padding: 16px;
+  text-align: center;
+}
+
+.timeline-photo-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  color: var(--color-grey-dim);
+}
+
+/* 10 — THE EVENTS DOCUMENTARY STAGE */
+.events-documentary-stage {
+  position: relative;
+  padding: 100px 24px 130px;
+  border-top: 1px solid var(--color-border-subtle);
+  background: radial-gradient(circle at 20% 40%, rgba(255, 27, 60, 0.05) 0%, transparent 60%);
+}
+
+.events-headline-split {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-bottom: 1px solid var(--color-border-subtle);
+  padding-bottom: 20px;
+  margin-top: 12px;
+}
+
+.events-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 7vw, 5.5rem);
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  color: var(--color-white);
+  text-transform: uppercase;
+}
+
+.event-tabs {
+  display: flex;
+  gap: 8px;
+}
+
+.event-tab-btn {
+  background: rgba(16, 16, 16, 0.8);
+  border: 1px solid var(--color-border-subtle);
+  color: var(--color-grey-muted);
+  padding: 8px 16px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.25s ease;
+}
+
+.event-tab-btn.active {
+  background: rgba(255, 27, 60, 0.12);
+  border-color: var(--color-red);
+  color: var(--color-white);
+}
+
+.documentary-feature {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 48px;
+  margin-top: 50px;
+  background: rgba(12, 12, 12, 0.85);
+  border: 1px solid var(--color-border-subtle);
+  padding: 40px;
+  border-radius: 3px;
+}
+
+.documentary-visual-side {
+  width: 100%;
+}
+
+.doc-photo-box {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background: #080808;
+  border: 1px solid rgba(255, 27, 60, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.doc-photo-corner {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-color: var(--color-red);
+}
+
+.doc-photo-corner.tl { top: -1px; left: -1px; border-top: 2px solid var(--color-red); border-left: 2px solid var(--color-red); }
+.doc-photo-corner.br { bottom: -1px; right: -1px; border-bottom: 2px solid var(--color-red); border-right: 2px solid var(--color-red); }
+
+.doc-photo-placeholder {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--color-red);
+  text-shadow: 0 0 10px var(--color-red-glow);
+}
+
+.doc-ratio-tag {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  color: var(--color-grey-dim);
+}
+
+.documentary-narrative-side {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.doc-meta-strip {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+}
+
+.doc-date-tag {
+  color: var(--color-red);
+  font-weight: 600;
+}
+
+.doc-status-indicator {
+  color: var(--color-grey-muted);
+}
+
+.doc-event-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--color-white);
+  text-transform: uppercase;
+}
+
+.block-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.22em;
+  color: var(--color-grey-muted);
+  margin-bottom: 6px;
+}
+
+.block-text {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--color-white);
+}
+
+.block-text.accent-red {
+  color: #ff526d;
+}
+
+.doc-lead-badge {
+  display: inline-flex;
+  gap: 8px;
+  background: rgba(18, 18, 18, 0.9);
+  border: 1px solid var(--color-border-subtle);
+  padding: 6px 14px;
+  border-radius: 2px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+}
+
+.lead-role { color: var(--color-grey-muted); }
+.lead-name { color: var(--color-red); font-weight: 700; }
+
+/* 11 — THE PROJECTS */
+.projects-story-stage {
+  position: relative;
+  padding: 100px 24px 130px;
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.projects-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 7vw, 5.5rem);
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  color: var(--color-white);
+  text-transform: uppercase;
+  margin: 12px 0 16px;
+}
+
+.projects-sub {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  color: var(--color-grey-muted);
+  max-width: 650px;
+  margin-bottom: 50px;
+}
+
+.projects-story-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 36px;
+}
+
+.project-story-card {
+  background: rgba(14, 14, 14, 0.85);
+  border: 1px solid var(--color-border-subtle);
+  border-top: 2px solid var(--color-green-emerald);
+  padding: 32px;
+  border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  transition: all 0.3s ease;
+}
+
+.project-story-card:hover {
+  border-top-color: var(--color-red);
+  transform: translateY(-4px);
+}
+
+.proj-photo-frame {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #080808;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(242, 242, 242, 0.05);
+}
+
+.proj-photo-tag {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.18em;
+  color: var(--color-grey-dim);
+}
+
+.proj-tag-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+}
+
+.proj-id-badge {
+  color: var(--color-red);
+  font-weight: 700;
+}
+
+.proj-lead-tag {
+  color: var(--color-grey-muted);
+}
+
+.proj-title {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--color-white);
+  margin: 10px 0 16px;
+}
+
+.proj-narrative-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.narrative-heading {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  color: var(--color-grey-muted);
+  margin-bottom: 4px;
+}
+
+.narrative-text {
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--color-white);
+}
+
+.narrative-text.highlight {
+  color: #ff526d;
+}
+
+@media (max-width: 900px) {
+  .vertical-timeline-track {
+    margin: 40px 0 0;
+  }
+  .central-timeline-laser {
+    left: 20px;
+  }
+  .timeline-node-row {
+    width: 100%;
+    left: 0 !important;
+    text-align: left !important;
+    padding-left: 50px;
+    padding-right: 0;
+  }
+  .timeline-node-row .node-marker {
+    left: 12px !important;
+    right: auto !important;
+  }
+  .documentary-feature {
+    grid-template-columns: 1fr;
+    padding: 24px;
+  }
+  .projects-story-grid {
+    grid-template-columns: 1fr;
+  }
+}

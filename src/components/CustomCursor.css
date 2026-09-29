@@ -1,0 +1,164 @@
+/* ============================================================
+   CUSTOM CURSOR UI SYSTEM (Desktop Only, Subtle & Cinematic)
+   ============================================================ */
+
+.custom-cursor-root {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 99999;
+  mix-blend-mode: normal;
+  transition: opacity 0.2s ease;
+}
+
+.custom-cursor-root.is-hidden {
+  opacity: 0;
+}
+
+.custom-cursor-root.is-visible {
+  opacity: 1;
+}
+
+/* 1. Central Small Red Point */
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 5px;
+  height: 5px;
+  margin-top: -2.5px;
+  margin-left: -2.5px;
+  background-color: var(--color-red);
+  border-radius: 50%;
+  pointer-events: none;
+  box-shadow: 
+    0 0 6px 1px var(--color-red),
+    0 0 14px 2px rgba(255, 27, 60, 0.4);
+  transition: width 0.2s ease, height 0.2s ease, margin 0.2s ease, background-color 0.2s ease, transform 0.05s linear;
+  will-change: transform;
+}
+
+/* 2. Trailing Subtle Circular Ring */
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 24px;
+  height: 24px;
+  margin-top: -12px;
+  margin-left: -12px;
+  border: 1px solid rgba(255, 27, 60, 0.45);
+  border-radius: 50%;
+  pointer-events: none;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 
+    width 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+    height 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+    margin 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+  will-change: transform;
+}
+
+/* --- STATE: DEFAULT --- */
+.custom-cursor-root.state-default .cursor-dot {
+  opacity: 1;
+}
+
+.custom-cursor-root.state-default .cursor-ring {
+  border-color: rgba(255, 27, 60, 0.35);
+  background: transparent;
+}
+
+/* --- STATE: POINTER (Links, Clickables) --- */
+.custom-cursor-root.state-pointer .cursor-dot {
+  width: 6px;
+  height: 6px;
+  margin-top: -3px;
+  margin-left: -3px;
+}
+
+.custom-cursor-root.state-pointer .cursor-ring {
+  width: 34px;
+  height: 34px;
+  margin-top: -17px;
+  margin-left: -17px;
+  border-color: rgba(255, 27, 60, 0.8);
+  background: rgba(255, 27, 60, 0.06);
+}
+
+/* --- STATE: BUTTON (Buttons, Tabs, Interactive CTAs) --- */
+.custom-cursor-root.state-button .cursor-dot {
+  width: 6px;
+  height: 6px;
+  margin-top: -3px;
+  margin-left: -3px;
+  background-color: #ffffff;
+  box-shadow: 0 0 8px #ffffff;
+}
+
+.custom-cursor-root.state-button .cursor-ring {
+  width: 38px;
+  height: 38px;
+  margin-top: -19px;
+  margin-left: -19px;
+  border-color: var(--color-red);
+  background: rgba(255, 27, 60, 0.12);
+  box-shadow: 0 0 14px rgba(255, 27, 60, 0.2);
+}
+
+/* --- STATE: IMAGE (Interactive Photographs) --- */
+.custom-cursor-root.state-image .cursor-dot {
+  opacity: 0;
+}
+
+.custom-cursor-root.state-image .cursor-ring {
+  width: 48px;
+  height: 48px;
+  margin-top: -24px;
+  margin-left: -24px;
+  border-color: var(--color-red);
+  background: rgba(10, 10, 10, 0.7);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 0 16px rgba(255, 27, 60, 0.25);
+}
+
+.cursor-badge-text {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--color-white, #f2f2f2);
+  text-transform: uppercase;
+  pointer-events: none;
+  animation: cursorFadeIn 0.15s ease-out forwards;
+}
+
+@keyframes cursorFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Disable completely on touch devices and coarse pointers */
+@media (hover: none), (pointer: coarse) {
+  .custom-cursor-root {
+    display: none !important;
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .cursor-ring,
+  .cursor-dot {
+    transition: none !important;
+  }
+}

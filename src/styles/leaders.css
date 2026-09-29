@@ -1,0 +1,481 @@
+/* ============================================================
+   03, 04, 05 — THE PEOPLE, THE LEADERS, VOICES OF GWD
+   ============================================================ */
+
+.people-leaders-flow {
+  position: relative;
+  width: 100vw;
+  background-color: var(--color-void);
+  border-top: 1px solid var(--color-border-subtle);
+  overflow: hidden;
+}
+
+/* 03 — THE PEOPLE TRANSITIONAL MANIFESTO */
+.people-manifesto-stage {
+  position: relative;
+  width: 100%;
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 100px 24px;
+}
+
+.people-backdrop-gradient {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at center,
+    rgba(255, 27, 60, 0.05) 0%,
+    transparent 65%
+  );
+  pointer-events: none;
+}
+
+.people-manifesto-container {
+  max-width: 950px;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.chapter-eyebrow.center {
+  justify-content: center;
+}
+
+.people-statement-massive {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 6.5vw, 4.8rem);
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  line-height: 1.15;
+  color: var(--color-white);
+  text-transform: uppercase;
+}
+
+.statement-dot {
+  color: var(--color-red);
+}
+
+.statement-highlight {
+  color: var(--color-red);
+  text-shadow: 0 0 45px var(--color-red-glow);
+}
+
+.statement-line {
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--color-red), transparent);
+  margin-top: 16px;
+}
+
+/* 04 — THE LEADERS CINEMATIC STAGE */
+.leaders-cinematic-stage {
+  position: relative;
+  padding: 60px 24px 120px;
+}
+
+.leaders-header {
+  margin-bottom: 50px;
+}
+
+.leaders-headline-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-bottom: 1px solid var(--color-border-subtle);
+  padding-bottom: 20px;
+  margin-top: 12px;
+}
+
+.leaders-huge-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 7vw, 5.5rem);
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  color: var(--color-white);
+  text-transform: uppercase;
+}
+
+.leader-indexer {
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  letter-spacing: 0.2em;
+}
+
+.current-idx {
+  color: var(--color-red);
+  font-weight: 700;
+  font-size: 1.6rem;
+}
+
+.total-idx {
+  color: var(--color-grey-muted);
+}
+
+/* Monolith Card */
+.leader-monolith-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 440px 1fr;
+  gap: 60px;
+  background: rgba(14, 14, 14, 0.85);
+  border: 1px solid var(--color-border-subtle);
+  padding: 48px;
+  border-radius: 4px;
+  align-items: center;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+}
+
+.leader-card-glow {
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(0, 81, 46, 0.12) 0%, transparent 70%);
+  filter: blur(70px);
+  pointer-events: none;
+}
+
+/* Photo Frame */
+.leader-photo-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  background: #080808;
+  border: 1px solid rgba(255, 27, 60, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.frame-corner {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-color: var(--color-red);
+}
+
+.c-tl { top: -2px; left: -2px; border-top: 2px solid var(--color-red); border-left: 2px solid var(--color-red); }
+.c-tr { top: -2px; right: -2px; border-top: 2px solid var(--color-red); border-right: 2px solid var(--color-red); }
+.c-bl { bottom: -2px; left: -2px; border-bottom: 2px solid var(--color-red); border-left: 2px solid var(--color-red); }
+.c-br { bottom: -2px; right: -2px; border-bottom: 2px solid var(--color-red); border-right: 2px solid var(--color-red); }
+
+.leader-photo-viewport {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.leader-actual-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photo-placeholder-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 32px;
+  text-align: center;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(255, 27, 60, 0.05) 0%, #060606 80%);
+}
+
+.placeholder-scanline {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.4) 51%);
+  background-size: 100% 4px;
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.placeholder-icon {
+  color: var(--color-red);
+  opacity: 0.8;
+}
+
+.strict-photo-label {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: var(--color-red);
+  text-shadow: 0 0 12px var(--color-red-glow);
+}
+
+.photo-ratio-hint {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  color: var(--color-grey-muted);
+}
+
+/* Identity Info */
+.leader-identity-info {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.leader-position-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 27, 60, 0.08);
+  border: 1px solid var(--color-border-red);
+  padding: 6px 16px;
+  border-radius: 2px;
+  width: fit-content;
+}
+
+.tag-pulse {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-red);
+  box-shadow: 0 0 8px var(--color-red);
+}
+
+.tag-text {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: var(--color-red);
+  text-transform: uppercase;
+}
+
+.leader-fullname {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 5vw, 4.2rem);
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  line-height: 1.05;
+  color: var(--color-white);
+  text-transform: uppercase;
+}
+
+.identity-separator-line {
+  width: 100%;
+  height: 1px;
+  background: var(--color-border-subtle);
+  margin: 12px 0;
+}
+
+/* Switcher Controls */
+.leader-controls {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin: 10px 0 20px;
+}
+
+.control-nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(20, 20, 20, 0.8);
+  border: 1px solid var(--color-border-subtle);
+  color: var(--color-white);
+  padding: 8px 16px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.control-nav-btn:hover {
+  border-color: var(--color-red);
+  color: var(--color-red);
+  box-shadow: 0 0 12px var(--color-red-subtle);
+}
+
+.leader-nav-pills {
+  display: flex;
+  gap: 8px;
+}
+
+.pill-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-grey-dim);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.pill-dot:hover {
+  background: var(--color-white);
+}
+
+.pill-dot.active {
+  background: var(--color-red);
+  box-shadow: 0 0 8px var(--color-red);
+  transform: scale(1.3);
+}
+
+/* Quick Roster */
+.leader-quick-roster {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.roster-item {
+  display: flex;
+  flex-direction: column;
+  background: rgba(16, 16, 16, 0.5);
+  border: 1px solid var(--color-border-subtle);
+  padding: 8px 10px;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+}
+
+.roster-item:hover {
+  border-color: rgba(255, 27, 60, 0.3);
+  background: rgba(22, 22, 22, 0.8);
+}
+
+.roster-item.active {
+  border-color: var(--color-red);
+  background: rgba(255, 27, 60, 0.08);
+}
+
+.roster-role {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  color: var(--color-grey-muted);
+  text-transform: uppercase;
+}
+
+.roster-name {
+  font-family: var(--font-heading);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--color-white);
+}
+
+/* 05 — VOICES OF GWD */
+.voices-section {
+  position: relative;
+  padding: 100px 24px 120px;
+  border-top: 1px solid var(--color-border-subtle);
+  background: linear-gradient(to bottom, var(--color-void), #060606);
+}
+
+.voices-header {
+  margin-bottom: 50px;
+}
+
+.voices-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 6vw, 4.5rem);
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  color: var(--color-white);
+  text-transform: uppercase;
+  margin-top: 12px;
+}
+
+.voices-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+.voice-card {
+  position: relative;
+  background: rgba(14, 14, 14, 0.7);
+  border: 1px solid var(--color-border-subtle);
+  border-left: 2px solid var(--color-red);
+  padding: 36px 28px;
+  border-radius: 2px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.voice-indicator-pip {
+  width: 24px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-red), transparent);
+  box-shadow: 0 0 8px var(--color-red-glow);
+}
+
+.voice-strict-text {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 400;
+  line-height: 1.65;
+  letter-spacing: 0.01em;
+  color: rgba(242, 242, 242, 0.88);
+  text-transform: none;
+}
+
+.voice-attribution {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  border-top: 1px solid var(--color-border-subtle);
+  padding-top: 16px;
+}
+
+.voice-author {
+  color: var(--color-white);
+  font-weight: 700;
+}
+
+.voice-sep {
+  color: var(--color-red);
+}
+
+.voice-pos {
+  color: var(--color-grey-muted);
+}
+
+@media (max-width: 1024px) {
+  .leader-monolith-card {
+    grid-template-columns: 1fr;
+    gap: 36px;
+    padding: 28px;
+  }
+  .leader-photo-frame {
+    max-width: 340px;
+    margin: 0 auto;
+  }
+  .leader-quick-roster {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .voices-grid {
+    grid-template-columns: 1fr;
+  }
+}
