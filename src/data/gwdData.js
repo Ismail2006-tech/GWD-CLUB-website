@@ -41,7 +41,7 @@ export const LEADERSHIP = [
     position: "President",
     name: "Aldrin Paul",
     photoPlaceholder: "[PHOTO — ALDRIN PAUL]",
-    photoUrl: "/photos/aldrin-paul.jpg?v=2",
+    photoUrl: "/photos/aldrin-paul.webp",
     branch: "Executive",
   },
   {
@@ -49,7 +49,7 @@ export const LEADERSHIP = [
     position: "Vice President",
     name: "Mohd Ismail",
     photoPlaceholder: "[PHOTO — MOHD ISMAIL]",
-    photoUrl: "/photos/mohd-ismail.png",
+    photoUrl: "/photos/mohd-ismail.webp",
     branch: "Executive",
   },
   {
@@ -57,7 +57,7 @@ export const LEADERSHIP = [
     position: "General Secretary",
     name: "G. Sravya",
     photoPlaceholder: "[PHOTO — G. SRAVYA]",
-    photoUrl: "/photos/g-sravya.jpg",
+    photoUrl: "/photos/g-sravya.webp",
     branch: "Administration",
   },
   {
@@ -65,7 +65,7 @@ export const LEADERSHIP = [
     position: "Marketing Lead",
     name: "Anvitha Reddy",
     photoPlaceholder: "[PHOTO — ANVITHA REDDY]",
-    photoUrl: "/photos/anvitha-reddy.jpg",
+    photoUrl: "/photos/anvitha-reddy.webp",
     branch: "Outreach",
   },
   {
@@ -73,7 +73,7 @@ export const LEADERSHIP = [
     position: "Event Management Lead",
     name: "Bhavya Chaudhary",
     photoPlaceholder: "[PHOTO — BHAVYA CHAUDHARY]",
-    photoUrl: "/photos/bhavya-chaudhary.jpg",
+    photoUrl: "/photos/bhavya-chaudhary.webp",
     branch: "Operations",
   },
   {
@@ -81,7 +81,7 @@ export const LEADERSHIP = [
     position: "PR Lead",
     name: "Tuba Azeem",
     photoPlaceholder: "[PHOTO — TUBA AZEEM]",
-    photoUrl: "/photos/tuba-azeem.png",
+    photoUrl: "/photos/tuba-azeem.webp",
     branch: "Public Relations",
   },
   {
@@ -89,7 +89,7 @@ export const LEADERSHIP = [
     position: "Creative & Visual Media Lead",
     name: "Nishta",
     photoPlaceholder: "[PHOTO — NISHTA]",
-    photoUrl: "/photos/nishta.png",
+    photoUrl: "/photos/nishta.webp",
     branch: "Creative",
   },
   {
@@ -97,7 +97,7 @@ export const LEADERSHIP = [
     position: "Creative & Visual Media Lead",
     name: "Burhan",
     photoPlaceholder: "[PHOTO — BURHAN]",
-    photoUrl: "/photos/burhan.jpg",
+    photoUrl: "/photos/burhan.webp",
     branch: "Creative",
   },
   {
@@ -105,7 +105,7 @@ export const LEADERSHIP = [
     position: "Technical Lead",
     name: "Deekshith",
     photoPlaceholder: "[PHOTO — DEEKSHITH]",
-    photoUrl: "/photos/deekshith.jpg",
+    photoUrl: "/photos/deekshith.webp",
     branch: "Technical",
   }
 ];

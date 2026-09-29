@@ -38,9 +38,9 @@ export default function BeginningSection() {
   const p3Line2Ref = useRef(0); // Sravya → Aldrin
 
   // People data
-  const president         = { name: "Aldrin Paul",  role: "PRESIDENT",         photoUrl: "/photos/aldrin-paul.jpg?v=2",    emerald: false };
-  const vicePresident     = { name: "Mohd Ismail",  role: "VICE PRESIDENT",    photoUrl: "/photos/mohd-ismail.png",   emerald: false };
-  const generalSecretary  = { name: "G. Sravya",    role: "GENERAL SECRETARY", photoUrl: "/photos/g-sravya.jpg",      emerald: true  };
+  const president         = { name: "Aldrin Paul",  role: "PRESIDENT",         photoUrl: "/photos/aldrin-paul.webp",    emerald: false };
+  const vicePresident     = { name: "Mohd Ismail",  role: "VICE PRESIDENT",    photoUrl: "/photos/mohd-ismail.webp",   emerald: false };
+  const generalSecretary  = { name: "G. Sravya",    role: "GENERAL SECRETARY", photoUrl: "/photos/g-sravya.webp",      emerald: true  };
 
   // ─────────────────────────────────────────────
   //  Handle phase switch — reset all sub-states

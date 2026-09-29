@@ -1,10 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { LEADERSHIP, VOICES_OF_GWD } from '../data/gwdData';
 import '../styles/leaders.css';
 
 export default function PeopleLeadersSection() {
   const [activeLeaderIdx, setActiveLeaderIdx] = useState(0);
   const currentLeader = LEADERSHIP[activeLeaderIdx];
+
+  // Eagerly pre-cache all leadership photos immediately on mount
+  useEffect(() => {
+    LEADERSHIP.forEach((leader) => {
+      if (leader.photoUrl) {
+        const img = new Image();
+        img.src = leader.photoUrl;
+      }
+    });
+  }, []);
 
   const nextLeader = () => {
     setActiveLeaderIdx((prev) => (prev + 1) % LEADERSHIP.length);
@@ -66,13 +76,22 @@ export default function PeopleLeadersSection() {
               <div className="frame-corner c-br" />
 
               <div className="leader-photo-viewport">
-                {currentLeader.photoUrl ? (
-                  <img
-                    src={currentLeader.photoUrl}
-                    alt={currentLeader.name}
-                    className="leader-actual-img"
-                  />
-                ) : (
+                {LEADERSHIP.map((leader, idx) => {
+                  if (!leader.photoUrl) return null;
+                  const isActive = activeLeaderIdx === idx;
+                  return (
+                    <img
+                      key={leader.id}
+                      src={leader.photoUrl}
+                      alt={leader.name}
+                      className={`leader-actual-img ${isActive ? 'is-active' : 'is-hidden'}`}
+                      loading="eager"
+                      decoding="async"
+                    />
+                  );
+                })}
+
+                {!currentLeader.photoUrl && (
                   <div className="photo-placeholder-box">
                     <div className="placeholder-scanline" />
                     <div className="placeholder-icon">

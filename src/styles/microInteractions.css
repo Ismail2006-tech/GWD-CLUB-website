@@ -119,13 +119,17 @@ a:focus-visible {
 }
 
 /* Smooth zoom on images */
-.leader-actual-img,
+.leader-actual-img {
+  transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
+  will-change: opacity, transform;
+}
+
 .node-img {
   transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
   will-change: transform;
 }
 
-.leader-monolith-card:hover .leader-actual-img {
+.leader-monolith-card:hover .leader-actual-img.is-active {
   transform: scale(1.03);
 }
 
