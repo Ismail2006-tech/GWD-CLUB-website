@@ -18,7 +18,7 @@
 
 .core-team-header {
   text-align: center;
-  margin-bottom: 50px;
+  margin-bottom: 60px;
 }
 
 .core-team-statement {
@@ -32,56 +32,59 @@
   margin-top: 14px;
 }
 
+/*
+ * Core team frame — frameless, cinematic.
+ * No hard border, no card background.
+ * The photo will dissolve at its edges into the surrounding black.
+ */
 .core-team-group-frame {
   position: relative;
-  max-width: 1050px;
+  max-width: 1000px;
   margin: 0 auto;
   aspect-ratio: 16 / 9;
-  background: #080808;
-  border: 1px solid rgba(255, 27, 60, 0.25);
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 35px rgba(255, 27, 60, 0.08);
-  overflow: hidden;
+  background: transparent;
+  border: none;
+  overflow: visible;
+  /*
+   * Subtle atmospheric glow beneath the photograph.
+   * Keeps the cinematic void feeling without overpowering the people.
+   */
+  filter: drop-shadow(0 0 60px rgba(255, 27, 60, 0.06));
 }
 
-.group-frame-corner {
-  position: absolute;
-  width: 16px;
-  height: 16px;
-  border-color: var(--color-red);
-  z-index: 5;
-}
-
+/* The photo sits inside a black viewport — essential for the mask effect */
 .group-photo-viewport {
   width: 100%;
   height: 100%;
   position: relative;
+  overflow: hidden;
+  background: #000;
+  border-radius: 2px;
 }
 
-.group-placeholder-box {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
+/*
+ * The actual core team photograph.
+ * Starts with a tiny radial mask (almost invisible).
+ * JS will animate this via mask-image + filter.
+ * opacity is set to 1 by JS after initial state is applied
+ * to avoid a flash of full image before masking starts.
+ */
+.core-team-photo {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle, rgba(255, 27, 60, 0.06) 0%, rgba(0, 81, 46, 0.04) 45%, #050505 85%);
-  text-align: center;
-  padding: 40px;
+  object-fit: cover;
+  object-position: center center;
+  opacity: 0;
+  /* Mask and filter are applied and animated by JS */
+  will-change: mask-image, filter;
+  transition: none;
+  display: block;
 }
 
-.group-icon {
-  color: var(--color-red);
-}
-
-.strict-photo-label.large {
-  font-family: var(--font-mono);
-  font-size: clamp(1.1rem, 2.4vw, 1.6rem);
-  font-weight: 700;
-  letter-spacing: 0.25em;
-  color: var(--color-red);
-  text-shadow: 0 0 16px var(--color-red-glow);
-}
+/* Removed: group-placeholder-box, group-frame-corner, group-icon, group-scan-line */
+/* These are replaced by the real cinematic photo reveal */
 
 /* 07 — THE STRUCTURE (Constellation) */
 .living-structure-stage {

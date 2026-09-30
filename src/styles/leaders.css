@@ -76,11 +76,11 @@
 /* 04 — THE LEADERS CINEMATIC STAGE */
 .leaders-cinematic-stage {
   position: relative;
-  padding: 60px 24px 120px;
+  padding: 60px 24px 110px;
 }
 
 .leaders-header {
-  margin-bottom: 50px;
+  margin-bottom: 48px;
 }
 
 .leaders-headline-row {
@@ -88,13 +88,13 @@
   justify-content: space-between;
   align-items: flex-end;
   border-bottom: 1px solid var(--color-border-subtle);
-  padding-bottom: 20px;
-  margin-top: 12px;
+  padding-bottom: 16px;
+  margin-top: 10px;
 }
 
 .leaders-huge-title {
   font-family: var(--font-display);
-  font-size: clamp(2.8rem, 7vw, 5.5rem);
+  font-size: clamp(2.2rem, 5.5vw, 4.2rem);
   font-weight: 900;
   letter-spacing: 0.12em;
   color: var(--color-white);
@@ -103,76 +103,92 @@
 
 .leader-indexer {
   font-family: var(--font-mono);
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   letter-spacing: 0.2em;
 }
 
 .current-idx {
   color: var(--color-red);
   font-weight: 700;
-  font-size: 1.6rem;
+  font-size: 1.3rem;
 }
 
 .total-idx {
   color: var(--color-grey-muted);
 }
 
-/* Monolith Card */
+/* Monolith Card — now an open cinematic space, not a UI panel */
 .leader-monolith-card {
   position: relative;
   display: grid;
-  grid-template-columns: 440px 1fr;
-  gap: 60px;
-  background: rgba(14, 14, 14, 0.85);
-  border: 1px solid var(--color-border-subtle);
-  padding: 48px;
-  border-radius: 4px;
+  grid-template-columns: 300px 1fr;
+  gap: 64px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  border-radius: 0;
   align-items: center;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
-  overflow: hidden;
+  overflow: visible;
 }
 
 .leader-card-glow {
   position: absolute;
-  top: -50px;
-  right: -50px;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(0, 81, 46, 0.12) 0%, transparent 70%);
-  filter: blur(70px);
+  top: -80px;
+  right: -80px;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(255, 27, 60, 0.04) 0%, transparent 70%);
+  filter: blur(100px);
   pointer-events: none;
 }
 
-/* Photo Frame */
+/* Photo Frame — frameless, emerging from void */
 .leader-photo-frame {
   position: relative;
   width: 100%;
   aspect-ratio: 3 / 4;
-  background: #080808;
-  border: 1px solid rgba(255, 27, 60, 0.2);
+  background: transparent;
+  border: none;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
+/* Subtle corner accents — reduced opacity for cinema feel */
 .frame-corner {
   position: absolute;
-  width: 14px;
-  height: 14px;
-  border-color: var(--color-red);
+  width: 12px;
+  height: 12px;
+  border-color: rgba(255, 27, 60, 0.4);
+  z-index: 3;
 }
 
-.c-tl { top: -2px; left: -2px; border-top: 2px solid var(--color-red); border-left: 2px solid var(--color-red); }
-.c-tr { top: -2px; right: -2px; border-top: 2px solid var(--color-red); border-right: 2px solid var(--color-red); }
-.c-bl { bottom: -2px; left: -2px; border-bottom: 2px solid var(--color-red); border-left: 2px solid var(--color-red); }
-.c-br { bottom: -2px; right: -2px; border-bottom: 2px solid var(--color-red); border-right: 2px solid var(--color-red); }
+.c-tl { top: -1px; left: -1px; border-top: 1px solid rgba(255, 27, 60, 0.4); border-left: 1px solid rgba(255, 27, 60, 0.4); }
+.c-tr { top: -1px; right: -1px; border-top: 1px solid rgba(255, 27, 60, 0.4); border-right: 1px solid rgba(255, 27, 60, 0.4); }
+.c-bl { bottom: -1px; left: -1px; border-bottom: 1px solid rgba(255, 27, 60, 0.4); border-left: 1px solid rgba(255, 27, 60, 0.4); }
+.c-br { bottom: -1px; right: -1px; border-bottom: 1px solid rgba(255, 27, 60, 0.4); border-right: 1px solid rgba(255, 27, 60, 0.4); }
 
 .leader-photo-viewport {
   width: 100%;
   height: 100%;
   position: relative;
   overflow: hidden;
-  background: #080808;
+  background: #000;
+  /* Cinematic soft-edge dissolve: photo edges bleed into black */
+  -webkit-mask-image: radial-gradient(
+    ellipse 85% 90% at 50% 42%,
+    black 52%,
+    rgba(0,0,0,0.7) 68%,
+    rgba(0,0,0,0.3) 82%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    ellipse 85% 90% at 50% 42%,
+    black 52%,
+    rgba(0,0,0,0.7) 68%,
+    rgba(0,0,0,0.3) 82%,
+    transparent 100%
+  );
 }
 
 .leader-actual-img {
@@ -181,11 +197,13 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center top;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform;
   pointer-events: none;
+  filter: brightness(0.88) contrast(1.06);
 }
 
 .leader-actual-img.is-active {
@@ -203,7 +221,7 @@
 }
 
 .leader-monolith-card:hover .leader-actual-img.is-active {
-  transform: scale(1.03);
+  transform: scale(1.02);
 }
 
 .photo-placeholder-box {
@@ -250,22 +268,34 @@
   color: var(--color-grey-muted);
 }
 
-/* Identity Info */
+/* Identity Info — spacious, cinematic hierarchy */
 .leader-identity-info {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 16px;
+  padding-top: 0;
+  /*
+   * LAYOUT STABILITY: The identity panel must not change height
+   * when switching leaders. The photo column drives the card height
+   * (aspect-ratio 3/4 on a 300px column = 400px). Ensure the right
+   * column never becomes taller than this, and never causes reflow.
+   */
+  align-self: center;
 }
 
 .leader-position-tag {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  background: rgba(255, 27, 60, 0.08);
-  border: 1px solid var(--color-border-red);
-  padding: 6px 16px;
+  gap: 8px;
+  background: rgba(255, 27, 60, 0.06);
+  border: 1px solid rgba(255, 27, 60, 0.25);
+  padding: 5px 14px;
   border-radius: 2px;
   width: fit-content;
+  /* LAYOUT STABILITY: fixed height so the tag never grows */
+  height: 26px;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .tag-pulse {
@@ -274,52 +304,72 @@
   border-radius: 50%;
   background: var(--color-red);
   box-shadow: 0 0 8px var(--color-red);
+  animation: pulse-beat 2.4s ease-in-out infinite;
+}
+
+@keyframes pulse-beat {
+  0%, 100% { opacity: 1; box-shadow: 0 0 8px var(--color-red); }
+  50% { opacity: 0.5; box-shadow: 0 0 18px var(--color-red); }
 }
 
 .tag-text {
   font-family: var(--font-mono);
-  font-size: 0.78rem;
+  font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.22em;
   color: var(--color-red);
   text-transform: uppercase;
 }
 
 .leader-fullname {
   font-family: var(--font-display);
-  font-size: clamp(2.4rem, 5vw, 4.2rem);
+  /* ~17% smaller than previous 5rem max → 4.1rem max */
+  font-size: clamp(2.2rem, 4.5vw, 4.1rem);
   font-weight: 900;
-  letter-spacing: 0.12em;
-  line-height: 1.05;
+  letter-spacing: 0.1em;
+  line-height: 1.0;
   color: var(--color-white);
   text-transform: uppercase;
+  /* Subtle text glow for premium feel */
+  text-shadow: 0 0 60px rgba(255, 255, 255, 0.06);
+  /*
+   * LAYOUT STABILITY: reserve the same vertical space regardless of
+   * whether the name uses 1 or 2 lines. min-height = 2 lines.
+   */
+  min-height: 2em;
+  /* Clamp to two lines maximum — never let a name break the layout */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .identity-separator-line {
-  width: 100%;
+  width: 40px;
   height: 1px;
-  background: var(--color-border-subtle);
-  margin: 12px 0;
+  background: linear-gradient(90deg, var(--color-red), transparent);
+  margin: 0;
 }
 
 /* Switcher Controls */
 .leader-controls {
   display: flex;
   align-items: center;
-  gap: 20px;
-  margin: 10px 0 20px;
+  gap: 16px;
+  margin: 0 0 10px;
 }
 
 .control-nav-btn {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   background: rgba(20, 20, 20, 0.8);
   border: 1px solid var(--color-border-subtle);
   color: var(--color-white);
-  padding: 8px 16px;
+  /* Slightly smaller visual scale but still comfortable to click */
+  padding: 6px 12px;
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: 0.62rem;
   letter-spacing: 0.18em;
   cursor: pointer;
   border-radius: 2px;
@@ -334,12 +384,13 @@
 
 .leader-nav-pills {
   display: flex;
-  gap: 8px;
+  gap: 6px;
 }
 
 .pill-dot {
-  width: 10px;
-  height: 10px;
+  /* Slightly smaller dots — less visual weight */
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: var(--color-grey-dim);
   border: none;
@@ -353,28 +404,46 @@
 
 .pill-dot.active {
   background: var(--color-red);
-  box-shadow: 0 0 8px var(--color-red);
+  box-shadow: 0 0 6px var(--color-red);
   transform: scale(1.3);
 }
 
-/* Quick Roster */
+/* ============================================================
+   LEADER QUICK ROSTER — LOCKED GEOMETRY
+   Every card must have IDENTICAL dimensions regardless of
+   the leader's name length or role length.
+   Switching the active card must NEVER cause a layout shift.
+   ============================================================ */
 .leader-quick-roster {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  margin-top: 14px;
+  /* Fixed row height — never driven by content */
+  grid-auto-rows: 64px;
+  gap: 6px;
+  margin-top: 8px;
 }
 
 .roster-item {
+  /*
+   * FIXED dimensions. box-sizing: border-box means the border is
+   * included inside the declared height — no shift when border
+   * changes between inactive (1px) and active (1px red).
+   */
+  box-sizing: border-box;
+  height: 64px;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  gap: 2px;
   background: rgba(16, 16, 16, 0.5);
   border: 1px solid var(--color-border-subtle);
-  padding: 8px 10px;
+  padding: 0 9px;
   text-align: left;
   cursor: pointer;
   border-radius: 2px;
-  transition: all 0.2s ease;
+  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+  /* Never let content overflow and reshape the card */
+  overflow: hidden;
 }
 
 .roster-item:hover {
@@ -385,22 +454,50 @@
 .roster-item.active {
   border-color: var(--color-red);
   background: rgba(255, 27, 60, 0.08);
+  /* NO width/height/padding changes — only visual accent */
+  box-shadow: inset 0 0 12px rgba(255, 27, 60, 0.06);
 }
 
 .roster-role {
   font-family: var(--font-mono);
-  font-size: 0.58rem;
+  /* ~10% smaller than 0.52rem → 0.47rem */
+  font-size: 0.47rem;
   letter-spacing: 0.1em;
   color: var(--color-grey-muted);
   text-transform: uppercase;
+  line-height: 1.3;
+  /*
+   * FIXED HEIGHT for the role area: longest role is
+   * "Creative & Visual Media Lead" which wraps to 2 lines
+   * at 0.47rem × 1.3 ≈ 0.611rem per line × 2 = ~1.222rem.
+   * Fixed to exactly 2 lines — card geometry never changes.
+   */
+  height: calc(0.47rem * 1.3 * 2);
+  /* Overflow silently hidden — never stretches card */
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 .roster-name {
   font-family: var(--font-heading);
-  font-size: 0.82rem;
+  /* ~10% smaller than 0.82rem → 0.74rem */
+  font-size: 0.74rem;
   font-weight: 700;
   letter-spacing: 0.05em;
+  line-height: 1.2;
   color: var(--color-white);
+  /*
+   * FIXED HEIGHT for the name area: reserve exactly 2 lines
+   * so short names ("Nishta") and long names ("Bhavya Chaudhary")
+   * both occupy the same vertical space.
+   */
+  height: calc(0.74rem * 1.2 * 2);
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 /* 05 — VOICES OF GWD */
@@ -489,10 +586,10 @@
   .leader-monolith-card {
     grid-template-columns: 1fr;
     gap: 36px;
-    padding: 28px;
+    padding: 0;
   }
   .leader-photo-frame {
-    max-width: 340px;
+    max-width: 280px;
     margin: 0 auto;
   }
   .leader-quick-roster {
@@ -500,5 +597,20 @@
   }
   .voices-grid {
     grid-template-columns: 1fr;
+  }
+  .leaders-cinematic-stage {
+    padding: 48px 24px 80px;
+  }
+  /* On tablet/mobile, allow comfortable touch targets */
+  .roster-item {
+    height: 64px;
+  }
+  .leader-quick-roster {
+    grid-auto-rows: 64px;
+  }
+  /* Ensure buttons are comfortably tappable on mobile */
+  .control-nav-btn {
+    padding: 8px 14px;
+    font-size: 0.65rem;
   }
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { LEADERSHIP, MEMBERS_DATA } from '../data/gwdData';
 import '../styles/structure.css';
 
@@ -6,7 +6,80 @@ export default function CoreStructureMembersSection() {
   const [selectedLeaderId, setSelectedLeaderId] = useState(LEADERSHIP[0].id);
   const networkCanvasRef = useRef(null);
 
+  // Chapter 06 — Core Team Photo Cinematic Reveal
+  const coreTeamImgRef = useRef(null);
+  const coreTeamFrameRef = useRef(null);
+  const coreRevealRafRef = useRef(null);
+  const coreRevealProgressRef = useRef(0);
+  const coreRevealActiveRef = useRef(false);
+
   const selectedLeader = LEADERSHIP.find(l => l.id === selectedLeaderId) || LEADERSHIP[0];
+
+  // Chapter 06 — Core Team Photo Cinematic Reveal via IntersectionObserver + RAF
+  const applyCoreRevealFrame = useCallback((progress) => {
+    const img = coreTeamImgRef.current;
+    if (!img) return;
+    // Ease: smooth cubic easing
+    const eased = progress < 0.5
+      ? 4 * progress * progress * progress
+      : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+    // Radial mask: starts tiny (5% radius), grows to cover 160% so corners fully dissolve
+    const innerRadius = 5 + eased * 120;   // from 5% → 125%
+    const softEdge   = 15 + eased * 35;    // feather band grows with reveal
+    const outerRadius = innerRadius + softEdge;
+    // Brightness emerges with the reveal
+    const brightness = 0.05 + eased * 0.88;
+    const contrast   = 1.0  + eased * 0.06;
+    const mask = `radial-gradient(ellipse ${innerRadius}% ${innerRadius * 0.7}% at 50% 46%, black ${(innerRadius - 2).toFixed(1)}%, rgba(0,0,0,0.7) ${((innerRadius + outerRadius) / 2).toFixed(1)}%, transparent ${outerRadius.toFixed(1)}%)`;
+    img.style.webkitMaskImage = mask;
+    img.style.maskImage = mask;
+    img.style.filter = `brightness(${brightness.toFixed(3)}) contrast(${contrast.toFixed(3)})`;
+  }, []);
+
+  useEffect(() => {
+    const frame = coreTeamFrameRef.current;
+    const img   = coreTeamImgRef.current;
+    if (!frame || !img) return;
+
+    // Start completely hidden
+    applyCoreRevealFrame(0);
+    img.style.opacity = '1';
+
+    const runReveal = () => {
+      if (!coreRevealActiveRef.current) return;
+      coreRevealProgressRef.current = Math.min(coreRevealProgressRef.current + 0.006, 1);
+      applyCoreRevealFrame(coreRevealProgressRef.current);
+      if (coreRevealProgressRef.current < 1) {
+        coreRevealRafRef.current = requestAnimationFrame(runReveal);
+      } else {
+        coreRevealActiveRef.current = false;
+        // Final settled state — fully visible with soft edges
+        const finalMask = `radial-gradient(ellipse 105% 95% at 50% 46%, black 55%, rgba(0,0,0,0.6) 74%, rgba(0,0,0,0.2) 88%, transparent 100%)`;
+        img.style.webkitMaskImage = finalMask;
+        img.style.maskImage = finalMask;
+        img.style.filter = `brightness(0.93) contrast(1.06)`;
+      }
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !coreRevealActiveRef.current && coreRevealProgressRef.current === 0) {
+            coreRevealActiveRef.current = true;
+            coreRevealRafRef.current = requestAnimationFrame(runReveal);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    observer.observe(frame);
+
+    return () => {
+      observer.disconnect();
+      if (coreRevealRafRef.current) cancelAnimationFrame(coreRevealRafRef.current);
+    };
+  }, [applyCoreRevealFrame]);
 
   // Interactive Living Constellation Network for 07 - THE STRUCTURE
   useEffect(() => {
@@ -171,27 +244,23 @@ export default function CoreStructureMembersSection() {
             </h2>
           </header>
 
-          {/* Group Photo Monolith Frame */}
-          <div className="core-team-group-frame" data-cursor="image" tabIndex={0} aria-label="GWD Core Team photograph placeholder">
-            <div className="group-frame-corner c-tl" />
-            <div className="group-frame-corner c-tr" />
-            <div className="group-frame-corner c-bl" />
-            <div className="group-frame-corner c-br" />
-
+          {/* Chapter 06 — Core Team Cinematic Photo Reveal */}
+          <div
+            ref={coreTeamFrameRef}
+            className="core-team-group-frame"
+            data-cursor="image"
+            tabIndex={0}
+            aria-label="GWD Core Team photograph"
+          >
             <div className="group-photo-viewport">
-              <div className="group-placeholder-box">
-                <div className="group-scan-line" />
-                <div className="group-icon">
-                  <svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                    <circle cx="9" cy="7" r="4" />
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                  </svg>
-                </div>
-                <span className="strict-photo-label large">[PHOTO — GWD CORE TEAM]</span>
-                <span className="photo-ratio-hint">WIDE CINEMATIC COMPOSITION // 16:9</span>
-              </div>
+              <img
+                ref={coreTeamImgRef}
+                src="/photos/core-team.png"
+                alt="GWD Club Core Team — all 9 members"
+                className="core-team-photo"
+                loading="eager"
+                decoding="async"
+              />
             </div>
           </div>
         </div>
