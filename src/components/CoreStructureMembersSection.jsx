@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { LEADERSHIP, MEMBERS_DATA } from '../data/gwdData';
+import LivingSystemSection from './LivingSystemSection';
 import '../styles/structure.css';
 
 export default function CoreStructureMembersSection() {
@@ -374,48 +375,8 @@ export default function CoreStructureMembersSection() {
         </div>
       </div>
 
-      {/* 07 — THE STRUCTURE (Living Constellation Network) */}
-      <div id="structure" className="living-structure-stage">
-        <div className="section-container">
-          <header className="structure-header">
-            <div className="chapter-eyebrow">
-              <span className="eyebrow-idx">CHAPTER 07</span>
-              <span className="eyebrow-divider">—</span>
-              <span className="eyebrow-theme">THE LIVING CONSTELLATION</span>
-            </div>
-
-            <h2 className="structure-title reveal-title">THE STRUCTURE<span className="title-accent-dot">.</span></h2>
-            <p className="structure-desc">
-              GWD functions as an interconnected organism. Explore the constellation of leadership and domain branches.
-            </p>
-          </header>
-
-          <div className="constellation-viewer">
-            {/* Interactive Network Canvas */}
-            <div className="constellation-canvas-frame">
-              <canvas ref={networkCanvasRef} className="network-canvas" />
-              <div className="canvas-interaction-hint">INTERACTIVE CONSTELLATION // CLICK NODES TO INSPECT</div>
-            </div>
-
-            {/* Active Branch Inspector Panel */}
-            <div className="branch-inspector-panel">
-              <div className="inspector-badge">BRANCH INSPECTOR</div>
-              <div className="inspector-leader-info">
-                <span className="ins-pos">{selectedLeader.position}</span>
-                <h3 className="ins-name">{selectedLeader.name}</h3>
-                <span className="ins-domain">DOMAIN: {selectedLeader.branch.toUpperCase()}</span>
-              </div>
-
-              <div className="ins-connections">
-                <span className="conn-title">CONNECTED DOMAIN NETWORK</span>
-                <p className="conn-desc">
-                  This branch coordinates execution across creative, operational, and technical squads within GWD Club.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* 07 — THE LIVING SYSTEM (One Point → One Line → A Network) */}
+      <LivingSystemSection />
 
       {/* 08 — THE MEMBERS (The Digital Archive) */}
       <div id="members" className="members-archive-stage">

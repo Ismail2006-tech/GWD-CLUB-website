@@ -4,7 +4,32 @@ import '../styles/leaders.css';
 
 export default function PeopleLeadersSection() {
   const [activeLeaderIdx, setActiveLeaderIdx] = useState(0);
+  const [devStage, setDevStage] = useState(3); // 0 = identifying, 1 = developing photo, 2 = reveal name, 3 = reveal role
+  const timersRef = useRef([]);
+
   const currentLeader = LEADERSHIP[activeLeaderIdx];
+
+  const triggerDevelopmentSequence = useCallback((newIdx) => {
+    timersRef.current.forEach(t => clearTimeout(t));
+    timersRef.current = [];
+
+    setActiveLeaderIdx(newIdx);
+    setDevStage(0); // Identifying / dark blur
+
+    const t1 = setTimeout(() => {
+      setDevStage(1); // Photo emerges
+    }, 280);
+
+    const t2 = setTimeout(() => {
+      setDevStage(2); // Name reveals
+    }, 600);
+
+    const t3 = setTimeout(() => {
+      setDevStage(3); // Role reveals
+    }, 850);
+
+    timersRef.current = [t1, t2, t3];
+  }, []);
 
   // Eagerly pre-cache all leadership photos immediately on mount
   useEffect(() => {
@@ -14,14 +39,22 @@ export default function PeopleLeadersSection() {
         img.src = leader.photoUrl;
       }
     });
+    return () => timersRef.current.forEach(t => clearTimeout(t));
   }, []);
 
   const nextLeader = () => {
-    setActiveLeaderIdx((prev) => (prev + 1) % LEADERSHIP.length);
+    const nextIdx = (activeLeaderIdx + 1) % LEADERSHIP.length;
+    triggerDevelopmentSequence(nextIdx);
   };
 
   const prevLeader = () => {
-    setActiveLeaderIdx((prev) => (prev - 1 + LEADERSHIP.length) % LEADERSHIP.length);
+    const prevIdx = (activeLeaderIdx - 1 + LEADERSHIP.length) % LEADERSHIP.length;
+    triggerDevelopmentSequence(prevIdx);
+  };
+
+  const selectLeader = (idx) => {
+    if (idx === activeLeaderIdx) return;
+    triggerDevelopmentSequence(idx);
   };
 
   return (
@@ -75,16 +108,25 @@ export default function PeopleLeadersSection() {
               <div className="frame-corner c-bl" />
               <div className="frame-corner c-br" />
 
+              {/* Development status overlay */}
+              {devStage === 0 && (
+                <div className="photo-identifying-overlay" aria-live="polite">
+                  <div className="identifying-scan-beam" />
+                  <span className="identifying-tag-text">IDENTIFYING ARCHIVE...</span>
+                </div>
+              )}
+
               <div className="leader-photo-viewport">
                 {LEADERSHIP.map((leader, idx) => {
                   if (!leader.photoUrl) return null;
                   const isActive = activeLeaderIdx === idx;
+                  const isDeveloping = isActive && devStage < 1;
                   return (
                     <img
                       key={leader.id}
                       src={leader.photoUrl}
                       alt={leader.name}
-                      className={`leader-actual-img ${isActive ? 'is-active' : 'is-hidden'}`}
+                      className={`leader-actual-img ${isActive ? 'is-active' : 'is-hidden'} ${isDeveloping ? 'is-developing' : ''}`}
                       loading="eager"
                       decoding="async"
                     />
@@ -109,12 +151,14 @@ export default function PeopleLeadersSection() {
 
             {/* Right/Info: Strictly Position, Full Name, and Controls */}
             <div className="leader-identity-info">
-              <div className="leader-position-tag">
+              <div className={`leader-position-tag ${devStage >= 3 ? 'revealed' : 'concealed'}`}>
                 <span className="tag-pulse" />
                 <span className="tag-text">{currentLeader.position}</span>
               </div>
 
-              <h3 className="leader-fullname">{currentLeader.name}</h3>
+              <h3 className={`leader-fullname ${devStage >= 2 ? 'revealed' : 'concealed'}`}>
+                {currentLeader.name}
+              </h3>
 
               <div className="identity-separator-line" />
 
@@ -136,7 +180,7 @@ export default function PeopleLeadersSection() {
                   {LEADERSHIP.map((leader, idx) => (
                     <button
                       key={leader.id}
-                      onClick={() => setActiveLeaderIdx(idx)}
+                      onClick={() => selectLeader(idx)}
                       className={`pill-dot ${activeLeaderIdx === idx ? 'active' : ''}`}
                       title={`${leader.position}: ${leader.name}`}
                       aria-label={`View ${leader.name}`}

@@ -200,8 +200,10 @@
   object-position: center top;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform;
+  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), 
+              filter 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform, filter;
   pointer-events: none;
   filter: brightness(0.88) contrast(1.06);
 }
@@ -211,6 +213,14 @@
   visibility: visible;
   pointer-events: auto;
   z-index: 2;
+  filter: brightness(0.92) contrast(1.06) blur(0px);
+  transform: scale(1);
+}
+
+.leader-actual-img.is-developing {
+  filter: brightness(0.35) contrast(1.2) blur(10px) !important;
+  opacity: 0.45 !important;
+  transform: scale(0.97) !important;
 }
 
 .leader-actual-img.is-hidden {
@@ -220,7 +230,65 @@
   z-index: 1;
 }
 
-.leader-monolith-card:hover .leader-actual-img.is-active {
+/* Photographic Darkroom Development Overlay */
+.photo-identifying-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 10, 0.7);
+  backdrop-filter: blur(6px);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.identifying-scan-beam {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--color-red), transparent);
+  box-shadow: 0 0 14px var(--color-red);
+  animation: scanBeamAnim 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes scanBeamAnim {
+  0% { top: 15%; opacity: 0.4; }
+  100% { top: 85%; opacity: 0.95; }
+}
+
+.identifying-tag-text {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.22em;
+  color: var(--color-red);
+  text-shadow: 0 0 10px var(--color-red-glow);
+  animation: identBlink 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes identBlink {
+  from { opacity: 0.4; }
+  to { opacity: 1; }
+}
+
+.leader-fullname.concealed,
+.leader-position-tag.concealed {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.leader-fullname.revealed,
+.leader-position-tag.revealed {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.5s var(--ease-cinematic), transform 0.5s var(--ease-cinematic);
+}
+
+.leader-monolith-card:hover .leader-actual-img.is-active:not(.is-developing) {
   transform: scale(1.02);
 }
 

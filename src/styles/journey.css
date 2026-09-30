@@ -506,3 +506,45 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Recovered Archive Stamp Overlay */
+.archive-stamp-overlay {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  padding: 4px 10px;
+  border: 1px dashed var(--color-red);
+  background: rgba(255, 27, 60, 0.08);
+  color: var(--color-red);
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.16em;
+  border-radius: 2px;
+  text-transform: uppercase;
+}
+
+/* Case File Card Specifics */
+.case-file-card {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(14, 14, 14, 0.65);
+  transition: transform 0.4s ease, border-color 0.4s ease;
+}
+
+.case-file-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 27, 60, 0.35);
+}
+
+.case-file-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(10, 10, 10, 0.85);
+  border-left: 2px solid var(--color-red);
+  padding: 3px 8px;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.15em;
+  color: var(--color-white);
+  backdrop-filter: blur(4px);
+}

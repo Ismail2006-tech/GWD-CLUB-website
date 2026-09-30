@@ -6,25 +6,25 @@ export default function MemoriesTodayFutureSection() {
   const [activeMemory, setActiveMemory] = useState(MEMORIES_DATA[0]);
 
   return (
-    <section id="memories-today-future" className="future-flow" aria-label="Chapters 11, 12, 13, 14: Memories, Achievements, Today, and Future">
-      {/* 11 — THE MEMORIES (Calm Visual Archive) */}
+    <section id="memories-today-future" className="future-flow" aria-label="Chapters 11, 12, 13, 14: Exhibition, Evidence, Today, and The Future">
+      {/* 11 — THE MEMORIES (Cinematic Photo Exhibition) */}
       <div id="memories" className="memories-archive-stage">
         <div className="section-container">
           <header className="memories-header">
             <div className="chapter-eyebrow">
               <span className="eyebrow-idx">CHAPTER 11</span>
               <span className="eyebrow-divider">—</span>
-              <span className="eyebrow-theme">THE ATMOSPHERIC ARCHIVE</span>
+              <span className="eyebrow-theme">PHOTOGRAPHY EXHIBITION</span>
             </div>
 
             <h2 className="memories-title reveal-title">THE MEMORIES<span className="title-accent-dot">.</span></h2>
-            <p className="memories-sub">Fragments of time, emotion, and shared effort preserved in darkness.</p>
+            <p className="memories-sub">An immersive photographic exhibition. Fragments of time, emotion, and shared effort preserved in darkness.</p>
           </header>
 
           <div className="memories-viewport-space">
-            {/* Memory Cluster */}
+            {/* Gallery Filmstrip Cluster */}
             <div className="memories-grid-cluster">
-              {MEMORIES_DATA.map((mem) => {
+              {MEMORIES_DATA.map((mem, idx) => {
                 const isSelected = activeMemory.id === mem.id;
                 return (
                   <div
@@ -40,9 +40,10 @@ export default function MemoriesTodayFutureSection() {
                     data-cursor="image"
                     role="button"
                     tabIndex={0}
-                    aria-label={`Inspect memory: ${mem.event}`}
+                    aria-label={`Exhibition plate: ${mem.event}`}
                     style={{ transform: `scale(${isSelected ? 1.04 : 1})` }}
                   >
+                    <div className="exhibition-plate-num">FRAME 0{idx + 1}</div>
                     <div className="memory-photo-box">
                       <span className="mem-tag">{mem.photoPlaceholder}</span>
                     </div>
@@ -55,18 +56,19 @@ export default function MemoriesTodayFutureSection() {
               })}
             </div>
 
-            {/* Active Memory Spotlight Drawer */}
+            {/* Active Exhibition Spotlight Frame */}
             <div className="active-memory-spotlight">
-              <div className="spotlight-badge">INSPECTING ARCHIVE RECORD</div>
+              <div className="spotlight-badge">EXHIBITION SPOTLIGHT // ACTIVE PLATE</div>
               <h3 className="spotlight-title">{activeMemory.event}</h3>
-              <span className="spotlight-date">DATE // {activeMemory.date}</span>
+              <span className="spotlight-date">ARCHIVE RECORD // {activeMemory.date}</span>
 
               <div className="spotlight-caption-box">
-                <span className="caption-tag">CAPTION:</span>
+                <span className="caption-tag">EXHIBITION NOTES:</span>
                 <p className="caption-text">{activeMemory.caption}</p>
               </div>
 
               <div className="spotlight-photo-frame" data-cursor="image">
+                <div className="spotlight-beam-glow" />
                 <span className="spotlight-placeholder">{activeMemory.photoPlaceholder}</span>
               </div>
             </div>
@@ -74,26 +76,31 @@ export default function MemoriesTodayFutureSection() {
         </div>
       </div>
 
-      {/* 12 — THE ACHIEVEMENTS (Verified Statistics Counters) */}
+      {/* 12 — THE ACHIEVEMENTS (Verified Evidence & Checkpoints) */}
       <div id="achievements" className="achievements-stage">
         <div className="section-container">
           <header className="achievements-header">
             <div className="chapter-eyebrow">
               <span className="eyebrow-idx">CHAPTER 12</span>
               <span className="eyebrow-divider">—</span>
-              <span className="eyebrow-theme">VERIFIED MILESTONES</span>
+              <span className="eyebrow-theme">VERIFIED EVIDENCE & CHECKPOINTS</span>
             </div>
 
             <h2 className="achievements-title reveal-title">THE ACHIEVEMENTS<span className="title-accent-dot">.</span></h2>
+            <p className="achievements-sub">Every milestone backed by tangible execution and community footprint.</p>
           </header>
 
           <div className="achievements-metrics-grid">
             {ACHIEVEMENTS_DATA.map((item, idx) => (
-              <div key={idx} className="metric-monolith reveal-fade">
+              <div key={idx} className="metric-monolith evidence-card reveal-fade">
+                <div className="evidence-header-row">
+                  <span className="evidence-checkpoint-tag">CHECKPOINT 0{idx + 1}</span>
+                  <span className="evidence-status-pill">AUTHENTICATED</span>
+                </div>
                 <div className="metric-tick" />
                 <span className="metric-number-placeholder">{item.placeholder}</span>
                 <span className="metric-label">{item.label}</span>
-                <span className="metric-subtext">AWAITING FORMAL AUDIT DATA</span>
+                <span className="metric-subtext">OFFICIAL CLUB EVIDENCE LOG</span>
               </div>
             ))}
           </div>
@@ -107,12 +114,12 @@ export default function MemoriesTodayFutureSection() {
             <div className="chapter-eyebrow">
               <span className="eyebrow-idx">CHAPTER 13</span>
               <span className="eyebrow-divider">—</span>
-              <span className="eyebrow-theme">THE PRESENT TENSE</span>
+              <span className="eyebrow-theme">CONVERGENCE // THE PRESENT</span>
             </div>
 
             <h2 className="today-title reveal-title">GWD TODAY<span className="title-accent-dot">.</span></h2>
             <p className="today-sub">
-              Active, disciplined, and unified. A snapshot of the current leadership cohort steering the club right now.
+              Active, disciplined, and unified. A living snapshot of the current leadership cohort steering GWD.
             </p>
           </header>
 
@@ -140,7 +147,7 @@ export default function MemoriesTodayFutureSection() {
         </div>
       </div>
 
-      {/* 14 — THE FUTURE (Mirrors The Void) */}
+      {/* 14 — THE FUTURE (Minimal Void + Single Beacon) */}
       <div id="future" className="the-future-stage">
         <div className="future-abyss-aura" />
         <div className="future-red-beacon" />
@@ -159,7 +166,7 @@ export default function MemoriesTodayFutureSection() {
           <div className="future-narrative-flow">
             <p className="future-step step-one">WHAT COMES NEXT?</p>
             <p className="future-step step-two">THE STORY ISN'T OVER.</p>
-            <p className="future-step step-three">THE JOURNEY CONTINUES.</p>
+            <p className="future-step step-three">THE UNKNOWN AWAITS.</p>
           </div>
 
           <div className="future-final-brand">
