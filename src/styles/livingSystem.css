@@ -1,0 +1,335 @@
+/* ============================================================
+   LIVING SYSTEM — Chapter 07
+   One Point → One Line → A Network
+   ============================================================ */
+
+.living-system-section {
+  position: relative;
+  min-height: 100vh;
+  padding: 120px 0 100px;
+  display: flex;
+  align-items: center;
+}
+
+.ls-header {
+  margin-bottom: 72px;
+}
+
+.ls-main-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 6vw, 5.5rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--color-white);
+  margin-top: 28px;
+}
+
+.ls-title-dim {
+  color: rgba(242, 242, 242, 0.55);
+}
+
+.ls-title-dimmer {
+  color: rgba(242, 242, 242, 0.28);
+}
+
+/* ── Main Composition ─────────────────────────── */
+.ls-composition {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+  min-height: 480px;
+  margin-bottom: 64px;
+}
+
+/* ── Canvas Region ────────────────────────────── */
+.ls-canvas-region {
+  position: relative;
+  height: 480px;
+  border: 1px solid var(--color-border-subtle);
+  background: rgba(10, 10, 10, 0.4);
+  overflow: hidden;
+}
+
+.ls-network-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Node labels positioned by chapter percent values */
+.ls-node-label {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  animation: nodeAppear 0.5s var(--ease-cinematic) forwards;
+  pointer-events: none;
+}
+
+@keyframes nodeAppear {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.ls-node-aldrin {
+  top: calc(38% + 24px);
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.ls-node-ismail {
+  top: calc(62% + 24px);
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.ls-node-sravya {
+  top: 50%;
+  left: calc(30% + 18px);
+  transform: translateY(-50%);
+}
+
+.nk-name {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--color-white);
+}
+
+.nk-role {
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  letter-spacing: 0.1em;
+  color: var(--color-grey-muted);
+}
+
+/* ── Info Region ──────────────────────────────── */
+.ls-info-region {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+/* Photo frame — fixed size, never shifts */
+.ls-photo-frame {
+  position: relative;
+  width: 100%;
+  max-width: 340px;
+  aspect-ratio: 3 / 4;
+  background: rgba(15, 15, 15, 0.8);
+  border: 1px solid var(--color-border-subtle);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.ls-person-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transform: scale(1.03);
+  transition: opacity 0.8s var(--ease-cinematic), transform 0.8s var(--ease-cinematic);
+}
+
+.ls-person-photo.revealed {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Waiting signal placeholder */
+.ls-waiting-signal {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.ls-signal-ring {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 27, 60, 0.4);
+  animation: signalPulse 2s ease-in-out infinite;
+}
+
+.ls-signal-ring.transmitting {
+  border-color: rgba(255, 27, 60, 0.7);
+  animation: signalPulse 0.8s ease-in-out infinite;
+}
+
+@keyframes signalPulse {
+  0%, 100% { transform: scale(0.9); opacity: 0.4; }
+  50% { transform: scale(1.15); opacity: 0.9; }
+}
+
+.ls-identifying {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  color: rgba(255, 27, 60, 0.6);
+  animation: identBlink 1.4s step-end infinite;
+}
+
+@keyframes identBlink {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 0.2; }
+}
+
+/* ── Narrative Block ──────────────────────────── */
+.ls-narrative-block {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.7s var(--ease-cinematic), transform 0.7s var(--ease-cinematic);
+}
+
+.ls-narrative-block.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.ls-phase-tag {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.16em;
+  color: var(--color-red);
+  margin-bottom: 14px;
+}
+
+.ls-narrative-text {
+  font-family: var(--font-body);
+  font-size: 0.93rem;
+  line-height: 1.8;
+  color: rgba(242, 242, 242, 0.62);
+  max-width: 420px;
+}
+
+/* ── Phase Navigation ─────────────────────────── */
+.ls-phase-nav {
+  display: flex;
+  gap: 0;
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.ls-phase-btn {
+  flex: 1;
+  position: relative;
+  padding: 24px 20px;
+  background: transparent;
+  border: none;
+  border-right: 1px solid var(--color-border-subtle);
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.3s ease;
+}
+
+.ls-phase-btn:last-child {
+  border-right: none;
+}
+
+.ls-phase-btn:hover {
+  background: rgba(255, 27, 60, 0.04);
+}
+
+.ls-phase-btn.active {
+  background: rgba(255, 27, 60, 0.06);
+}
+
+.ls-phase-btn.completed .ls-phase-label,
+.ls-phase-btn.completed .ls-phase-name {
+  opacity: 0.5;
+}
+
+.ls-phase-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  color: var(--color-grey-muted);
+  margin-bottom: 4px;
+}
+
+.ls-phase-btn.active .ls-phase-label {
+  color: var(--color-red);
+}
+
+.ls-phase-name {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--color-white);
+}
+
+.ls-phase-active-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--color-red);
+  box-shadow: 0 0 8px var(--color-red);
+}
+
+/* ── Mobile ───────────────────────────────────── */
+@media (max-width: 768px) {
+  .living-system-section {
+    padding: 90px 0 80px;
+  }
+
+  .ls-composition {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    min-height: auto;
+  }
+
+  .ls-canvas-region {
+    height: 320px;
+  }
+
+  .ls-main-title {
+    font-size: clamp(2rem, 8vw, 3.5rem);
+  }
+
+  .ls-phase-nav {
+    flex-direction: column;
+  }
+
+  .ls-phase-btn {
+    border-right: none;
+    border-bottom: 1px solid var(--color-border-subtle);
+    padding: 18px 20px;
+  }
+
+  .ls-photo-frame {
+    max-width: 240px;
+  }
+
+  .ls-node-label {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ls-signal-ring {
+    animation: none;
+    opacity: 0.6;
+  }
+  .ls-identifying {
+    animation: none;
+  }
+  .ls-person-photo {
+    transition: opacity 0.2s ease;
+  }
+}
