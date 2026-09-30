@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { LEADERSHIP, MEMBERS_DATA } from '../data/gwdData';
-import LivingSystemSection from './LivingSystemSection';
 import '../styles/structure.css';
 
 export default function CoreStructureMembersSection() {
@@ -375,15 +374,12 @@ export default function CoreStructureMembersSection() {
         </div>
       </div>
 
-      {/* 07 — THE LIVING SYSTEM (One Point → One Line → A Network) */}
-      <LivingSystemSection />
-
-      {/* 08 — THE MEMBERS (The Digital Archive) */}
+      {/* 07 — THE MEMBERS (The Digital Archive) */}
       <div id="members" className="members-archive-stage">
         <div className="section-container">
           <header className="members-header">
             <div className="chapter-eyebrow">
-              <span className="eyebrow-idx">CHAPTER 08</span>
+              <span className="eyebrow-idx">CHAPTER 07</span>
               <span className="eyebrow-divider">—</span>
               <span className="eyebrow-theme">THE EXPANDING COLLECTIVE</span>
             </div>

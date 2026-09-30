@@ -14,7 +14,7 @@ export default function JourneyEventsProjectsSection() {
         <div className="section-container">
           <header className="events-header">
             <div className="chapter-eyebrow">
-              <span className="eyebrow-idx">CHAPTER 09</span>
+              <span className="eyebrow-idx">CHAPTER 08</span>
               <span className="eyebrow-divider">—</span>
               <span className="eyebrow-theme">RECOVERED ARCHIVES</span>
             </div>
@@ -89,7 +89,7 @@ export default function JourneyEventsProjectsSection() {
         <div className="section-container">
           <header className="projects-header">
             <div className="chapter-eyebrow">
-              <span className="eyebrow-idx">CHAPTER 10</span>
+              <span className="eyebrow-idx">CHAPTER 09</span>
               <span className="eyebrow-divider">—</span>
               <span className="eyebrow-theme">CASE FILES</span>
             </div>

@@ -22,14 +22,13 @@ export const CHAPTERS = [
   { id: "04", key: "leaders", title: "THE LEADERS", subtitle: "Current Leadership" },
   { id: "05", key: "voices", title: "VOICES OF GWD CLUB", subtitle: "Authentic Words" },
   { id: "06", key: "core-team", title: "THE CORE TEAM", subtitle: "One Club. Many Minds." },
-  { id: "07", key: "structure", title: "THE STRUCTURE", subtitle: "The Living Constellation" },
-  { id: "08", key: "members", title: "THE MEMBERS", subtitle: "The Digital Archive" },
-  { id: "09", key: "events", title: "THE EVENTS", subtitle: "Documentary Chronicles" },
-  { id: "10", key: "projects", title: "THE PROJECTS", subtitle: "Crafted Realities" },
-  { id: "11", key: "memories", title: "THE MEMORIES", subtitle: "Atmospheric Archive" },
-  { id: "12", key: "achievements", title: "THE ACHIEVEMENTS", subtitle: "Verified Milestones" },
-  { id: "13", key: "today", title: "GWD TODAY", subtitle: "The Present State" },
-  { id: "14", key: "future", title: "THE FUTURE", subtitle: "The Journey Continues" }
+  { id: "07", key: "members", title: "THE MEMBERS", subtitle: "The Digital Archive" },
+  { id: "08", key: "events", title: "THE EVENTS", subtitle: "Recovered Archives" },
+  { id: "09", key: "projects", title: "THE PROJECTS", subtitle: "Case Files" },
+  { id: "10", key: "memories", title: "THE MEMORIES", subtitle: "Photography Exhibition" },
+  { id: "11", key: "achievements", title: "THE ACHIEVEMENTS", subtitle: "Verified Evidence" },
+  { id: "12", key: "today", title: "GWD TODAY", subtitle: "Convergence" },
+  { id: "13", key: "future", title: "THE FUTURE", subtitle: "The Unknown" }
 ];
 
 // Single source of truth for all leaders (strictly provided names only)

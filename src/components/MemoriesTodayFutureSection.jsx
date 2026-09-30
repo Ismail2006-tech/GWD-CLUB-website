@@ -12,7 +12,7 @@ export default function MemoriesTodayFutureSection() {
         <div className="section-container">
           <header className="memories-header">
             <div className="chapter-eyebrow">
-              <span className="eyebrow-idx">CHAPTER 11</span>
+              <span className="eyebrow-idx">CHAPTER 10</span>
               <span className="eyebrow-divider">—</span>
               <span className="eyebrow-theme">PHOTOGRAPHY EXHIBITION</span>
             </div>
@@ -81,7 +81,7 @@ export default function MemoriesTodayFutureSection() {
         <div className="section-container">
           <header className="achievements-header">
             <div className="chapter-eyebrow">
-              <span className="eyebrow-idx">CHAPTER 12</span>
+              <span className="eyebrow-idx">CHAPTER 11</span>
               <span className="eyebrow-divider">—</span>
               <span className="eyebrow-theme">VERIFIED EVIDENCE & CHECKPOINTS</span>
             </div>
@@ -112,7 +112,7 @@ export default function MemoriesTodayFutureSection() {
         <div className="section-container">
           <header className="today-header">
             <div className="chapter-eyebrow">
-              <span className="eyebrow-idx">CHAPTER 13</span>
+              <span className="eyebrow-idx">CHAPTER 12</span>
               <span className="eyebrow-divider">—</span>
               <span className="eyebrow-theme">CONVERGENCE // THE PRESENT</span>
             </div>
