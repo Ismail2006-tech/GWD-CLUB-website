@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { LEADERSHIP, VOICES_OF_GWD } from '../data/gwdData';
 import '../styles/leaders.css';
 
