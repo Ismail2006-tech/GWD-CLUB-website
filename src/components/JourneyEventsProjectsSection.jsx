@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { JOURNEY_TIMELINE, EVENTS_DATA, PROJECTS_DATA, LEADERSHIP } from '../data/gwdData';
+import { EVENTS_DATA, PROJECTS_DATA, LEADERSHIP } from '../data/gwdData';
 import '../styles/journey.css';
 
 export default function JourneyEventsProjectsSection() {
@@ -8,59 +8,13 @@ export default function JourneyEventsProjectsSection() {
   const eventLead = LEADERSHIP.find(l => l.id === currentEvent.leadId);
 
   return (
-    <section id="journey-events-projects" className="journey-flow" aria-label="Chapters 09, 10, 11: Journey, Events, and Projects">
-      {/* 09 — THE JOURNEY (Vertical Cinematic Timeline) */}
-      <div id="journey" className="journey-timeline-stage">
-        <div className="section-container">
-          <header className="journey-header">
-            <div className="chapter-eyebrow">
-              <span className="eyebrow-idx">CHAPTER 09</span>
-              <span className="eyebrow-divider">—</span>
-              <span className="eyebrow-theme">THE TIMELINE OF MOMENTUM</span>
-            </div>
-
-            <h2 className="journey-title reveal-title">THE JOURNEY<span className="title-accent-dot">.</span></h2>
-            <p className="journey-sub">From a bold premise to an enduring institution. Discover the milestones that forged GWD.</p>
-          </header>
-
-          <div className="vertical-timeline-track">
-            <div className="central-timeline-laser" />
-
-            {JOURNEY_TIMELINE.map((item, index) => {
-              const isEven = index % 2 === 0;
-              return (
-                <div key={item.year} className={`timeline-node-row ${isEven ? 'left' : 'right'}`}>
-                  <div className="node-marker">
-                    <span className="marker-core" />
-                    <span className="marker-ping" />
-                  </div>
-
-                  <div className="timeline-content-card reveal-fade">
-                    <div className="timeline-meta-bar">
-                      <span className="timeline-era-tag">{item.year}</span>
-                      <span className="timeline-phase-tag">{item.tag}</span>
-                    </div>
-
-                    <h3 className="timeline-node-title">{item.title}</h3>
-                    <p className="timeline-node-desc">{item.description}</p>
-
-                    <div className="timeline-photo-slot" data-cursor="image" tabIndex={0} aria-label={`Timeline photo: ${item.photoPlaceholder}`}>
-                      <span className="timeline-photo-label">{item.photoPlaceholder}</span>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-
-      {/* 10 — THE EVENTS (Mini Documentary Chronicles) */}
+    <section id="journey-events-projects" className="journey-flow" aria-label="Chapters 09, 10: Events and Projects">
+      {/* 09 — THE EVENTS (Mini Documentary Chronicles) */}
       <div id="events" className="events-documentary-stage">
         <div className="section-container">
           <header className="events-header">
             <div className="chapter-eyebrow">
-              <span className="eyebrow-idx">CHAPTER 10</span>
+              <span className="eyebrow-idx">CHAPTER 09</span>
               <span className="eyebrow-divider">—</span>
               <span className="eyebrow-theme">DOCUMENTARY CHRONICLES</span>
             </div>
@@ -129,12 +83,12 @@ export default function JourneyEventsProjectsSection() {
         </div>
       </div>
 
-      {/* 11 — THE PROJECTS (Treat Projects Like Stories) */}
+      {/* 10 — THE PROJECTS (Treat Projects Like Stories) */}
       <div id="projects" className="projects-story-stage">
         <div className="section-container">
           <header className="projects-header">
             <div className="chapter-eyebrow">
-              <span className="eyebrow-idx">CHAPTER 11</span>
+              <span className="eyebrow-idx">CHAPTER 10</span>
               <span className="eyebrow-divider">—</span>
               <span className="eyebrow-theme">CRAFTED REALITIES</span>
             </div>

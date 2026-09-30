@@ -34,25 +34,22 @@
 
 /*
  * Core team frame — frameless, cinematic.
- * No hard border, no card background.
- * The photo will dissolve at its edges into the surrounding black.
+ * Aspect ratio precisely matches the 1024x543 authentic group photograph
+ * ensuring all 9 leaders are completely in view without clipping.
  */
 .core-team-group-frame {
   position: relative;
-  max-width: 1000px;
+  max-width: 1040px;
+  width: 100%;
   margin: 0 auto;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 1024 / 543;
   background: transparent;
   border: none;
   overflow: visible;
-  /*
-   * Subtle atmospheric glow beneath the photograph.
-   * Keeps the cinematic void feeling without overpowering the people.
-   */
-  filter: drop-shadow(0 0 60px rgba(255, 27, 60, 0.06));
+  filter: drop-shadow(0 0 50px rgba(255, 27, 60, 0.05));
 }
 
-/* The photo sits inside a black viewport — essential for the mask effect */
+/* The photo sits inside a black viewport with a soft feathered perimeter vignette */
 .group-photo-viewport {
   width: 100%;
   height: 100%;
@@ -60,14 +57,14 @@
   overflow: hidden;
   background: #000;
   border-radius: 2px;
+  -webkit-mask-image: radial-gradient(ellipse 98% 92% at 50% 50%, black 78%, rgba(0, 0, 0, 0.6) 90%, transparent 100%);
+  mask-image: radial-gradient(ellipse 98% 92% at 50% 50%, black 78%, rgba(0, 0, 0, 0.6) 90%, transparent 100%);
 }
 
 /*
- * The actual core team photograph.
- * Starts with a tiny radial mask (almost invisible).
- * JS will animate this via mask-image + filter.
- * opacity is set to 1 by JS after initial state is applied
- * to avoid a flash of full image before masking starts.
+ * The authentic core team photograph.
+ * Starts completely hidden in black.
+ * JS drives the Left + Right -> Center curtain reveal via linear-gradient mask.
  */
 .core-team-photo {
   position: absolute;
@@ -77,14 +74,51 @@
   object-fit: cover;
   object-position: center center;
   opacity: 0;
-  /* Mask and filter are applied and animated by JS */
-  will-change: mask-image, filter;
-  transition: none;
+  will-change: mask-image, -webkit-mask-image, transform, filter;
   display: block;
 }
 
-/* Removed: group-placeholder-box, group-frame-corner, group-icon, group-scan-line */
-/* These are replaced by the real cinematic photo reveal */
+/*
+ * Extremely subtle crimson scanning light filaments tracking
+ * the leading edges of the left and right reveals as they move toward the center.
+ */
+.reveal-light-bar {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 44px;
+  pointer-events: none;
+  opacity: 0;
+  will-change: left, right, opacity;
+  z-index: 2;
+}
+
+.reveal-light-bar.left {
+  left: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(to right, transparent 0%, rgba(255, 27, 60, 0.16) 65%, rgba(255, 140, 160, 0.32) 100%);
+  filter: drop-shadow(0 0 10px rgba(255, 27, 60, 0.35));
+}
+
+.reveal-light-bar.right {
+  right: 0;
+  transform: translateX(100%);
+  background: linear-gradient(to left, transparent 0%, rgba(255, 27, 60, 0.16) 65%, rgba(255, 140, 160, 0.32) 100%);
+  filter: drop-shadow(0 0 10px rgba(255, 27, 60, 0.35));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .core-team-photo {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    -webkit-mask-image: none !important;
+    mask-image: none !important;
+  }
+  .reveal-light-bar {
+    display: none !important;
+  }
+}
 
 /* 07 — THE STRUCTURE (Constellation) */
 .living-structure-stage {

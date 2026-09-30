@@ -6,13 +6,13 @@ export default function MemoriesTodayFutureSection() {
   const [activeMemory, setActiveMemory] = useState(MEMORIES_DATA[0]);
 
   return (
-    <section id="memories-today-future" className="future-flow" aria-label="Chapters 12, 13, 14, 15: Memories, Achievements, Today, and Future">
-      {/* 12 — THE MEMORIES (Calm Visual Archive) */}
+    <section id="memories-today-future" className="future-flow" aria-label="Chapters 11, 12, 13, 14: Memories, Achievements, Today, and Future">
+      {/* 11 — THE MEMORIES (Calm Visual Archive) */}
       <div id="memories" className="memories-archive-stage">
         <div className="section-container">
           <header className="memories-header">
             <div className="chapter-eyebrow">
-              <span className="eyebrow-idx">CHAPTER 12</span>
+              <span className="eyebrow-idx">CHAPTER 11</span>
               <span className="eyebrow-divider">—</span>
               <span className="eyebrow-theme">THE ATMOSPHERIC ARCHIVE</span>
             </div>
@@ -74,12 +74,12 @@ export default function MemoriesTodayFutureSection() {
         </div>
       </div>
 
-      {/* 13 — THE ACHIEVEMENTS (Verified Statistics Counters) */}
+      {/* 12 — THE ACHIEVEMENTS (Verified Statistics Counters) */}
       <div id="achievements" className="achievements-stage">
         <div className="section-container">
           <header className="achievements-header">
             <div className="chapter-eyebrow">
-              <span className="eyebrow-idx">CHAPTER 13</span>
+              <span className="eyebrow-idx">CHAPTER 12</span>
               <span className="eyebrow-divider">—</span>
               <span className="eyebrow-theme">VERIFIED MILESTONES</span>
             </div>
@@ -100,12 +100,12 @@ export default function MemoriesTodayFutureSection() {
         </div>
       </div>
 
-      {/* 14 — GWD TODAY (The Present State) */}
+      {/* 13 — GWD TODAY (The Present State) */}
       <div id="today" className="gwd-today-stage">
         <div className="section-container">
           <header className="today-header">
             <div className="chapter-eyebrow">
-              <span className="eyebrow-idx">CHAPTER 14</span>
+              <span className="eyebrow-idx">CHAPTER 13</span>
               <span className="eyebrow-divider">—</span>
               <span className="eyebrow-theme">THE PRESENT TENSE</span>
             </div>
@@ -140,7 +140,7 @@ export default function MemoriesTodayFutureSection() {
         </div>
       </div>
 
-      {/* 15 — THE FUTURE (Mirrors The Void) */}
+      {/* 14 — THE FUTURE (Mirrors The Void) */}
       <div id="future" className="the-future-stage">
         <div className="future-abyss-aura" />
         <div className="future-red-beacon" />

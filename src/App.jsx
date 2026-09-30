@@ -37,13 +37,12 @@ export default function App() {
       { id: '06', el: document.getElementById('core-team') },
       { id: '07', el: document.getElementById('structure') },
       { id: '08', el: document.getElementById('members') },
-      { id: '09', el: document.getElementById('journey') },
-      { id: '10', el: document.getElementById('events') },
-      { id: '11', el: document.getElementById('projects') },
-      { id: '12', el: document.getElementById('memories') },
-      { id: '13', el: document.getElementById('achievements') },
-      { id: '14', el: document.getElementById('today') },
-      { id: '15', el: document.getElementById('future') }
+      { id: '09', el: document.getElementById('events') },
+      { id: '10', el: document.getElementById('projects') },
+      { id: '11', el: document.getElementById('memories') },
+      { id: '12', el: document.getElementById('achievements') },
+      { id: '13', el: document.getElementById('today') },
+      { id: '14', el: document.getElementById('future') }
     ];
 
     const handleScroll = () => {
@@ -77,13 +76,12 @@ export default function App() {
       '06': 'core-team',
       '07': 'structure',
       '08': 'members',
-      '09': 'journey',
-      '10': 'events',
-      '11': 'projects',
-      '12': 'memories',
-      '13': 'achievements',
-      '14': 'today',
-      '15': 'future'
+      '09': 'events',
+      '10': 'projects',
+      '11': 'memories',
+      '12': 'achievements',
+      '13': 'today',
+      '14': 'future'
     };
 
     const targetEl = document.getElementById(idMap[chapterId]);

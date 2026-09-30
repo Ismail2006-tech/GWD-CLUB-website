@@ -24,13 +24,12 @@ export const CHAPTERS = [
   { id: "06", key: "core-team", title: "THE CORE TEAM", subtitle: "One Club. Many Minds." },
   { id: "07", key: "structure", title: "THE STRUCTURE", subtitle: "The Living Constellation" },
   { id: "08", key: "members", title: "THE MEMBERS", subtitle: "The Digital Archive" },
-  { id: "09", key: "journey", title: "THE JOURNEY", subtitle: "Timeline of Evolution" },
-  { id: "10", key: "events", title: "THE EVENTS", subtitle: "Documentary Chronicles" },
-  { id: "11", key: "projects", title: "THE PROJECTS", subtitle: "Crafted Realities" },
-  { id: "12", key: "memories", title: "THE MEMORIES", subtitle: "Atmospheric Archive" },
-  { id: "13", key: "achievements", title: "THE ACHIEVEMENTS", subtitle: "Verified Milestones" },
-  { id: "14", key: "today", title: "GWD TODAY", subtitle: "The Present State" },
-  { id: "15", key: "future", title: "THE FUTURE", subtitle: "The Journey Continues" }
+  { id: "09", key: "events", title: "THE EVENTS", subtitle: "Documentary Chronicles" },
+  { id: "10", key: "projects", title: "THE PROJECTS", subtitle: "Crafted Realities" },
+  { id: "11", key: "memories", title: "THE MEMORIES", subtitle: "Atmospheric Archive" },
+  { id: "12", key: "achievements", title: "THE ACHIEVEMENTS", subtitle: "Verified Milestones" },
+  { id: "13", key: "today", title: "GWD TODAY", subtitle: "The Present State" },
+  { id: "14", key: "future", title: "THE FUTURE", subtitle: "The Journey Continues" }
 ];
 
 // Single source of truth for all leaders (strictly provided names only)

@@ -6,77 +6,183 @@ export default function CoreStructureMembersSection() {
   const [selectedLeaderId, setSelectedLeaderId] = useState(LEADERSHIP[0].id);
   const networkCanvasRef = useRef(null);
 
-  // Chapter 06 — Core Team Photo Cinematic Reveal
+  // Chapter 06 — Core Team Photo Cinematic Left + Right -> Center Reveal
   const coreTeamImgRef = useRef(null);
   const coreTeamFrameRef = useRef(null);
+  const leftGlowRef = useRef(null);
+  const rightGlowRef = useRef(null);
   const coreRevealRafRef = useRef(null);
   const coreRevealProgressRef = useRef(0);
-  const coreRevealActiveRef = useRef(false);
+  const targetProgressRef = useRef(0);
+  const coreRevealStartedRef = useRef(false);
+  const coreRevealCompletedRef = useRef(false);
 
   const selectedLeader = LEADERSHIP.find(l => l.id === selectedLeaderId) || LEADERSHIP[0];
 
-  // Chapter 06 — Core Team Photo Cinematic Reveal via IntersectionObserver + RAF
+  // Cinematic Left + Right -> Center photo reveal
   const applyCoreRevealFrame = useCallback((progress) => {
     const img = coreTeamImgRef.current;
+    const leftGlow = leftGlowRef.current;
+    const rightGlow = rightGlowRef.current;
     if (!img) return;
-    // Ease: smooth cubic easing
+
+    if (progress <= 0) {
+      const mask = 'linear-gradient(to right, transparent 0%, transparent 100%)';
+      img.style.webkitMaskImage = mask;
+      img.style.maskImage = mask;
+      img.style.opacity = '1';
+      img.style.transform = 'scale(1.018)';
+      if (leftGlow) leftGlow.style.opacity = '0';
+      if (rightGlow) rightGlow.style.opacity = '0';
+      return;
+    }
+
+    if (progress >= 0.985) {
+      // Seamless complete reveal — zero split, zero seam
+      const finalMask = 'linear-gradient(to right, black 0%, black 100%)';
+      img.style.webkitMaskImage = finalMask;
+      img.style.maskImage = finalMask;
+      img.style.opacity = '1';
+      img.style.transform = 'scale(1)';
+      img.style.filter = 'brightness(1) contrast(1.05)';
+      img.style.transition = 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
+      if (leftGlow) {
+        leftGlow.style.opacity = '0';
+        leftGlow.style.transition = 'opacity 0.4s ease';
+      }
+      if (rightGlow) {
+        rightGlow.style.opacity = '0';
+        rightGlow.style.transition = 'opacity 0.4s ease';
+      }
+      return;
+    }
+
+    // Eased progress (cubic smooth in-out)
     const eased = progress < 0.5
       ? 4 * progress * progress * progress
       : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-    // Radial mask: starts tiny (5% radius), grows to cover 160% so corners fully dissolve
-    const innerRadius = 5 + eased * 120;   // from 5% → 125%
-    const softEdge   = 15 + eased * 35;    // feather band grows with reveal
-    const outerRadius = innerRadius + softEdge;
-    // Brightness emerges with the reveal
-    const brightness = 0.05 + eased * 0.88;
-    const contrast   = 1.0  + eased * 0.06;
-    const mask = `radial-gradient(ellipse ${innerRadius}% ${innerRadius * 0.7}% at 50% 46%, black ${(innerRadius - 2).toFixed(1)}%, rgba(0,0,0,0.7) ${((innerRadius + outerRadius) / 2).toFixed(1)}%, transparent ${outerRadius.toFixed(1)}%)`;
+
+    // Reach moves from 0% at outer edges toward 51% in the center
+    const reach = eased * 51;
+    const feather = 8.5;
+
+    const leftSolid = Math.max(0, reach - feather).toFixed(2);
+    const leftFade = Math.min(50, reach + feather).toFixed(2);
+    const rightFade = Math.max(50, 100 - (reach + feather)).toFixed(2);
+    const rightSolid = Math.min(100, 100 - (reach - feather)).toFixed(2);
+
+    // Left revealed -> feather -> dark center -> feather -> Right revealed
+    const mask = `linear-gradient(to right, black 0%, black ${leftSolid}%, transparent ${leftFade}%, transparent ${rightFade}%, black ${rightSolid}%, black 100%)`;
+
     img.style.webkitMaskImage = mask;
     img.style.maskImage = mask;
-    img.style.filter = `brightness(${brightness.toFixed(3)}) contrast(${contrast.toFixed(3)})`;
+    img.style.opacity = '1';
+
+    // Cinematic camera push settle and lighting
+    const scale = (1.018 - eased * 0.018).toFixed(4);
+    const brightness = (0.90 + eased * 0.10).toFixed(3);
+    const contrast = (1.07 - eased * 0.02).toFixed(3);
+    img.style.transform = `scale(${scale})`;
+    img.style.filter = `brightness(${brightness}) contrast(${contrast})`;
+
+    // Subtle crimson scanning filaments at the leading edges
+    const glowOpacity = Math.sin(progress * Math.PI) * 0.55;
+    if (leftGlow) {
+      leftGlow.style.opacity = glowOpacity.toFixed(2);
+      leftGlow.style.left = `${Math.min(50, reach).toFixed(2)}%`;
+    }
+    if (rightGlow) {
+      rightGlow.style.opacity = glowOpacity.toFixed(2);
+      rightGlow.style.right = `${Math.min(50, reach).toFixed(2)}%`;
+    }
   }, []);
 
   useEffect(() => {
     const frame = coreTeamFrameRef.current;
-    const img   = coreTeamImgRef.current;
+    const img = coreTeamImgRef.current;
     if (!frame || !img) return;
 
-    // Start completely hidden
-    applyCoreRevealFrame(0);
-    img.style.opacity = '1';
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      coreRevealCompletedRef.current = true;
+      applyCoreRevealFrame(1);
+      return;
+    }
 
-    const runReveal = () => {
-      if (!coreRevealActiveRef.current) return;
-      coreRevealProgressRef.current = Math.min(coreRevealProgressRef.current + 0.006, 1);
-      applyCoreRevealFrame(coreRevealProgressRef.current);
-      if (coreRevealProgressRef.current < 1) {
-        coreRevealRafRef.current = requestAnimationFrame(runReveal);
-      } else {
-        coreRevealActiveRef.current = false;
-        // Final settled state — fully visible with soft edges
-        const finalMask = `radial-gradient(ellipse 105% 95% at 50% 46%, black 55%, rgba(0,0,0,0.6) 74%, rgba(0,0,0,0.2) 88%, transparent 100%)`;
-        img.style.webkitMaskImage = finalMask;
-        img.style.maskImage = finalMask;
-        img.style.filter = `brightness(0.93) contrast(1.06)`;
+    // Start completely hidden in darkness
+    applyCoreRevealFrame(0);
+
+    const updateScrollProgress = () => {
+      if (coreRevealCompletedRef.current) return;
+      const rect = frame.getBoundingClientRect();
+      const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+
+      // Start when top enters at 90% of viewport height
+      // Target 100% when center reaches 50% of viewport height
+      const startTrigger = windowHeight * 0.90;
+      const endTrigger = windowHeight * 0.50;
+
+      if (rect.top <= startTrigger) {
+        const raw = (startTrigger - rect.top) / (startTrigger - endTrigger);
+        const clamped = Math.max(0, Math.min(1, raw));
+        if (clamped > targetProgressRef.current) {
+          targetProgressRef.current = clamped;
+        }
+        if (!coreRevealStartedRef.current && clamped > 0.01) {
+          coreRevealStartedRef.current = true;
+        }
       }
+    };
+
+    const runLoop = () => {
+      if (coreRevealCompletedRef.current) return;
+
+      if (coreRevealStartedRef.current) {
+        const diff = targetProgressRef.current - coreRevealProgressRef.current;
+        // Glide smoothly with user scroll or smooth forward pace
+        const forwardStep = Math.max(diff * 0.14, 0.007);
+        coreRevealProgressRef.current = Math.min(1, coreRevealProgressRef.current + forwardStep);
+
+        applyCoreRevealFrame(coreRevealProgressRef.current);
+
+        if (coreRevealProgressRef.current >= 0.985) {
+          coreRevealProgressRef.current = 1;
+          coreRevealCompletedRef.current = true;
+          applyCoreRevealFrame(1);
+          window.removeEventListener('scroll', updateScrollProgress);
+          window.removeEventListener('resize', updateScrollProgress);
+          return;
+        }
+      }
+
+      coreRevealRafRef.current = requestAnimationFrame(runLoop);
     };
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting && !coreRevealActiveRef.current && coreRevealProgressRef.current === 0) {
-            coreRevealActiveRef.current = true;
-            coreRevealRafRef.current = requestAnimationFrame(runReveal);
+          if (entry.isIntersecting) {
+            updateScrollProgress();
+            if (!coreRevealStartedRef.current) {
+              coreRevealStartedRef.current = true;
+              targetProgressRef.current = Math.max(targetProgressRef.current, 0.2);
+            }
           }
         });
       },
-      { threshold: 0.15 }
+      { threshold: [0, 0.1, 0.25, 0.5] }
     );
 
     observer.observe(frame);
+    window.addEventListener('scroll', updateScrollProgress, { passive: true });
+    window.addEventListener('resize', updateScrollProgress, { passive: true });
+
+    updateScrollProgress();
+    coreRevealRafRef.current = requestAnimationFrame(runLoop);
 
     return () => {
       observer.disconnect();
+      window.removeEventListener('scroll', updateScrollProgress);
+      window.removeEventListener('resize', updateScrollProgress);
       if (coreRevealRafRef.current) cancelAnimationFrame(coreRevealRafRef.current);
     };
   }, [applyCoreRevealFrame]);
@@ -244,7 +350,7 @@ export default function CoreStructureMembersSection() {
             </h2>
           </header>
 
-          {/* Chapter 06 — Core Team Cinematic Photo Reveal */}
+          {/* Chapter 06 — Core Team Cinematic Photo Reveal (Left + Right -> Center) */}
           <div
             ref={coreTeamFrameRef}
             className="core-team-group-frame"
@@ -261,6 +367,8 @@ export default function CoreStructureMembersSection() {
                 loading="eager"
                 decoding="async"
               />
+              <div ref={leftGlowRef} className="reveal-light-bar left" aria-hidden="true" />
+              <div ref={rightGlowRef} className="reveal-light-bar right" aria-hidden="true" />
             </div>
           </div>
         </div>
