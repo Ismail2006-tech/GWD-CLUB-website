@@ -29,30 +29,31 @@ export default function App() {
   // Dynamic Scroll Spy across all 16 chapters
   useEffect(() => {
 
-    const sections = [
-      { id: '00', el: document.getElementById('void') },
-      { id: '01', el: document.getElementById('beginning') },
-      { id: '02', el: document.getElementById('why') },
-      { id: '03', el: document.getElementById('people') },
-      { id: '04', el: document.getElementById('leaders') },
-      { id: '05', el: document.getElementById('voices') },
-      { id: '06', el: document.getElementById('core-team') },
-      { id: '07', el: document.getElementById('members') },
-      { id: '08', el: document.getElementById('events') },
-      { id: '09', el: document.getElementById('projects') },
-      { id: '10', el: document.getElementById('memories') },
-      { id: '11', el: document.getElementById('achievements') },
-      { id: '12', el: document.getElementById('today') },
-      { id: '13', el: document.getElementById('future') }
+    const sectionDefinitions = [
+      { id: '00', domId: 'void' },
+      { id: '01', domId: 'beginning' },
+      { id: '02', domId: 'why' },
+      { id: '03', domId: 'people' },
+      { id: '04', domId: 'leaders' },
+      { id: '05', domId: 'voices' },
+      { id: '06', domId: 'core-team' },
+      { id: '07', domId: 'members' },
+      { id: '08', domId: 'events' },
+      { id: '09', domId: 'projects' },
+      { id: '10', domId: 'memories' },
+      { id: '11', domId: 'achievements' },
+      { id: '12', domId: 'today' },
+      { id: '13', domId: 'future' },
     ];
 
     const handleScroll = () => {
       const windowHeight = window.innerHeight;
 
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const item = sections[i];
-        if (item.el) {
-          const rect = item.el.getBoundingClientRect();
+      for (let i = sectionDefinitions.length - 1; i >= 0; i--) {
+        const item = sectionDefinitions[i];
+        const el = document.getElementById(item.domId);
+        if (el) {
+          const rect = el.getBoundingClientRect();
           if (rect.top <= windowHeight * 0.45) {
             setActiveChapter(item.id);
             break;
@@ -64,7 +65,8 @@ export default function App() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
 
-}, []);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const scrollToChapter = (chapterId) => {
     const idMap = {
