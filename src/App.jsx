@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import BackgroundWorld from './components/BackgroundWorld';
-import AtmosphericFog from './components/AtmosphericFog';
 import Atmosphere from './components/Atmosphere';
 import MinimalNav from './components/MinimalNav';
 import CustomCursor from './components/CustomCursor';
 import useScrollReveal from './hooks/useScrollReveal';
+
 // Chapter Sections
 import VoidSection from './components/VoidSection';
 import BeginningSection from './components/BeginningSection';
@@ -22,34 +22,36 @@ import './App.css';
 export default function App() {
   const [activeChapter, setActiveChapter] = useState('00');
 
+  // Trigger high-performance scroll reveal on content load
+  useScrollReveal(false);
+
   // Dynamic Scroll Spy across all 16 chapters
   useEffect(() => {
 
-    const sectionDefinitions = [
-      { id: '00', domId: 'void' },
-      { id: '01', domId: 'beginning' },
-      { id: '02', domId: 'why' },
-      { id: '03', domId: 'people' },
-      { id: '04', domId: 'leaders' },
-      { id: '05', domId: 'voices' },
-      { id: '06', domId: 'core-team' },
-      { id: '07', domId: 'members' },
-      { id: '08', domId: 'events' },
-      { id: '09', domId: 'projects' },
-      { id: '10', domId: 'memories' },
-      { id: '11', domId: 'achievements' },
-      { id: '12', domId: 'today' },
-      { id: '13', domId: 'future' },
+    const sections = [
+      { id: '00', el: document.getElementById('void') },
+      { id: '01', el: document.getElementById('beginning') },
+      { id: '02', el: document.getElementById('why') },
+      { id: '03', el: document.getElementById('people') },
+      { id: '04', el: document.getElementById('leaders') },
+      { id: '05', el: document.getElementById('voices') },
+      { id: '06', el: document.getElementById('core-team') },
+      { id: '07', el: document.getElementById('members') },
+      { id: '08', el: document.getElementById('events') },
+      { id: '09', el: document.getElementById('projects') },
+      { id: '10', el: document.getElementById('memories') },
+      { id: '11', el: document.getElementById('achievements') },
+      { id: '12', el: document.getElementById('today') },
+      { id: '13', el: document.getElementById('future') }
     ];
 
     const handleScroll = () => {
       const windowHeight = window.innerHeight;
 
-      for (let i = sectionDefinitions.length - 1; i >= 0; i--) {
-        const item = sectionDefinitions[i];
-        const el = document.getElementById(item.domId);
-        if (el) {
-          const rect = el.getBoundingClientRect();
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const item = sections[i];
+        if (item.el) {
+          const rect = item.el.getBoundingClientRect();
           if (rect.top <= windowHeight * 0.45) {
             setActiveChapter(item.id);
             break;
@@ -61,8 +63,7 @@ export default function App() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
 
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+}, []);
 
   const scrollToChapter = (chapterId) => {
     const idMap = {
@@ -96,9 +97,6 @@ export default function App() {
     <div className="gwd-journey-experience">
       {/* Evolving Background World (geometry, density, and movement per chapter) */}
       <BackgroundWorld activeChapter={activeChapter} />
-
-      {/* Cinematic Atmospheric Fog — Black + Light Red Environment */}
-      <AtmosphericFog activeChapter={activeChapter} />
 
       {/* Global Atmosphere Engine (Lights, Grain, Audio Drone) */}
       <Atmosphere />

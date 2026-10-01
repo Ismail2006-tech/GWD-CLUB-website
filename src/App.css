@@ -19,7 +19,7 @@
   position: relative;
   width: 100%;
   padding: 80px 24px 100px;
-  background: transparent;
+  background: var(--color-void-deep);
   border-top: 1px solid var(--color-border-subtle);
   display: flex;
   align-items: center;

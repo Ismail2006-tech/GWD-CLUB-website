@@ -5,7 +5,7 @@
 .future-flow {
   position: relative;
   width: 100vw;
-  background-color: transparent;
+  background-color: var(--color-void);
   border-top: 1px solid var(--color-border-subtle);
   overflow: hidden;
 }
