@@ -5,8 +5,6 @@ import Atmosphere from './components/Atmosphere';
 import MinimalNav from './components/MinimalNav';
 import CustomCursor from './components/CustomCursor';
 import useScrollReveal from './hooks/useScrollReveal';
-import EntrySmokeIntro from './components/EntrySmokeIntro';
-
 // Chapter Sections
 import VoidSection from './components/VoidSection';
 import BeginningSection from './components/BeginningSection';
@@ -23,16 +21,6 @@ import './App.css';
 
 export default function App() {
   const [activeChapter, setActiveChapter] = useState('00');
-
-  // Entry smoke has already played this session?
-  const alreadyPlayed = (() => {
-    try { return window.sessionStorage.getItem('gwd_entry_smoke_played_v1') === 'true'; } catch { return false; }
-  })();
-  const [smokeComplete, setSmokeComplete] = useState(alreadyPlayed);
-  const handleSmokeComplete = useCallback(() => setSmokeComplete(true), []);
-
-  // Trigger high-performance scroll reveal on content load
-  useScrollReveal(false);
 
   // Dynamic Scroll Spy across all 16 chapters
   useEffect(() => {
@@ -106,12 +94,6 @@ export default function App() {
 
   return (
     <div className="gwd-journey-experience">
-      {/* ONE-TIME CINEMATIC ENTRY SMOKE — Covers the entire website on first load.
-          Unmounts itself completely after 3.8s. Never replays. */}
-      {!smokeComplete && (
-        <EntrySmokeIntro onComplete={handleSmokeComplete} />
-      )}
-
       {/* Evolving Background World (geometry, density, and movement per chapter) */}
       <BackgroundWorld activeChapter={activeChapter} />
 

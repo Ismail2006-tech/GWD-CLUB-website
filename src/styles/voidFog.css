@@ -1,0 +1,95 @@
+/* ============================================================
+   VOID FOG — Cinematic Left & Right Atmospheric Fog Styles
+   Chapter 00 (Hero / First Page)
+   ============================================================ */
+
+.void-fog-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1; /* Sits behind core content (z-index: 2) */
+  overflow: hidden;
+}
+
+.void-fog-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  display: block;
+}
+
+/* Atmospheric CSS Billow Accents from Left and Right */
+.fog-billow-bank {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 48vw;
+  max-width: 750px;
+  pointer-events: none;
+  opacity: 0.55;
+  filter: blur(55px);
+  mix-blend-mode: screen;
+}
+
+.fog-billow-bank.left-bank {
+  left: -8vw;
+  background: radial-gradient(
+    ellipse at 15% 50%,
+    rgba(210, 215, 225, 0.32) 0%,
+    rgba(255, 30, 60, 0.16) 45%,
+    transparent 75%
+  );
+  animation: leftFogSurge 14s ease-in-out infinite alternate;
+}
+
+.fog-billow-bank.right-bank {
+  right: -8vw;
+  background: radial-gradient(
+    ellipse at 85% 50%,
+    rgba(210, 215, 225, 0.32) 0%,
+    rgba(255, 30, 60, 0.16) 45%,
+    transparent 75%
+  );
+  animation: rightFogSurge 16s ease-in-out infinite alternate;
+}
+
+@keyframes leftFogSurge {
+  0% {
+    transform: translate3d(0, -2%, 0) scale(1);
+    opacity: 0.45;
+  }
+  50% {
+    transform: translate3d(4%, 3%, 0) scale(1.08);
+    opacity: 0.62;
+  }
+  100% {
+    transform: translate3d(1%, -1%, 0) scale(0.96);
+    opacity: 0.48;
+  }
+}
+
+@keyframes rightFogSurge {
+  0% {
+    transform: translate3d(0, 3%, 0) scale(1.04);
+    opacity: 0.48;
+  }
+  50% {
+    transform: translate3d(-4%, -2%, 0) scale(0.98);
+    opacity: 0.65;
+  }
+  100% {
+    transform: translate3d(-1%, 2%, 0) scale(1.06);
+    opacity: 0.52;
+  }
+}
+
+@media (max-width: 768px) {
+  .fog-billow-bank {
+    width: 60vw;
+    filter: blur(40px);
+  }
+}

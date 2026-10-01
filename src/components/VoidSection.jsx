@@ -1,22 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
+import VoidFog from './VoidFog';
 import '../styles/void.css';
 
 /**
  * VoidSection — Chapter 00: The Void
  *
- * Handles its own one-time cinematic intro sequence internally.
- * Uses hasPlayedRef so the sequence NEVER replays when scrolling
- * back up to this section. State: INITIAL → PLAYING → COMPLETED.
- *
- * Timing:
- *   300ms  → logo begins fading in
- *   1800ms → GWD CLUB + GET WORK DONE appear
- *   3200ms → EVERY STORY HAS A BEGINNING. appears
- *   4200ms → SCROLL TO ENTER appears
- *
- * All elements use CSS transitions with animation-fill-mode equivalent
- * (opacity + transform transitions, not keyframe animations) so the
- * completed state is permanent for the entire page session.
+ * Cinematic Opening Hero Section with rolling volumetric fog
+ * billowing from the left and right sides of the screen.
+ * Elements reveal smoothly without delay.
  */
 // Module-level guard: persists for the entire page session (survives re-renders / re-mounts)
 let introCompleted = false;
@@ -28,18 +19,18 @@ export default function VoidSection({ onEnter }) {
   const [manifestoVisible, setManifestoVisible] = useState(() => introCompleted);
   const [ctaVisible, setCtaVisible]             = useState(() => introCompleted);
 
-  // One-time intro sequencer — never runs again once introCompleted is true
+  // Smooth cinematic reveal on first open
   useEffect(() => {
     if (introCompleted) return;
 
     const ids = [
-      setTimeout(() => setLogoVisible(true),        300),   // 0.3s — logo starts fade in
-      setTimeout(() => setTitleVisible(true),       1800),  // 1.8s — GWD CLUB starts fade in
-      setTimeout(() => setManifestoVisible(true),   3200),  // 3.2s — EVERY STORY HAS A BEGINNING.
+      setTimeout(() => setLogoVisible(true),        80),    // 0.08s — logo begins
+      setTimeout(() => setTitleVisible(true),       300),   // 0.3s — GWD CLUB reveals
+      setTimeout(() => setManifestoVisible(true),   550),   // 0.55s — Manifesto appears
       setTimeout(() => {
-        setCtaVisible(true);                                // 4.3s — SCROLL TO ENTER
+        setCtaVisible(true);                                // 0.8s — Scroll CTA ready
         introCompleted = true;                              // Permanently lock completed state
-      }, 4300),
+      }, 800),
     ];
 
     return () => ids.forEach(clearTimeout);
@@ -47,6 +38,9 @@ export default function VoidSection({ onEnter }) {
 
   return (
     <section id="void" className="void-section" aria-label="Chapter 00: The Void">
+      {/* Cinematic Left & Right Rolling Atmospheric Fog */}
+      <VoidFog />
+
       {/* Atmospheric center aura */}
       <div className="void-abyss-glow" />
 
