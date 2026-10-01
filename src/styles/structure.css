@@ -5,7 +5,7 @@
 .structure-flow {
   position: relative;
   width: 100vw;
-  background-color: var(--color-void);
+  background-color: transparent;
   border-top: 1px solid var(--color-border-subtle);
   overflow: hidden;
 }

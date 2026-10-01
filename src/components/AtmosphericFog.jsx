@@ -7,20 +7,20 @@ import '../styles/atmosphericFog.css';
 // glowPos: where primary glow sits (% x, % y)
 // spread: how wide/diffuse the atmosphere is
 const CHAPTER_ATMO = {
-  '00': { intensity: 0.12, fogOpacity: 0.06, glowPos: [30, 70], spread: 0.5 },   // THE VOID — almost black
-  '01': { intensity: 0.22, fogOpacity: 0.12, glowPos: [20, 55], spread: 0.7 },   // THE BEGINNING
-  '02': { intensity: 0.28, fogOpacity: 0.15, glowPos: [50, 40], spread: 0.8 },   // WHY GWD
-  '03': { intensity: 0.25, fogOpacity: 0.14, glowPos: [65, 50], spread: 0.75 },  // THE PEOPLE
-  '04': { intensity: 0.30, fogOpacity: 0.16, glowPos: [40, 60], spread: 0.85 },  // THE LEADERS
-  '05': { intensity: 0.22, fogOpacity: 0.13, glowPos: [30, 45], spread: 0.7 },   // VOICES
-  '06': { intensity: 0.28, fogOpacity: 0.15, glowPos: [55, 55], spread: 0.8 },   // CORE TEAM
-  '07': { intensity: 0.20, fogOpacity: 0.12, glowPos: [45, 50], spread: 0.65 },  // MEMBERS
-  '08': { intensity: 0.25, fogOpacity: 0.14, glowPos: [35, 65], spread: 0.72 },  // EVENTS
-  '09': { intensity: 0.27, fogOpacity: 0.15, glowPos: [60, 40], spread: 0.78 },  // PROJECTS
-  '10': { intensity: 0.20, fogOpacity: 0.10, glowPos: [50, 50], spread: 0.6 },   // MEMORIES — softer
-  '11': { intensity: 0.24, fogOpacity: 0.13, glowPos: [40, 55], spread: 0.7 },   // ACHIEVEMENTS
-  '12': { intensity: 0.18, fogOpacity: 0.09, glowPos: [50, 60], spread: 0.55 },  // TODAY — fading
-  '13': { intensity: 0.10, fogOpacity: 0.05, glowPos: [50, 50], spread: 0.35 },  // FUTURE — back to black
+  '00': { intensity: 0.30, fogOpacity: 0.20, glowPos: [30, 70], spread: 0.5 },   // THE VOID — dark, slight subtle presence
+  '01': { intensity: 0.55, fogOpacity: 0.38, glowPos: [20, 55], spread: 0.7 },   // THE BEGINNING
+  '02': { intensity: 0.70, fogOpacity: 0.48, glowPos: [50, 40], spread: 0.8 },   // WHY GWD
+  '03': { intensity: 0.60, fogOpacity: 0.42, glowPos: [65, 50], spread: 0.75 },  // THE PEOPLE
+  '04': { intensity: 0.75, fogOpacity: 0.52, glowPos: [40, 60], spread: 0.85 },  // THE LEADERS
+  '05': { intensity: 0.55, fogOpacity: 0.40, glowPos: [30, 45], spread: 0.7 },   // VOICES
+  '06': { intensity: 0.70, fogOpacity: 0.48, glowPos: [55, 55], spread: 0.8 },   // CORE TEAM
+  '07': { intensity: 0.50, fogOpacity: 0.35, glowPos: [45, 50], spread: 0.65 },  // MEMBERS
+  '08': { intensity: 0.65, fogOpacity: 0.45, glowPos: [35, 65], spread: 0.72 },  // EVENTS
+  '09': { intensity: 0.70, fogOpacity: 0.50, glowPos: [60, 40], spread: 0.78 },  // PROJECTS
+  '10': { intensity: 0.48, fogOpacity: 0.32, glowPos: [50, 50], spread: 0.6 },   // MEMORIES — softer
+  '11': { intensity: 0.60, fogOpacity: 0.42, glowPos: [40, 55], spread: 0.7 },   // ACHIEVEMENTS
+  '12': { intensity: 0.40, fogOpacity: 0.25, glowPos: [50, 60], spread: 0.55 },  // TODAY — fading
+  '13': { intensity: 0.18, fogOpacity: 0.10, glowPos: [50, 50], spread: 0.35 },  // FUTURE — back to black
 };
 
 export default function AtmosphericFog({ activeChapter }) {
@@ -33,8 +33,8 @@ export default function AtmosphericFog({ activeChapter }) {
   const rafRef = useRef(null);
   const currentAtmo = useRef(CHAPTER_ATMO['00']);
   const targetAtmo = useRef(CHAPTER_ATMO['00']);
-  const lerpedIntensity = useRef(0.12);
-  const lerpedFogOpacity = useRef(0.06);
+  const lerpedIntensity = useRef(0.30);
+  const lerpedFogOpacity = useRef(0.20);
   const lerpedGlowX = useRef(30);
   const lerpedGlowY = useRef(70);
 
@@ -76,7 +76,7 @@ export default function AtmosphericFog({ activeChapter }) {
       if (atmoA.current) {
         const ox = lerpedGlowX.current;
         const oy = lerpedGlowY.current;
-        atmoA.current.style.opacity = lerpedIntensity.current * 0.9;
+        atmoA.current.style.opacity = lerpedIntensity.current * 0.95;
         atmoA.current.style.left = `${ox - 30}%`;
         atmoA.current.style.top = `${oy - 30}%`;
       }
@@ -85,19 +85,19 @@ export default function AtmosphericFog({ activeChapter }) {
       if (atmoB.current) {
         const ox = 100 - lerpedGlowX.current;
         const oy = 100 - lerpedGlowY.current;
-        atmoB.current.style.opacity = lerpedIntensity.current * 0.4;
+        atmoB.current.style.opacity = lerpedIntensity.current * 0.65;
         atmoB.current.style.left = `${ox - 30}%`;
         atmoB.current.style.top = `${oy - 20}%`;
       }
 
       // Tertiary small glow
       if (atmoC.current) {
-        atmoC.current.style.opacity = lerpedIntensity.current * 0.25;
+        atmoC.current.style.opacity = lerpedIntensity.current * 0.45;
       }
 
       // Green subtle accent
       if (greenAtmo.current) {
-        greenAtmo.current.style.opacity = lerpedIntensity.current * 0.08;
+        greenAtmo.current.style.opacity = lerpedIntensity.current * 0.22;
       }
 
       // Fog opacity
