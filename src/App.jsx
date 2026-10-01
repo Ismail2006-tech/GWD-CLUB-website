@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import BackgroundWorld from './components/BackgroundWorld';
+import AtmosphericFog from './components/AtmosphericFog';
 import Atmosphere from './components/Atmosphere';
 import MinimalNav from './components/MinimalNav';
 import CustomCursor from './components/CustomCursor';
@@ -97,6 +98,9 @@ export default function App() {
     <div className="gwd-journey-experience">
       {/* Evolving Background World (geometry, density, and movement per chapter) */}
       <BackgroundWorld activeChapter={activeChapter} />
+
+      {/* Cinematic Atmospheric Fog — Black + Light Red Environment */}
+      <AtmosphericFog activeChapter={activeChapter} />
 
       {/* Global Atmosphere Engine (Lights, Grain, Audio Drone) */}
       <Atmosphere />
