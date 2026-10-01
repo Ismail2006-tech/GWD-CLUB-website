@@ -4,56 +4,54 @@ import '../styles/atmosphericFog.css';
 /**
  * GWD CLUB — GLOBAL CINEMATIC ATMOSPHERIC SMOKE SYSTEM
  * 
- * Persistent, continuous atmospheric background across the entire website.
- * Runs seamlessly from Chapter 00 (The Void) through Chapter 15 (The Future).
+ * Hardware-Accelerated Procedural Smoke & Fog Engine (WebGL + Canvas 2D Fallback)
  * 
- * Layers:
- * 1. Background Fog: Expansive, slow-breathing light red ambient bloom.
- * 2. Mid Fog: Organic smoke formations drifting in multiple directions.
- * 3. Near Atmosphere: Fine floating atmospheric vapor particles & micro-dust on canvas.
- * 4. Deep Green Trace: Subtle, rare emerald presence.
- * 
- * Black remains 80–90% dominant everywhere.
- * Transitions are ultra-gradual (lerped over 3–5 seconds). Never resets.
+ * Sits permanently behind all website content across Chapters 00 through 15.
+ * Visual Target:
+ * - 75–85% Pure Void Black
+ * - 15–25% Visible, Translucent, Flowing Smoke & Fog
+ * - Subtle light-red illumination cutting through the smoke curls
+ * - Irregular, multi-layered organic domain-warped vapor (NOT circular radial blobs)
+ * - Continuous slow movement even when idle + smooth inertia on scroll
+ * - Ultra-gradual chapter transitions (no resets, no unmounting)
  */
 
 // Chapter atmospheric DNA — subtle modulation, continuous world
 const CHAPTER_ATMOSPHERE = {
-  // 00 — THE VOID: almost completely black, mysterious faint red haze
-  '00': { intensity: 0.28, fogOpacity: 0.18, vaporCount: 22, glowPos: [35, 65] },
-  // 01 — THE BEGINNING: slightly more visible red atmosphere, subtle emerging fog
-  '01': { intensity: 0.44, fogOpacity: 0.30, vaporCount: 36, glowPos: [25, 52] },
-  // 02 — WHY GWD EXISTS: balanced atmosphere, slightly clearer red light
-  '02': { intensity: 0.54, fogOpacity: 0.38, vaporCount: 44, glowPos: [50, 42] },
-  // 03 — THE PEOPLE: soft atmospheric movement, human-focused environment
-  '03': { intensity: 0.48, fogOpacity: 0.34, vaporCount: 38, glowPos: [65, 50] },
-  // 04 — THE LEADERS: subtle red bloom around active identities, black dominant
-  '04': { intensity: 0.56, fogOpacity: 0.40, vaporCount: 42, glowPos: [40, 58] },
-  // 05 — VOICES OF GWD: softer, calmer fog, reduced intensity
-  '05': { intensity: 0.42, fogOpacity: 0.28, vaporCount: 30, glowPos: [30, 46] },
-  // 06 — THE CORE TEAM: atmospheric depth behind team photo, never obscures faces
-  '06': { intensity: 0.50, fogOpacity: 0.36, vaporCount: 38, glowPos: [55, 52] },
-  // 07 — LIVING SYSTEM / STRUCTURE: subtle red atmosphere around network
-  '07': { intensity: 0.54, fogOpacity: 0.40, vaporCount: 42, glowPos: [46, 50] },
+  // 00 — THE VOID: darker, mysterious, moderate visible fog around central monolith
+  '00': { intensity: 0.38, fogOpacity: 0.38, lightPos: [0.45, 0.52] },
+  // 01 — THE BEGINNING: slightly more visible red illumination
+  '01': { intensity: 0.52, fogOpacity: 0.44, lightPos: [0.35, 0.48] },
+  // 02 — WHY GWD EXISTS: balanced atmosphere, clearer flowing fog
+  '02': { intensity: 0.58, fogOpacity: 0.48, lightPos: [0.52, 0.42] },
+  // 03 — THE PEOPLE: soft atmospheric movement, human-focused
+  '03': { intensity: 0.52, fogOpacity: 0.42, lightPos: [0.65, 0.50] },
+  // 04 — THE LEADERS: subtle red atmosphere behind identities, black dominant
+  '04': { intensity: 0.62, fogOpacity: 0.48, lightPos: [0.40, 0.56] },
+  // 05 — VOICES OF GWD: softer, calmer fog, slightly reduced intensity
+  '05': { intensity: 0.46, fogOpacity: 0.36, lightPos: [0.32, 0.45] },
+  // 06 — THE CORE TEAM: atmospheric depth behind team photograph
+  '06': { intensity: 0.54, fogOpacity: 0.44, lightPos: [0.55, 0.50] },
+  // 07 — LIVING SYSTEM / STRUCTURE: slightly stronger atmosphere around active network
+  '07': { intensity: 0.60, fogOpacity: 0.48, lightPos: [0.48, 0.50] },
   // 08 — THE MEMBERS: atmospheric archive feeling, soft drifting fog
-  '08': { intensity: 0.46, fogOpacity: 0.32, vaporCount: 34, glowPos: [38, 62] },
+  '08': { intensity: 0.50, fogOpacity: 0.38, lightPos: [0.38, 0.60] },
   // 09 — THE JOURNEY: gradual movement, travelling through time
-  '09': { intensity: 0.52, fogOpacity: 0.38, vaporCount: 40, glowPos: [52, 45] },
-  // 10 — EVENTS: slightly more dynamic atmosphere, still subtle
-  '10': { intensity: 0.56, fogOpacity: 0.40, vaporCount: 44, glowPos: [58, 48] },
+  '09': { intensity: 0.56, fogOpacity: 0.44, lightPos: [0.52, 0.46] },
+  // 10 — EVENTS: slightly more movement, still subtle
+  '10': { intensity: 0.60, fogOpacity: 0.46, lightPos: [0.58, 0.48] },
   // 11 — PROJECTS / WORK: cleaner atmosphere, less fog behind important info
-  '11': { intensity: 0.46, fogOpacity: 0.30, vaporCount: 32, glowPos: [42, 54] },
+  '11': { intensity: 0.48, fogOpacity: 0.36, lightPos: [0.44, 0.54] },
   // 12 — MEMORIES: softer, dreamier haze, slightly more diffuse
-  '12': { intensity: 0.42, fogOpacity: 0.28, vaporCount: 28, glowPos: [50, 50] },
-  // 13 — ACHIEVEMENTS: controlled atmosphere, red highlights sharper
-  '13': { intensity: 0.52, fogOpacity: 0.36, vaporCount: 38, glowPos: [45, 52] },
-  // 14 — GWD TODAY: clearer, more confident atmosphere, slightly stronger red presence
-  '14': { intensity: 0.55, fogOpacity: 0.38, vaporCount: 40, glowPos: [50, 56] },
-  // 15 — THE FUTURE: atmosphere gradually darker again, red light slowly fades toward black
-  '15': { intensity: 0.22, fogOpacity: 0.14, vaporCount: 16, glowPos: [50, 50] },
+  '12': { intensity: 0.44, fogOpacity: 0.34, lightPos: [0.50, 0.50] },
+  // 13 — ACHIEVEMENTS: cleaner atmosphere, sharper red highlights
+  '13': { intensity: 0.52, fogOpacity: 0.40, lightPos: [0.46, 0.52] },
+  // 14 — GWD TODAY: clearer, more confident atmosphere
+  '14': { intensity: 0.58, fogOpacity: 0.44, lightPos: [0.50, 0.55] },
+  // 15 — THE FUTURE: gradually fade toward deeper black
+  '15': { intensity: 0.24, fogOpacity: 0.20, lightPos: [0.50, 0.50] },
 };
 
-// Key aliases for bulletproof chapter lookup
 const KEY_ALIASES = {
   void: '00',
   beginning: '01',
@@ -84,232 +82,368 @@ function normalizeChapter(key) {
   return '00';
 }
 
+// GLSL Vertex Shader — Simple Fullscreen Quad
+const VS_SOURCE = `
+attribute vec2 a_position;
+void main() {
+  gl_Position = vec4(a_position, 0.0, 1.0);
+}
+`;
+
+// GLSL Fragment Shader — Multi-Octave Domain-Warped Smoke & Fog
+const FS_SOURCE = `
+precision mediump float;
+
+uniform vec2 u_resolution;
+uniform float u_time;
+uniform float u_scroll;
+uniform float u_intensity;
+uniform float u_fog_opacity;
+uniform vec2 u_light_pos;
+
+// Hash function for pseudo-random gradient noise
+vec2 hash2(vec2 p) {
+  p = vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)));
+  return -1.0 + 2.0 * fract(sin(p) * 43758.5453123);
+}
+
+// 2D Perlin-style gradient noise
+float noise(vec2 p) {
+  vec2 i = floor(p);
+  vec2 f = fract(p);
+  vec2 u = f * f * (3.0 - 2.0 * f);
+  return mix(
+    mix(dot(hash2(i + vec2(0.0, 0.0)), f - vec2(0.0, 0.0)),
+        dot(hash2(i + vec2(1.0, 0.0)), f - vec2(1.0, 0.0)), u.x),
+    mix(dot(hash2(i + vec2(0.0, 1.0)), f - vec2(0.0, 1.0)),
+        dot(hash2(i + vec2(1.0, 1.0)), f - vec2(1.0, 1.0)), u.x),
+    u.y
+  );
+}
+
+// 4-Octave Fractal Brownian Motion with rotation matrix to avoid grid artifacts
+float fbm(vec2 p) {
+  float v = 0.0;
+  float a = 0.5;
+  mat2 rot = mat2(0.80, 0.60, -0.60, 0.80);
+  for (int i = 0; i < 4; i++) {
+    v += a * (noise(p) * 0.5 + 0.5);
+    p = rot * p * 2.02;
+    a *= 0.5;
+  }
+  return v;
+}
+
+void main() {
+  vec2 uv = gl_FragCoord.xy / u_resolution.xy;
+  vec2 aspectUV = uv;
+  aspectUV.x *= u_resolution.x / u_resolution.y;
+
+  // Slow organic time speeds
+  float t = u_time * 0.028;
+  float scrollY = u_scroll * 0.00018;
+
+  // Domain warping for fluid smoke physics:
+  // p -> q (large drift currents) -> r (swirling tendrils) -> final smoke density
+  vec2 p = aspectUV * 1.6;
+  p.y += scrollY;
+
+  // Layer 1: Slow horizontal and diagonal drift
+  vec2 q = vec2(
+    fbm(p + vec2(t * 0.35, t * 0.15)),
+    fbm(p + vec2(5.2, 1.3) + vec2(-t * 0.28, t * 0.12))
+  );
+
+  // Layer 2: Swirling organic smoke wisps
+  vec2 r = vec2(
+    fbm(p + 2.8 * q + vec2(1.7, 9.2) + vec2(t * 0.22, -t * 0.30)),
+    fbm(p + 2.8 * q + vec2(8.3, 2.8) + vec2(-t * 0.18, t * 0.25))
+  );
+
+  // Main volumetric smoke density field
+  float mainSmoke = fbm(p + 2.4 * r);
+
+  // Layer 3: Finer atmospheric vapor wisps
+  float fineVapor = fbm(p * 2.4 + r * 1.6 + vec2(-t * 0.4, t * 0.35));
+
+  // Volumetric density thresholds (clear organic shapes with soft edges)
+  float smokeMask = smoothstep(0.25, 0.70, mainSmoke);
+  float vaporMask = smoothstep(0.32, 0.65, fineVapor) * 0.45;
+  float totalVapor = clamp(smokeMask + vaporMask, 0.0, 1.0);
+
+  // Soft edge vignette so smoke naturally lives within the frame
+  vec2 borderFade = uv * (1.0 - uv);
+  float edgeWeight = clamp(borderFade.x * borderFade.y * 24.0, 0.0, 1.0);
+  totalVapor *= edgeWeight;
+
+  // Atmospheric Light Source Calculation
+  vec2 lightPos = u_light_pos;
+  lightPos.x *= u_resolution.x / u_resolution.y;
+  float distToLight = length(aspectUV - lightPos);
+  float lightCone = exp(-distToLight * 1.5);
+
+  // Broad ambient red diffusion
+  vec2 centerPos = vec2(0.5 * u_resolution.x / u_resolution.y, 0.5);
+  float ambientRed = exp(-length(aspectUV - centerPos) * 1.1) * 0.35;
+
+  // Smoke color grading:
+  // Base vapor is subtle dark-slate atmospheric smoke
+  // Red light illuminates portions of the smoke organically
+  vec3 darkVapor = vec3(0.09, 0.09, 0.11);
+  vec3 redIllumination = vec3(0.96, 0.16, 0.28);
+
+  float redLightFactor = clamp((lightCone * 0.75 + ambientRed * 0.25) * u_intensity, 0.0, 1.0);
+  vec3 illuminatedSmoke = mix(darkVapor, redIllumination, redLightFactor);
+
+  // Rare subtle emerald green trace in the bottom corner (≤5%)
+  vec2 greenPos = vec2(0.10 * u_resolution.x / u_resolution.y, 0.90);
+  float greenTrace = exp(-length(aspectUV - greenPos) * 2.2) * 0.22;
+  illuminatedSmoke = mix(illuminatedSmoke, vec3(0.0, 0.38, 0.20), greenTrace * u_intensity);
+
+  // Net visible smoke alpha (typically 0.15 - 0.48)
+  float alpha = clamp(totalVapor * u_fog_opacity * 1.35, 0.0, 0.85);
+
+  // Output with premultiplied alpha for clean additive/translucent blending over black
+  gl_FragColor = vec4(illuminatedSmoke * alpha, alpha);
+}
+`;
+
 export default function AtmosphericFog({ activeChapter }) {
-  const envRef = useRef(null);
-  const atmoA = useRef(null);
-  const atmoB = useRef(null);
-  const atmoC = useRef(null);
-  const greenAtmo = useRef(null);
   const canvasRef = useRef(null);
 
-  // Scroll & Momentum tracking
+  // Scroll tracking with smooth inertia
   const scrollYRef = useRef(0);
-  const lastScrollYRef = useRef(0);
-  const scrollVelocityRef = useRef(0);
-  const smoothedVelocityRef = useRef(0);
+  const targetScrollYRef = useRef(0);
+  const smoothedScrollRef = useRef(0);
 
   // Lerping animation state
   const targetAtmoRef = useRef(CHAPTER_ATMOSPHERE['00']);
-  const lerpedIntensity = useRef(0.28);
-  const lerpedFogOpacity = useRef(0.18);
-  const lerpedGlowX = useRef(35);
-  const lerpedGlowY = useRef(65);
-  const lerpedVaporCount = useRef(22);
+  const currentIntensity = useRef(0.38);
+  const currentFogOpacity = useRef(0.38);
+  const currentLightX = useRef(0.45);
+  const currentLightY = useRef(0.52);
 
-  // Particles state for Layer 3 (Near Atmospheric Vapor & Micro-Dust)
-  const particlesRef = useRef([]);
-
-  // 1. Scroll tracking with momentum
+  // Scroll listener
   useEffect(() => {
-    let ticking = false;
-    const onScroll = () => {
-      scrollYRef.current = window.scrollY || window.pageYOffset;
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          scrollVelocityRef.current = scrollYRef.current - lastScrollYRef.current;
-          lastScrollYRef.current = scrollYRef.current;
-          ticking = false;
-        });
-        ticking = true;
-      }
+    const handleScroll = () => {
+      targetScrollYRef.current = window.scrollY || window.pageYOffset;
     };
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // 2. Chapter target updates (continuous smooth transition)
+  // Chapter target updates (continuous smooth transition)
   useEffect(() => {
     const id = normalizeChapter(activeChapter);
     targetAtmoRef.current = CHAPTER_ATMOSPHERE[id] || CHAPTER_ATMOSPHERE['00'];
   }, [activeChapter]);
 
-  // 3. Vapor & Micro-Dust Canvas Engine (Layer 3)
+  // WebGL Atmospheric Smoke Engine
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+
+    // Check for prefers-reduced-motion
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const gl =
+      canvas.getContext('webgl', {
+        alpha: true,
+        antialias: false,
+        depth: false,
+        stencil: false,
+        premultipliedAlpha: true,
+        powerPreference: 'high-performance',
+      }) || canvas.getContext('experimental-webgl');
+
     let animId;
 
-    let width = (canvas.width = window.innerWidth);
-    let height = (canvas.height = window.innerHeight);
+    // If WebGL is not available, run Canvas 2D fallback
+    if (!gl) {
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
 
-    const onResize = () => {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-    };
-    window.addEventListener('resize', onResize, { passive: true });
+      let width = (canvas.width = window.innerWidth);
+      let height = (canvas.height = window.innerHeight);
 
-    // Initialize atmospheric vapor particles
-    const MAX_VAPOR = window.innerWidth < 768 ? 24 : 52;
-    particlesRef.current = Array.from({ length: MAX_VAPOR }, () => ({
-      x: Math.random() * width,
-      y: Math.random() * height,
-      vx: (Math.random() - 0.5) * 0.18,
-      vy: (Math.random() - 0.5) * 0.15 - 0.05, // gentle natural upward rise
-      radius: Math.random() * 1.8 + 0.6,
-      baseAlpha: Math.random() * 0.35 + 0.12,
-      phase: Math.random() * Math.PI * 2,
-      hueType: Math.random() > 0.22 ? 'red' : Math.random() > 0.5 ? 'warm' : 'green',
-    }));
+      const onResize = () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      };
+      window.addEventListener('resize', onResize);
 
-    const lerp = (a, b, t) => a + (b - a) * t;
+      // Procedural 2D smoke puffs fallback
+      const puffs = Array.from({ length: 18 }, () => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        radius: Math.random() * 250 + 150,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.2 - 0.1,
+        alpha: Math.random() * 0.15 + 0.1,
+        phase: Math.random() * Math.PI * 2,
+      }));
 
-    const renderLoop = (time) => {
-      const t = targetAtmoRef.current;
-      const LERP_SPEED = 0.015; // Slow, cinematic interpolation (3-4 seconds per change)
+      const render2D = (time) => {
+        ctx.clearRect(0, 0, width, height);
+        const t = targetAtmoRef.current;
+        currentIntensity.current += (t.intensity - currentIntensity.current) * 0.015;
+        currentFogOpacity.current += (t.fogOpacity - currentFogOpacity.current) * 0.015;
 
-      lerpedIntensity.current = lerp(lerpedIntensity.current, t.intensity, LERP_SPEED);
-      lerpedFogOpacity.current = lerp(lerpedFogOpacity.current, t.fogOpacity, LERP_SPEED);
-      lerpedGlowX.current = lerp(lerpedGlowX.current, t.glowPos[0], LERP_SPEED);
-      lerpedGlowY.current = lerp(lerpedGlowY.current, t.glowPos[1], LERP_SPEED);
-      lerpedVaporCount.current = lerp(lerpedVaporCount.current, t.vaporCount, LERP_SPEED);
+        for (let i = 0; i < puffs.length; i++) {
+          const p = puffs[i];
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.x < -p.radius) p.x = width + p.radius;
+          if (p.x > width + p.radius) p.x = -p.radius;
+          if (p.y < -p.radius) p.y = height + p.radius;
+          if (p.y > height + p.radius) p.y = -p.radius;
 
-      // Smooth scroll velocity damping for subtle momentum
-      smoothedVelocityRef.current = lerp(
-        smoothedVelocityRef.current,
-        scrollVelocityRef.current * 0.06,
-        0.08
-      );
-      scrollVelocityRef.current *= 0.92; // damp naturally
+          const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
+          const a = p.alpha * currentFogOpacity.current;
+          grad.addColorStop(0, `rgba(255, 35, 60, ${a * currentIntensity.current * 0.8})`);
+          grad.addColorStop(0.5, `rgba(40, 20, 25, ${a * 0.5})`);
+          grad.addColorStop(1, 'rgba(0,0,0,0)');
 
-      // Continuous slow scroll drift on CSS layers (very subtle 1.2% offset)
-      const scrollShift = scrollYRef.current * 0.012;
-      if (envRef.current) {
-        envRef.current.style.setProperty('--scroll-drift', `${scrollShift}px`);
-        envRef.current.style.setProperty('--fog-base-opacity', lerpedFogOpacity.current);
-      }
-
-      // Update Layer 1: Atmospheric Glows
-      if (atmoA.current) {
-        const ox = lerpedGlowX.current;
-        const oy = lerpedGlowY.current;
-        atmoA.current.style.opacity = lerpedIntensity.current * 0.95;
-        atmoA.current.style.left = `${ox - 30}%`;
-        atmoA.current.style.top = `${oy - 30}%`;
-      }
-
-      if (atmoB.current) {
-        const ox = 100 - lerpedGlowX.current;
-        const oy = 100 - lerpedGlowY.current;
-        atmoB.current.style.opacity = lerpedIntensity.current * 0.65;
-        atmoB.current.style.left = `${ox - 30}%`;
-        atmoB.current.style.top = `${oy - 20}%`;
-      }
-
-      if (atmoC.current) {
-        atmoC.current.style.opacity = lerpedIntensity.current * 0.45;
-      }
-
-      if (greenAtmo.current) {
-        greenAtmo.current.style.opacity = lerpedIntensity.current * 0.22;
-      }
-
-      // Render Layer 3: Atmospheric Vapor Canvas
-      ctx.clearRect(0, 0, width, height);
-
-      const activeCount = Math.min(
-        particlesRef.current.length,
-        Math.floor(lerpedVaporCount.current * (window.innerWidth < 768 ? 0.6 : 1.1))
-      );
-      const intensity = lerpedIntensity.current;
-      const momentumY = smoothedVelocityRef.current;
-
-      for (let i = 0; i < activeCount; i++) {
-        const p = particlesRef.current[i];
-
-        // Organic Brownian motion + subtle scroll momentum
-        p.x += p.vx + Math.sin(time * 0.0006 + p.phase) * 0.15;
-        p.y += p.vy - momentumY + Math.cos(time * 0.0005 + p.phase) * 0.12;
-
-        // Wrap gently around edges
-        if (p.x < -20) p.x = width + 20;
-        if (p.x > width + 20) p.x = -20;
-        if (p.y < -20) p.y = height + 20;
-        if (p.y > height + 20) p.y = -20;
-
-        // Soft pulsating alpha
-        const pulse = 0.8 + Math.sin(time * 0.0012 + p.phase) * 0.2;
-        const alpha = p.baseAlpha * intensity * pulse;
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-
-        if (p.hueType === 'red') {
-          ctx.fillStyle = `rgba(255, 35, 60, ${alpha * 0.85})`;
-        } else if (p.hueType === 'warm') {
-          ctx.fillStyle = `rgba(240, 220, 210, ${alpha * 0.55})`;
-        } else {
-          ctx.fillStyle = `rgba(0, 81, 46, ${alpha * 0.65})`;
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fill();
         }
-        ctx.fill();
-      }
 
-      animId = requestAnimationFrame(renderLoop);
+        if (!prefersReducedMotion) {
+          animId = requestAnimationFrame(render2D);
+        }
+      };
+
+      animId = requestAnimationFrame(render2D);
+      return () => {
+        window.removeEventListener('resize', onResize);
+        if (animId) cancelAnimationFrame(animId);
+      };
+    }
+
+    // --- WebGL Shader Setup ---
+    function compileShader(type, source) {
+      const shader = gl.createShader(type);
+      gl.shaderSource(shader, source);
+      gl.compileShader(shader);
+      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+        console.error('Shader compile error:', gl.getShaderInfoLog(shader));
+        gl.deleteShader(shader);
+        return null;
+      }
+      return shader;
+    }
+
+    const vs = compileShader(gl.VERTEX_SHADER, VS_SOURCE);
+    const fs = compileShader(gl.FRAGMENT_SHADER, FS_SOURCE);
+    if (!vs || !fs) return;
+
+    const program = gl.createProgram();
+    gl.attachShader(program, vs);
+    gl.attachShader(program, fs);
+    gl.linkProgram(program);
+
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      console.error('Program link error:', gl.getProgramInfoLog(program));
+      return;
+    }
+
+    gl.useProgram(program);
+
+    // Fullscreen quad buffer
+    const buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]),
+      gl.STATIC_DRAW
+    );
+
+    const aPos = gl.getAttribLocation(program, 'a_position');
+    gl.enableVertexAttribArray(aPos);
+    gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+
+    // Uniform locations
+    const uRes = gl.getUniformLocation(program, 'u_resolution');
+    const uTime = gl.getUniformLocation(program, 'u_time');
+    const uScroll = gl.getUniformLocation(program, 'u_scroll');
+    const uIntensity = gl.getUniformLocation(program, 'u_intensity');
+    const uFogOpacity = gl.getUniformLocation(program, 'u_fog_opacity');
+    const uLightPos = gl.getUniformLocation(program, 'u_light_pos');
+
+    // Handle canvas dimensions with Retina DPR capping
+    let width = 0;
+    let height = 0;
+
+    const resize = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      width = Math.floor(window.innerWidth * dpr);
+      height = Math.floor(window.innerHeight * dpr);
+      if (canvas.width !== width || canvas.height !== height) {
+        canvas.width = width;
+        canvas.height = height;
+        gl.viewport(0, 0, width, height);
+      }
     };
 
-    animId = requestAnimationFrame(renderLoop);
+    window.addEventListener('resize', resize, { passive: true });
+    resize();
+
+    // Enable premultiplied alpha blending
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+
+    let startTime = performance.now();
+
+    const render = (now) => {
+      const elapsedTime = (now - startTime) * 0.001;
+
+      // Smooth inertia on scroll
+      smoothedScrollRef.current += (targetScrollYRef.current - smoothedScrollRef.current) * 0.06;
+
+      // Smooth chapter interpolation (takes ~3.5s per transition)
+      const t = targetAtmoRef.current;
+      const LERP_RATE = 0.015;
+
+      currentIntensity.current += (t.intensity - currentIntensity.current) * LERP_RATE;
+      currentFogOpacity.current += (t.fogOpacity - currentFogOpacity.current) * LERP_RATE;
+      currentLightX.current += (t.lightPos[0] - currentLightX.current) * LERP_RATE;
+      currentLightY.current += (t.lightPos[1] - currentLightY.current) * LERP_RATE;
+
+      gl.useProgram(program);
+      gl.uniform2f(uRes, width, height);
+      gl.uniform1f(uTime, prefersReducedMotion ? 12.0 : elapsedTime);
+      gl.uniform1f(uScroll, smoothedScrollRef.current);
+      gl.uniform1f(uIntensity, currentIntensity.current);
+      gl.uniform1f(uFogOpacity, currentFogOpacity.current);
+      gl.uniform2f(uLightPos, currentLightX.current, currentLightY.current);
+
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+      if (!prefersReducedMotion) {
+        animId = requestAnimationFrame(render);
+      }
+    };
+
+    animId = requestAnimationFrame(render);
 
     return () => {
-      window.removeEventListener('resize', onResize);
+      window.removeEventListener('resize', resize);
       if (animId) cancelAnimationFrame(animId);
+      gl.deleteProgram(program);
+      gl.deleteShader(vs);
+      gl.deleteShader(fs);
+      gl.deleteBuffer(buffer);
     };
   }, []);
 
   return (
-    <div
-      ref={envRef}
-      className="atmospheric-fog-env"
-      aria-hidden="true"
-      role="presentation"
-    >
-      {/* ================================================================
-          LAYER 1: EXPANSIVE LIGHT RED ATMOSPHERIC BLOOM (Background Fog)
-          ================================================================ */}
-      <div ref={atmoA} className="atmo-glow atmo-glow--primary" />
-      <div ref={atmoB} className="atmo-glow atmo-glow--secondary" />
-      <div ref={atmoC} className="atmo-glow atmo-glow--tertiary" />
+    <div className="atmospheric-fog-env" aria-hidden="true" role="presentation">
+      {/* High-Performance WebGL Atmospheric Smoke Canvas */}
+      <canvas ref={canvasRef} className="global-atmospheric-canvas" />
 
-      {/* Deep green subtle accent — rare, cinematic trace */}
-      <div ref={greenAtmo} className="atmo-glow atmo-glow--green" />
-
-      {/* ================================================================
-          LAYER 2: DRIFTING MID-LEVEL ORGANIC FOG / SMOKE
-          Multiple asynchronous speeds, directions, and scales
-          ================================================================ */}
-      {/* Drift 1: Slow horizontal L -> R */}
-      <div className="fog-blob fog-blob--1" />
-      {/* Drift 2: Slow diagonal R -> L */}
-      <div className="fog-blob fog-blob--2" />
-      {/* Drift 3: Wide mid-level translucent smoke sheet */}
-      <div className="fog-blob fog-blob--3" />
-      {/* Drift 4: Upward rising soft organic wisp */}
-      <div className="fog-blob fog-blob--4" />
-      {/* Drift 5: Gentle expanding and fading cloud */}
-      <div className="fog-blob fog-blob--5" />
-      {/* Drift 6: Ambient low-altitude counter drift */}
-      <div className="fog-blob fog-blob--6" />
-
-      {/* ================================================================
-          LAYER 3: NEAR ATMOSPHERIC VAPOR & PARTICLES CANVAS
-          Continuous floating vapor motes responding to scroll momentum
-          ================================================================ */}
-      <canvas ref={canvasRef} className="atmo-vapor-canvas" />
-
-      {/* ================================================================
-          LAYER 4: AUTHENTIC 35mm FILM GRAIN TEXTURE
-          Prevents gradient banding and provides cinematic documentary feel
-          ================================================================ */}
+      {/* Atmospheric 35mm Fine Film Grain */}
       <div className="atmo-grain-overlay" />
     </div>
   );
