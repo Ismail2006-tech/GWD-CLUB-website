@@ -52,7 +52,7 @@ export const TEAM_BRANCHES = [
     name: "TECHNICAL TEAM",
     category: "SYSTEMS & DIGITAL INFRASTRUCTURE",
     status: "ARCHIVE ACTIVE",
-    photoUrl: null,
+    photoUrl: "/photos/team-technical.jpg",
     description: "Developing digital experiences, platforms, and technological infrastructure for GWD.",
     members: [],
   },
