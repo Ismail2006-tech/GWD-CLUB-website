@@ -213,13 +213,7 @@
   text-transform: uppercase;
 }
 
-/* Branch Information Grid */
-.tm-info-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 32px;
-}
-
+/* Branch Information — Mission only */
 .tm-info-block {
   display: flex;
   flex-direction: column;
@@ -236,18 +230,63 @@
 
 .tm-info-value {
   font-family: var(--font-display, "Space Grotesk", sans-serif);
-  font-size: 0.98rem;
-  font-weight: 600;
+  font-size: 1.05rem;
+  font-weight: 500;
   color: #f2f2f2;
-  line-height: 1.5;
+  line-height: 1.7;
   margin: 0;
 }
 
-.tm-info-lead {
-  color: #ff1b3c;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  font-family: var(--font-display, "Orbitron", sans-serif);
+/* ── Team Group Photo ──────────────────────────────── */
+.tm-photo-frame {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: #0a0a0a;
+  /* Feathered edges blending into section background */
+  -webkit-mask-image: radial-gradient(ellipse 95% 95% at 50% 50%, black 70%, transparent 100%);
+  mask-image: radial-gradient(ellipse 95% 95% at 50% 50%, black 70%, transparent 100%);
+}
+
+.tm-team-photo {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  opacity: 0;
+  transform: scale(1.02);
+  filter: brightness(0.92) contrast(1.04);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tm-team-photo.revealed {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.tm-photo-pending {
+  width: 100%;
+  padding: 40px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  background: rgba(12, 12, 12, 0.6);
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+.tm-pending-tag {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  color: #8a8a8a;
+}
+
+.tm-pending-label {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  color: rgba(242, 242, 242, 0.35);
 }
 
 /* Roster Archive Status Box */
@@ -334,9 +373,9 @@
     gap: 20px;
   }
 
-  .tm-info-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
+  .tm-photo-frame {
+    -webkit-mask-image: none;
+    mask-image: none;
   }
 
   .tm-main-title {
