@@ -1,0 +1,37 @@
+/* ================================================================
+   GWD CLUB — SYSTEM 2: CONTINUOUS BOTTOM ATMOSPHERE SMOKE CSS
+
+   A WebGL canvas fixed to the bottom of the viewport.
+   Sits just above the AtmosphericFog backdrop (z-index: 2) but
+   strictly behind all website content (z-index is low).
+   pointer-events: none — zero interference.
+   ================================================================ */
+
+.gwd-bottom-smoke-canvas {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  /* Covers bottom 25% of viewport. WebGL fragment shader handles
+     the top-edge natural dissolve into transparency. */
+  height: 28vh;
+  z-index: 2;            /* above AtmosphericFog (z:0), below content (z:10+) */
+  pointer-events: none;
+  display: block;
+  /* The canvas renders with alpha so it composites cleanly */
+  mix-blend-mode: screen;
+}
+
+/* Mobile: reduce height slightly for performance */
+@media (max-width: 768px) {
+  .gwd-bottom-smoke-canvas {
+    height: 22vh;
+  }
+}
+
+/* Respect reduced-motion: keep the canvas but it won't animate */
+@media (prefers-reduced-motion: reduce) {
+  .gwd-bottom-smoke-canvas {
+    opacity: 0.4;
+  }
+}

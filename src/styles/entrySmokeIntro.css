@@ -1,30 +1,29 @@
 /* ================================================================
-   GWD CLUB — CINEMATIC PAGE ENTRY SMOKE INTRO
+   GWD CLUB — SYSTEM 1: CINEMATIC ENTRY SMOKE OVERLAY CSS
    
-   Full-screen pure black backdrop with moving organic smoke.
-   Exists ONLY for the initial page entry.
-   Unmounts completely after completion.
+   Full-screen opaque black canvas. Sits above everything during
+   the intro. Unmounts completely after smoke exits.
    ================================================================ */
 
-.intro-smoke-overlay {
+.gwd-entry-smoke-overlay {
   position: fixed;
   inset: 0;
   width: 100vw;
   height: 100vh;
-  background-color: #000000;
-  z-index: 99999; /* Completely conceals all page content during intro */
+  z-index: 99999;        /* above everything */
+  background: #000000;
   overflow: hidden;
-  pointer-events: auto; /* Prevents interaction during the 3.8s intro */
+  pointer-events: auto;  /* blocks clicks during intro */
   opacity: 1;
-  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.intro-smoke-overlay.fade-out {
+.gwd-entry-smoke-overlay.gwd-entry-fading {
   opacity: 0;
   pointer-events: none;
 }
 
-.intro-smoke-canvas {
+.gwd-entry-smoke-canvas {
   position: absolute;
   inset: 0;
   width: 100%;
