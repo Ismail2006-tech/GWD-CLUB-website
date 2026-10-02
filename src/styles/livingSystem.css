@@ -237,6 +237,96 @@
   margin: 0;
 }
 
+/* ── Lead & Members Section ─────────────────────────── */
+.tm-lead-members-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 32px;
+  align-items: start;
+  padding: 24px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.tm-lead-block {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 220px;
+}
+
+.tm-lead-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.tm-lead-name {
+  font-family: var(--font-display, "Orbitron", sans-serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #ff1b3c;
+  line-height: 1.3;
+  margin: 0;
+}
+
+.tm-lead-sub {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  color: rgba(255, 27, 60, 0.7);
+}
+
+.tm-members-block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tm-members-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tm-member-pill {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: #f2f2f2;
+  background: rgba(22, 22, 22, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 5px 12px;
+  white-space: nowrap;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.tm-member-pill:hover {
+  border-color: rgba(255, 27, 60, 0.5);
+  color: #ffffff;
+}
+
+.tm-member-count {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  color: #8a8a8a;
+}
+
+@media (max-width: 768px) {
+  .tm-lead-members-row {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .tm-lead-block {
+    min-width: unset;
+  }
+}
+
 /* ── Team Group Photo ──────────────────────────────── */
 .tm-photo-frame {
   position: relative;

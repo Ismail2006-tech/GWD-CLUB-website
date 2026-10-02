@@ -4,11 +4,11 @@ import '../styles/livingSystem.css';
 
 /**
  * Chapter 07 — TEAM MEMBERS
- * 5 official domain branches with cinematic team photos and mission scope.
+ * 5 official domain branches with verified leads, members, cinematic photos, and mission scope.
  */
 
 export default function LivingSystemSection({ id = "members" }) {
-  const [activeBranchId, setActiveBranchId] = useState('management');
+  const [activeBranchId, setActiveBranchId] = useState('event-management');
   const [photoRevealed, setPhotoRevealed] = useState(false);
   const photoRef = useRef(null);
 
@@ -90,10 +90,41 @@ export default function LivingSystemSection({ id = "members" }) {
             <span className="tm-panel-category">{currentBranch.category}</span>
           </div>
 
-          {/* Mission & Scope only — Domain Leadership removed */}
+          {/* Mission & Scope */}
           <div className="tm-info-block">
             <span className="tm-info-label">MISSION &amp; SCOPE</span>
             <p className="tm-info-value">{currentBranch.description}</p>
+          </div>
+
+          {/* Leads & Members Roster */}
+          <div className="tm-lead-members-row">
+            {/* Domain Lead(s) */}
+            <div className="tm-lead-block">
+              <span className="tm-info-label">
+                {currentBranch.leads && currentBranch.leads.length > 1 ? 'DOMAIN LEADS' : 'DOMAIN LEAD'}
+              </span>
+              {currentBranch.leads && currentBranch.leads.map((l, idx) => (
+                <div key={idx} className="tm-lead-item">
+                  <p className="tm-lead-name">{l.name}</p>
+                  <span className="tm-lead-sub">{l.role}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Team Members List */}
+            <div className="tm-members-block">
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
+                <span className="tm-info-label">TEAM MEMBERS</span>
+                <span className="tm-member-count">{currentBranch.members.length} VERIFIED</span>
+              </div>
+              <ul className="tm-members-list">
+                {currentBranch.members.map((member, i) => (
+                  <li key={i} className="tm-member-pill">
+                    {member}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
           {/* Team Group Photo (cinematic reveal) */}
@@ -121,7 +152,7 @@ export default function LivingSystemSection({ id = "members" }) {
               <div>
                 <span className="tm-roster-title">MEMBER ARCHIVE // {currentBranch.name}</span>
                 <p className="tm-roster-desc">
-                  Domain documentation and active member profiles are cataloged as official records are verified.
+                  Official roster cataloged: {currentBranch.leads?.map(l => l.name).join(' & ')} (Lead) with {currentBranch.members?.length} active members.
                 </p>
               </div>
             </div>

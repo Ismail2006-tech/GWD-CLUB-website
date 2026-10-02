@@ -1,20 +1,25 @@
 /**
  * CHAPTER 07 — TEAM MEMBERS: BRANCH DATA
- * 
- * Strict Content Rule:
- * Only verified real data. No invented members or fake data.
+ * Verified real data only. No invented information.
  */
 
 export const TEAM_BRANCHES = [
   {
-    id: "management",
+    id: "event-management",
     code: "BRANCH 01",
-    name: "MANAGEMENT TEAM",
-    category: "EXECUTIVE & OPERATIONS",
+    name: "EVENT MANAGEMENT TEAM",
+    category: "OPERATIONS & EXPERIENCES",
     status: "ARCHIVE ACTIVE",
     photoUrl: "/photos/team-management.jpg",
     description: "Orchestrating strategy, operations, and cross-team execution across all GWD initiatives.",
-    members: [],
+    leads: [
+      { name: "Bhavya Choudhary", role: "Domain Lead" }
+    ],
+    members: [
+      "Airah Falak", "Akshithi Begum", "Chittapur Harini", "Vaddineni Akhil",
+      "Sai Jatan", "Sai Sankeerth", "M. Rithish", "V. Pushyani",
+      "P. Cheekruthi", "Avula Nikhil", "M. Harshith", "Chandu Charan Sai",
+    ],
   },
   {
     id: "marketing",
@@ -24,7 +29,15 @@ export const TEAM_BRANCHES = [
     status: "ARCHIVE ACTIVE",
     photoUrl: "/photos/team-marketing.jpg",
     description: "Driving brand identity, campaign narratives, community engagement, and digital presence.",
-    members: [],
+    leads: [
+      { name: "Anvitha Reddy", role: "Domain Lead" }
+    ],
+    members: [
+      "Anwita Mishra", "Muqtadir", "Bhavani Shankar", "Amaan Ahmed Shaik",
+      "Hima Bindu", "Rushika", "Syed Anas", "Saad Saleem",
+      "Junaid", "Aribah Azeem", "Mohammad M. Alaam", "Hufsah Tabassum",
+      "T. Harshatapasvi",
+    ],
   },
   {
     id: "pr",
@@ -34,7 +47,12 @@ export const TEAM_BRANCHES = [
     status: "ARCHIVE ACTIVE",
     photoUrl: "/photos/team-pr.jpg",
     description: "Building institutional connections, media partnerships, and official communications.",
-    members: [],
+    leads: [
+      { name: "Tuba Azeem", role: "Domain Lead" }
+    ],
+    members: [
+      "Srihitha", "A. Vaishanvi", "Mohammad Affan", "Mohammad Azlan Azhar",
+    ],
   },
   {
     id: "creative",
@@ -44,7 +62,15 @@ export const TEAM_BRANCHES = [
     status: "ARCHIVE ACTIVE",
     photoUrl: "/photos/team-creative.jpg",
     description: "Crafting visual design, cinematic storytelling, photography, and brand aesthetics.",
-    members: [],
+    leads: [
+      { name: "Nishta", role: "Creative Lead" },
+      { name: "Burhan", role: "Visual Media Lead" }
+    ],
+    members: [
+      "Shaik Sameera Tanveer", "Shiva Kumar", "H. Moukthik", "Ayush Kumar",
+      "Aakaram Akshitha", "G. Aishwarya", "K. Varshitha Yadav",
+      "Pasala Veersadhwik", "T. Sreenidhi",
+    ],
   },
   {
     id: "technical",
@@ -54,6 +80,12 @@ export const TEAM_BRANCHES = [
     status: "ARCHIVE ACTIVE",
     photoUrl: "/photos/team-technical.jpg",
     description: "Developing digital experiences, platforms, and technological infrastructure for GWD.",
-    members: [],
+    leads: [
+      { name: "Deekshit", role: "Domain Lead" }
+    ],
+    members: [
+      "Cheerath Aniketh", "N. Sree Vedha Sahasra", "Moinuddin",
+      "Vasundhara", "U. Mohitha", "Y. Adhithya Vardhan Reddy", "Sai Srujan",
+    ],
   },
 ];
