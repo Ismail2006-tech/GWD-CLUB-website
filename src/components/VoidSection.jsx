@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import '../styles/void.css';
 
 /**
@@ -21,7 +21,7 @@ import '../styles/void.css';
 // Module-level guard: persists for the entire page session (survives re-renders / re-mounts)
 let introCompleted = false;
 
-export default function VoidSection({ onEnter, introReady }) {
+export default function VoidSection({ onEnter }) {
   const canvasRef = useRef(null);
 
   // 4 independent reveal states — if intro already finished, initialize true immediately
@@ -30,25 +30,22 @@ export default function VoidSection({ onEnter, introReady }) {
   const [manifestoVisible, setManifestoVisible] = useState(() => introCompleted);
   const [ctaVisible, setCtaVisible]             = useState(() => introCompleted);
 
-  // One-time text-reveal sequencer.
-  // Waits until introReady (System 1 smoke fully gone) before starting.
-  // Never replays once introCompleted is true.
+  // One-time intro sequencer — never runs again once introCompleted is true
   useEffect(() => {
-    if (introCompleted) return; // already done — stay visible
-    if (!introReady) return;   // wait for smoke to leave first
+    if (introCompleted) return;
 
     const ids = [
-      setTimeout(() => setLogoVisible(true),       100),   // near-instant logo fade in
-      setTimeout(() => setTitleVisible(true),      900),   // 0.9s — GWD CLUB
-      setTimeout(() => setManifestoVisible(true),  2000),  // 2.0s — EVERY STORY...
+      setTimeout(() => setLogoVisible(true),        300),   // 0.3s — logo starts fade in
+      setTimeout(() => setTitleVisible(true),       1800),  // 1.8s — GWD CLUB starts fade in
+      setTimeout(() => setManifestoVisible(true),   3200),  // 3.2s — EVERY STORY HAS A BEGINNING.
       setTimeout(() => {
-        setCtaVisible(true);                               // 3.0s — SCROLL TO ENTER
-        introCompleted = true;
-      }, 3000),
+        setCtaVisible(true);                                // 4.3s — SCROLL TO ENTER
+        introCompleted = true;                              // Permanently lock completed state
+      }, 4300),
     ];
 
     return () => ids.forEach(clearTimeout);
-  }, [introReady]);
+  }, []);
 
   // Ambient particle canvas — always running, completely separate from intro
   useEffect(() => {
