@@ -121,12 +121,12 @@ float noise(vec2 p) {
   );
 }
 
-// 4-Octave Fractal Brownian Motion with rotation matrix to avoid grid artifacts
+// 3-Octave Fractal Brownian Motion (was 4 — saves ~25% shader cost)
 float fbm(vec2 p) {
   float v = 0.0;
   float a = 0.52;
   mat2 rot = mat2(0.80, 0.60, -0.60, 0.80);
-  for (int i = 0; i < 4; i++) {
+  for (int i = 0; i < 3; i++) {
     v += a * (noise(p) * 0.5 + 0.5);
     p = rot * p * 2.04;
     a *= 0.50;
@@ -428,9 +428,20 @@ export default function AtmosphericFog({ activeChapter }) {
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
 
-    let startTime = performance.now();
+    let startTime   = performance.now();
+    let lastRender   = 0;
+    const TARGET_FPS = 20;            // Subtle background fog — 20fps is imperceptible
+    const FRAME_MS   = 1000 / TARGET_FPS;
+    const isMobile   = window.innerWidth < 768;
 
     const render = (now) => {
+      // Throttle: skip frame if not enough time has passed
+      if (now - lastRender < FRAME_MS) {
+        animId = requestAnimationFrame(render);
+        return;
+      }
+      lastRender = now;
+
       const elapsedTime = (now - startTime) * 0.001;
 
       // Smooth inertia on scroll

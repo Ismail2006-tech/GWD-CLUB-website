@@ -53,39 +53,51 @@ export default function VoidSection({ onEnter }) {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     let animationFrameId;
+    let frameCount = 0;
 
-    let width = (canvas.width = window.innerWidth);
+    const isMobile = window.innerWidth < 768;
+
+    let width  = (canvas.width  = window.innerWidth);
     let height = (canvas.height = window.innerHeight);
 
     const handleResize = () => {
-      width = canvas.width = window.innerWidth;
+      width  = canvas.width  = window.innerWidth;
       height = canvas.height = window.innerHeight;
     };
-    window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResize, { passive: true });
 
-    // Controlled, minimal particles (subtle green and red)
-    const particleCount = 42;
+    // PERF: Reduced from 42 to 22 particles (12 on mobile).
+    // Colors pre-assigned at init — no Math.random() in render loop.
+    const particleCount = isMobile ? 12 : 22;
     const particles = [];
     for (let i = 0; i < particleCount; i++) {
       particles.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.25,
-        vy: (Math.random() - 0.5) * 0.25,
+        x:      Math.random() * width,
+        y:      Math.random() * height,
+        vx:     (Math.random() - 0.5) * 0.25,
+        vy:     (Math.random() - 0.5) * 0.25,
         radius: Math.random() * 1.5 + 0.5,
-        color: Math.random() > 0.2 ? 'rgba(0, 81, 46, 0.45)' : 'rgba(255, 27, 60, 0.6)',
+        // Pre-assign color at creation — no random per frame
+        color:  Math.random() > 0.2 ? 'rgba(0, 81, 46, 0.40)' : 'rgba(255, 27, 60, 0.55)',
       });
     }
 
     const render = () => {
+      // Skip every other frame on mobile (~30fps)
+      frameCount++;
+      if (isMobile && frameCount % 2 !== 0) {
+        animationFrameId = requestAnimationFrame(render);
+        return;
+      }
+
       ctx.clearRect(0, 0, width, height);
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
         p.x += p.vx;
         p.y += p.vy;
-        if (p.x < 0) p.x = width;
-        if (p.x > width) p.x = 0;
-        if (p.y < 0) p.y = height;
+        if (p.x < 0)      p.x = width;
+        if (p.x > width)  p.x = 0;
+        if (p.y < 0)      p.y = height;
         if (p.y > height) p.y = 0;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);

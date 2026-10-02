@@ -70,8 +70,19 @@ export default function LivingSystemSection() {
     sravya: { x: 0.3, y: 0.5 },
   });
 
-  const lineProgressRef = useRef(0);
+  const lineProgressRef    = useRef(0);
   const networkProgressRef = useRef(0);
+
+  // PERF FIX: Mirror boolean states into refs so drawCanvas never needs
+  // them in its dependency array (preventing loop restarts on every reveal).
+  const aldrinRevealedRef  = useRef(false);
+  const ismailRevealedRef  = useRef(false);
+  const sravyaRevealedRef  = useRef(false);
+
+  // Keep refs in sync with state
+  useEffect(() => { aldrinRevealedRef.current  = aldrinRevealed;  }, [aldrinRevealed]);
+  useEffect(() => { ismailRevealedRef.current  = ismailRevealed;  }, [ismailRevealed]);
+  useEffect(() => { sravyaRevealedRef.current  = sravyaRevealed;  }, [sravyaRevealed]);
 
   const drawCanvas = useCallback(() => {
     const canvas = canvasRef.current;
@@ -87,132 +98,111 @@ export default function LivingSystemSection() {
     const sravyaPx = { x: N.sravya.x * W, y: N.sravya.y * H };
 
     const phase = phaseRef.current;
-    const lp = lineProgressRef.current;
-    const np = networkProgressRef.current;
+    const lp    = lineProgressRef.current;
+    const np    = networkProgressRef.current;
+    // PERF FIX: Read refs, not state — no dep array changes
+    const aR    = aldrinRevealedRef.current;
+    const iR    = ismailRevealedRef.current;
+    const sR    = sravyaRevealedRef.current;
+    // Single Date.now() call per frame (not per node)
+    const now   = Date.now();
 
-    // ── Phase 01: Single red node ──────────────────────────────
-    if (phase >= 0 && aldrinRevealed) {
-      const pulse = Math.sin(Date.now() * 0.003) * 0.3 + 0.7;
-      
-      // Outer pulse ring
+    if (phase >= 0 && aR) {
+      const pulse = Math.sin(now * 0.003) * 0.3 + 0.7;
       ctx.beginPath();
       ctx.arc(aldrinPx.x, aldrinPx.y, 18 + pulse * 6, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(255, 27, 60, ${0.15 * pulse})`;
+      ctx.strokeStyle = `rgba(255,27,60,${(0.15 * pulse).toFixed(3)})`;
       ctx.lineWidth = 1;
       ctx.stroke();
-
-      // Node
       ctx.beginPath();
       ctx.arc(aldrinPx.x, aldrinPx.y, 8, 0, Math.PI * 2);
       ctx.fillStyle = '#ff1b3c';
       ctx.shadowColor = '#ff1b3c';
-      ctx.shadowBlur = 18;
+      ctx.shadowBlur  = 14;
       ctx.fill();
-      ctx.shadowBlur = 0;
+      ctx.shadowBlur  = 0;
     }
 
-    // ── Phase 02: Line travels from Aldrin to Ismail ───────────
-    if (phase >= 1 && aldrinRevealed && lp > 0) {
+    if (phase >= 1 && aR && lp > 0) {
       const ex = aldrinPx.x + (ismailPx.x - aldrinPx.x) * lp;
       const ey = aldrinPx.y + (ismailPx.y - aldrinPx.y) * lp;
-
-      // Travelling line
       ctx.beginPath();
       ctx.moveTo(aldrinPx.x, aldrinPx.y);
       ctx.lineTo(ex, ey);
-      ctx.strokeStyle = 'rgba(255, 27, 60, 0.7)';
-      ctx.lineWidth = 1.5;
+      ctx.strokeStyle = 'rgba(255,27,60,0.7)';
+      ctx.lineWidth   = 1.5;
       ctx.shadowColor = '#ff1b3c';
-      ctx.shadowBlur = 10;
+      ctx.shadowBlur  = 8;
       ctx.stroke();
-      ctx.shadowBlur = 0;
-
-      // Travelling tip glow
+      ctx.shadowBlur  = 0;
       ctx.beginPath();
       ctx.arc(ex, ey, 4, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(255, 27, 60, 0.9)';
+      ctx.fillStyle   = 'rgba(255,27,60,0.9)';
       ctx.shadowColor = '#ff1b3c';
-      ctx.shadowBlur = 14;
+      ctx.shadowBlur  = 12;
       ctx.fill();
-      ctx.shadowBlur = 0;
+      ctx.shadowBlur  = 0;
     }
 
-    // Ismail node — revealed when line reaches him
-    if (phase >= 1 && ismailRevealed) {
-      const pulse2 = Math.sin(Date.now() * 0.0025 + 1) * 0.3 + 0.7;
+    if (phase >= 1 && iR) {
+      const pulse2 = Math.sin(now * 0.0025 + 1) * 0.3 + 0.7;
       ctx.beginPath();
       ctx.arc(ismailPx.x, ismailPx.y, 18 + pulse2 * 6, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(255, 27, 60, ${0.12 * pulse2})`;
+      ctx.strokeStyle = `rgba(255,27,60,${(0.12 * pulse2).toFixed(3)})`;
       ctx.lineWidth = 1;
       ctx.stroke();
-
       ctx.beginPath();
       ctx.arc(ismailPx.x, ismailPx.y, 8, 0, Math.PI * 2);
-      ctx.fillStyle = '#ff1b3c';
+      ctx.fillStyle   = '#ff1b3c';
       ctx.shadowColor = '#ff1b3c';
-      ctx.shadowBlur = 18;
+      ctx.shadowBlur  = 14;
       ctx.fill();
-      ctx.shadowBlur = 0;
+      ctx.shadowBlur  = 0;
     }
 
-    // ── Phase 03: Sravya node + network connections animate ────
-    if (phase >= 2 && sravyaRevealed) {
-      const pulse3 = Math.sin(Date.now() * 0.002 + 2) * 0.3 + 0.7;
+    if (phase >= 2 && sR) {
+      const pulse3 = Math.sin(now * 0.002 + 2) * 0.3 + 0.7;
       ctx.beginPath();
       ctx.arc(sravyaPx.x, sravyaPx.y, 18 + pulse3 * 6, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(0, 81, 46, ${0.2 * pulse3})`;
+      ctx.strokeStyle = `rgba(0,81,46,${(0.2 * pulse3).toFixed(3)})`;
       ctx.lineWidth = 1;
       ctx.stroke();
-
       ctx.beginPath();
       ctx.arc(sravyaPx.x, sravyaPx.y, 7, 0, Math.PI * 2);
-      ctx.fillStyle = '#00512e';
+      ctx.fillStyle   = '#00512e';
       ctx.shadowColor = '#00512e';
-      ctx.shadowBlur = 14;
+      ctx.shadowBlur  = 12;
       ctx.fill();
-      ctx.shadowBlur = 0;
+      ctx.shadowBlur  = 0;
     }
 
-    // Network connections — animate progressively
     if (phase >= 2 && np > 0) {
-      // Aldrin ↔ Sravya (first connection)
       if (np > 0) {
         const fp = Math.min(1, np * 2);
         const ex = aldrinPx.x + (sravyaPx.x - aldrinPx.x) * fp;
         const ey = aldrinPx.y + (sravyaPx.y - aldrinPx.y) * fp;
-        ctx.beginPath();
-        ctx.moveTo(aldrinPx.x, aldrinPx.y);
-        ctx.lineTo(ex, ey);
-        ctx.strokeStyle = `rgba(255, 27, 60, ${Math.min(0.6, fp * 0.6)})`;
-        ctx.lineWidth = 1.2;
-        ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(aldrinPx.x, aldrinPx.y); ctx.lineTo(ex, ey);
+        ctx.strokeStyle = `rgba(255,27,60,${Math.min(0.6, fp * 0.6).toFixed(3)})`;
+        ctx.lineWidth = 1.2; ctx.stroke();
       }
-
-      // Ismail ↔ Sravya (second connection)
       if (np > 0.5) {
         const fp2 = Math.min(1, (np - 0.5) * 2);
         const ex2 = ismailPx.x + (sravyaPx.x - ismailPx.x) * fp2;
         const ey2 = ismailPx.y + (sravyaPx.y - ismailPx.y) * fp2;
-        ctx.beginPath();
-        ctx.moveTo(ismailPx.x, ismailPx.y);
-        ctx.lineTo(ex2, ey2);
-        ctx.strokeStyle = `rgba(255, 27, 60, ${Math.min(0.5, fp2 * 0.5)})`;
-        ctx.lineWidth = 1.2;
-        ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(ismailPx.x, ismailPx.y); ctx.lineTo(ex2, ey2);
+        ctx.strokeStyle = `rgba(255,27,60,${Math.min(0.5, fp2 * 0.5).toFixed(3)})`;
+        ctx.lineWidth = 1.2; ctx.stroke();
       }
-
-      // Aldrin ↔ Ismail (full connection reinforced)
       if (np > 0.7) {
         const alpha = Math.min(0.6, (np - 0.7) * 2);
-        ctx.beginPath();
-        ctx.moveTo(aldrinPx.x, aldrinPx.y);
-        ctx.lineTo(ismailPx.x, ismailPx.y);
-        ctx.strokeStyle = `rgba(255, 27, 60, ${alpha})`;
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(aldrinPx.x, aldrinPx.y); ctx.lineTo(ismailPx.x, ismailPx.y);
+        ctx.strokeStyle = `rgba(255,27,60,${alpha.toFixed(3)})`;
+        ctx.lineWidth = 1.5; ctx.stroke();
       }
     }
-  }, [aldrinRevealed, ismailRevealed, sravyaRevealed]);
+  // PERF FIX: Empty dep array — drawCanvas reads only refs, never causes loop restarts
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Canvas sizing
   useEffect(() => {

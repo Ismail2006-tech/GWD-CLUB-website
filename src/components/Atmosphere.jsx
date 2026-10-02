@@ -1,45 +1,68 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import '../styles/atmosphere.css';
 
 export default function Atmosphere() {
-  const [mousePos, setMousePos] = useState({ x: -500, y: -500 });
-  const [soundActive, setSoundActive] = useState(false);
+  // PERF FIX: Use ref + direct DOM style update instead of setState on every mousemove.
+  // setState triggers React re-render every pixel — this is a major scroll jank source.
+  const cursorLightRef = useRef(null);
+  const rafRef = useRef(null);
+  const mouseRef = useRef({ x: -500, y: -500 });
+  const currentRef = useRef({ x: -500, y: -500 });
+
   const audioCtxRef = useRef(null);
   const gainNodeRef = useRef(null);
+  const soundActiveRef = useRef(false);
+  const dotRef = useRef(null);
+  const labelRef = useRef(null);
 
   useEffect(() => {
     const handleMouseMove = (e) => {
-      setMousePos({ x: e.clientX, y: e.clientY });
+      // Store target position — do NOT call setState
+      mouseRef.current = { x: e.clientX, y: e.clientY };
     };
 
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+
+    // Animate cursor light with smooth lerp using rAF — no React re-renders
+    const LERP = 0.12;
+    const animate = () => {
+      const { x: tx, y: ty } = mouseRef.current;
+      const cx = currentRef.current.x + (tx - currentRef.current.x) * LERP;
+      const cy = currentRef.current.y + (ty - currentRef.current.y) * LERP;
+      currentRef.current = { x: cx, y: cy };
+
+      if (cursorLightRef.current) {
+        cursorLightRef.current.style.transform = `translate(${cx - 160}px, ${cy - 160}px)`;
+      }
+      rafRef.current = requestAnimationFrame(animate);
+    };
+    rafRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
   }, []);
 
-  // Cinematic deep drone sound generation using Web Audio API (Zero external assets, 100% reliable)
   const toggleAudio = () => {
     if (!audioCtxRef.current) {
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
       const ctx = new AudioCtx();
       audioCtxRef.current = ctx;
 
-      // Master Gain
       const masterGain = ctx.createGain();
       masterGain.gain.setValueAtTime(0.001, ctx.currentTime);
       masterGain.connect(ctx.destination);
       gainNodeRef.current = masterGain;
 
-      // Deep Sub Drone (55Hz - A1)
       const osc1 = ctx.createOscillator();
       osc1.type = 'sine';
       osc1.frequency.setValueAtTime(55, ctx.currentTime);
 
-      // Warm Atmospheric Detuned Layer (110Hz - A2)
       const osc2 = ctx.createOscillator();
       osc2.type = 'triangle';
       osc2.frequency.setValueAtTime(110.4, ctx.currentTime);
 
-      // Lowpass Filter for cinematic deep warmth
       const filter = ctx.createBiquadFilter();
       filter.type = 'lowpass';
       filter.frequency.setValueAtTime(180, ctx.currentTime);
@@ -51,22 +74,28 @@ export default function Atmosphere() {
       osc2.connect(filter);
       filter.connect(oscGain);
       oscGain.connect(masterGain);
-
       osc1.start();
       osc2.start();
     }
 
     const ctx = audioCtxRef.current;
-    if (ctx.state === 'suspended') {
-      ctx.resume();
-    }
+    if (ctx.state === 'suspended') ctx.resume();
 
-    if (!soundActive) {
+    const nowActive = !soundActiveRef.current;
+    soundActiveRef.current = nowActive;
+
+    if (nowActive) {
       gainNodeRef.current.gain.setTargetAtTime(0.12, ctx.currentTime, 1.5);
-      setSoundActive(true);
     } else {
       gainNodeRef.current.gain.setTargetAtTime(0.0001, ctx.currentTime, 0.8);
-      setSoundActive(false);
+    }
+
+    // Update DOM directly — no setState needed for a toggle button
+    if (dotRef.current) {
+      dotRef.current.className = `audio-pulse-dot${nowActive ? ' active' : ''}`;
+    }
+    if (labelRef.current) {
+      labelRef.current.textContent = nowActive ? 'AUDIO // 55Hz ACTIVE' : 'AUDIO // OFF';
     }
   };
 
@@ -78,7 +107,7 @@ export default function Atmosphere() {
       {/* Film Grain Filter */}
       <div className="film-grain" />
 
-      {/* Very Subtle Scanlines */}
+      {/* Scanlines (hidden in CSS) */}
       <div className="scanlines" />
 
       {/* Cinematic Vignette */}
@@ -90,26 +119,22 @@ export default function Atmosphere() {
       {/* The Signature Distant Emerald Atmosphere */}
       <div className="ambient-emerald-glow" />
 
-      {/* Mouse Responsive Soft Glow */}
+      {/* Mouse Responsive Soft Glow — positioned via ref, not state */}
       <div
+        ref={cursorLightRef}
         className="cursor-light"
-        style={{
-          left: `${mousePos.x}px`,
-          top: `${mousePos.y}px`,
-        }}
+        style={{ left: 0, top: 0, transform: 'translate(-500px, -500px)' }}
       />
 
-      {/* Audio Atmosphere Toggle (Subtle HUD element) */}
-      <button 
-        className="audio-atmosphere-hud" 
+      {/* Audio Atmosphere Toggle */}
+      <button
+        className="audio-atmosphere-hud"
         onClick={toggleAudio}
-        title={soundActive ? "Mute Cinematic Drone" : "Enable Cinematic Atmosphere"}
+        title="Toggle Cinematic Atmosphere Audio"
         aria-label="Toggle Cinematic Atmosphere Audio"
       >
-        <span className={`audio-pulse-dot ${soundActive ? 'active' : ''}`} />
-        <span className="audio-label">
-          {soundActive ? "AUDIO // 55Hz ACTIVE" : "AUDIO // OFF"}
-        </span>
+        <span ref={dotRef} className="audio-pulse-dot" />
+        <span ref={labelRef} className="audio-label">AUDIO // OFF</span>
       </button>
     </div>
   );

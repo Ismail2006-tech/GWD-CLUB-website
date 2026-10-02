@@ -50,44 +50,32 @@
   pointer-events: none;
 }
 
-/* Tiny Red Light: Slow Autonomous Drift */
+/* Tiny Red Light: Slow Autonomous Drift
+   PERF FIX: Use transform:translate3d instead of top/left (no layout reflow) */
 .drifting-red-light {
   position: absolute;
+  /* Fixed position so transform is the only thing animating */
+  top: 22%;
+  left: 18%;
   width: 4px;
   height: 4px;
   border-radius: 50%;
   background: var(--color-red);
   box-shadow: 
     0 0 10px 3px var(--color-red),
-    0 0 35px 12px var(--color-red-glow),
-    0 0 90px 40px rgba(255, 27, 60, 0.08);
-  animation: slowDriftRed 24s ease-in-out infinite alternate;
+    0 0 28px 10px var(--color-red-glow);
+  animation: slowDriftRed 28s ease-in-out infinite alternate;
   pointer-events: none;
-  opacity: 0.9;
+  opacity: 0.85;
   z-index: 2;
+  will-change: transform, opacity;
 }
 
 @keyframes slowDriftRed {
-  0% {
-    top: 22%;
-    left: 18%;
-    transform: scale(0.9);
-  }
-  30% {
-    top: 55%;
-    left: 42%;
-    transform: scale(1.15);
-  }
-  65% {
-    top: 38%;
-    left: 78%;
-    transform: scale(0.85);
-  }
-  100% {
-    top: 75%;
-    left: 28%;
-    transform: scale(1.05);
-  }
+  0%   { transform: translate3d(0,    0,    0) scale(0.9); }
+  30%  { transform: translate3d(140px, 190px, 0) scale(1.1); }
+  65%  { transform: translate3d(380px, 100px, 0) scale(0.85); }
+  100% { transform: translate3d(60px,  310px, 0) scale(1.05); }
 }
 
 /* Deep Green Atmospheric Light: Distant, Subtle & Dim (5-10% visual weight) */
@@ -125,13 +113,16 @@
   }
 }
 
-/* Subtle Cursor Glow / Environmental Light */
+/* Subtle Cursor Glow / Environmental Light
+   PERF FIX: position is now driven by transform via rAF in Atmosphere.jsx
+   No left/top changes — only transform: translate() is animated */
 .cursor-light {
   position: fixed;
+  left: 0;
+  top: 0;
   width: 320px;
   height: 320px;
   border-radius: 50%;
-  transform: translate(-50%, -50%);
   background: radial-gradient(
     circle,
     rgba(255, 27, 60, 0.04) 0%,
@@ -139,7 +130,7 @@
   );
   pointer-events: none;
   z-index: 98;
-  transition: width 0.3s ease, height 0.3s ease;
+  will-change: transform;
 }
 
 /* Audio Atmosphere HUD Button */
@@ -162,7 +153,7 @@
   z-index: 101;
   pointer-events: auto;
   transition: all 0.3s ease;
-  backdrop-filter: blur(8px);
+  /* Removed backdrop-filter:blur — was creating unnecessary compositing layer */
 }
 
 .audio-atmosphere-hud:hover {
