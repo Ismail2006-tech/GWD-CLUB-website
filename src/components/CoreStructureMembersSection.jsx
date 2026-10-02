@@ -1,11 +1,8 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { LEADERSHIP, MEMBERS_DATA } from '../data/gwdData';
+import React, { useEffect, useRef, useCallback } from 'react';
+import LivingSystemSection from './LivingSystemSection';
 import '../styles/structure.css';
 
 export default function CoreStructureMembersSection() {
-  const [selectedLeaderId, setSelectedLeaderId] = useState(LEADERSHIP[0].id);
-  const networkCanvasRef = useRef(null);
-
   // Chapter 06 — Core Team Photo Cinematic Left + Right -> Center Reveal
   const coreTeamImgRef = useRef(null);
   const coreTeamFrameRef = useRef(null);
@@ -16,8 +13,6 @@ export default function CoreStructureMembersSection() {
   const targetProgressRef = useRef(0);
   const coreRevealStartedRef = useRef(false);
   const coreRevealCompletedRef = useRef(false);
-
-  const selectedLeader = LEADERSHIP.find(l => l.id === selectedLeaderId) || LEADERSHIP[0];
 
   // Cinematic Left + Right -> Center photo reveal
   const applyCoreRevealFrame = useCallback((progress) => {
@@ -116,8 +111,6 @@ export default function CoreStructureMembersSection() {
       const rect = frame.getBoundingClientRect();
       const windowHeight = window.innerHeight || document.documentElement.clientHeight;
 
-      // Start when top enters at 90% of viewport height
-      // Target 100% when center reaches 50% of viewport height
       const startTrigger = windowHeight * 0.90;
       const endTrigger = windowHeight * 0.50;
 
@@ -138,7 +131,6 @@ export default function CoreStructureMembersSection() {
 
       if (coreRevealStartedRef.current) {
         const diff = targetProgressRef.current - coreRevealProgressRef.current;
-        // Glide smoothly with user scroll or smooth forward pace
         const forwardStep = Math.max(diff * 0.14, 0.007);
         coreRevealProgressRef.current = Math.min(1, coreRevealProgressRef.current + forwardStep);
 
@@ -187,152 +179,8 @@ export default function CoreStructureMembersSection() {
     };
   }, [applyCoreRevealFrame]);
 
-  // Interactive Living Constellation Network for 07 - THE STRUCTURE
-  useEffect(() => {
-    const canvas = networkCanvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    let animId;
-
-    let width = (canvas.width = canvas.parentElement.offsetWidth);
-    let height = (canvas.height = canvas.parentElement.offsetHeight);
-
-    const handleResize = () => {
-      if (!canvas.parentElement) return;
-      width = canvas.width = canvas.parentElement.offsetWidth;
-      height = canvas.height = canvas.parentElement.offsetHeight;
-    };
-    window.addEventListener('resize', handleResize);
-
-    // Root GWD Center Node
-    const rootNode = { x: width * 0.5, y: height * 0.45, label: "GWD CLUB", r: 12, isRoot: true };
-
-    // Leadership Nodes arranged radially
-    const leaderNodes = LEADERSHIP.map((lead, i) => {
-      const angle = (i / LEADERSHIP.length) * Math.PI * 2 - Math.PI / 2;
-      const radius = Math.min(width, height) * 0.32;
-      return {
-        id: lead.id,
-        name: lead.name,
-        position: lead.position,
-        x: rootNode.x + Math.cos(angle) * radius,
-        y: rootNode.y + Math.sin(angle) * radius,
-        r: 7,
-        baseAngle: angle,
-        orbitRadius: radius,
-        isLeader: true
-      };
-    });
-
-    let time = 0;
-
-    const render = () => {
-      ctx.clearRect(0, 0, width, height);
-      time += 0.015;
-
-      // Update positions with subtle floating
-      leaderNodes.forEach((node, i) => {
-        const float = Math.sin(time + i) * 5;
-        node.x = rootNode.x + Math.cos(node.baseAngle) * (node.orbitRadius + float);
-        node.y = rootNode.y + Math.sin(node.baseAngle) * (node.orbitRadius + float);
-      });
-
-      // Draw connections from root to all leaders
-      leaderNodes.forEach((node) => {
-        const isSelected = node.id === selectedLeaderId;
-        ctx.beginPath();
-        ctx.moveTo(rootNode.x, rootNode.y);
-        ctx.lineTo(node.x, node.y);
-        ctx.strokeStyle = isSelected ? '#ff1b3c' : 'rgba(0, 81, 46, 0.18)';
-        ctx.lineWidth = isSelected ? 2.5 : 1;
-        if (isSelected) {
-          ctx.shadowColor = '#ff1b3c';
-          ctx.shadowBlur = 14;
-        } else {
-          ctx.shadowBlur = 0;
-        }
-        ctx.stroke();
-      });
-
-      // Draw Root Node
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(rootNode.x, rootNode.y, rootNode.r + Math.sin(time * 2) * 2, 0, Math.PI * 2);
-      ctx.fillStyle = '#ff1b3c';
-      ctx.shadowColor = '#ff1b3c';
-      ctx.shadowBlur = 20;
-      ctx.fill();
-
-      // Root label
-      ctx.font = '600 11px Orbitron, sans-serif';
-      ctx.fillStyle = '#ffffff';
-      ctx.textAlign = 'center';
-      ctx.fillText(rootNode.label, rootNode.x, rootNode.y + 26);
-      ctx.restore();
-
-      // Draw Leader Nodes
-      leaderNodes.forEach((node) => {
-        const isSelected = node.id === selectedLeaderId;
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(node.x, node.y, isSelected ? node.r + 4 : node.r, 0, Math.PI * 2);
-        ctx.fillStyle = isSelected ? '#ff1b3c' : 'rgba(0, 81, 46, 0.75)';
-        ctx.shadowColor = isSelected ? '#ff1b3c' : 'rgba(0, 81, 46, 0.3)';
-        ctx.shadowBlur = isSelected ? 18 : 4;
-        ctx.fill();
-
-        // Node Title
-        ctx.font = isSelected ? '600 10px Space Grotesk, monospace' : '400 9px Space Grotesk, monospace';
-        ctx.fillStyle = isSelected ? '#ffffff' : 'rgba(242, 242, 242, 0.45)';
-        ctx.textAlign = 'center';
-        ctx.fillText(node.name, node.x, node.y + (isSelected ? 22 : 16));
-        ctx.restore();
-      });
-
-      animId = requestAnimationFrame(render);
-    };
-
-    render();
-
-    // Canvas cursor feedback on hover
-    const handleCanvasMouseMove = (e) => {
-      const rect = canvas.getBoundingClientRect();
-      const mx = e.clientX - rect.left;
-      const my = e.clientY - rect.top;
-      const isOverNode = leaderNodes.some((node) => {
-        const dist = Math.sqrt((mx - node.x) ** 2 + (my - node.y) ** 2);
-        return dist <= node.r + 14;
-      });
-      canvas.style.cursor = isOverNode ? 'pointer' : 'default';
-    };
-
-    // Canvas click to select node
-    const handleCanvasClick = (e) => {
-      const rect = canvas.getBoundingClientRect();
-      const clickX = e.clientX - rect.left;
-      const clickY = e.clientY - rect.top;
-
-      leaderNodes.forEach((node) => {
-        const dist = Math.sqrt((clickX - node.x) ** 2 + (clickY - node.y) ** 2);
-        if (dist <= node.r + 14) {
-          setSelectedLeaderId(node.id);
-        }
-      });
-    };
-
-    canvas.addEventListener('mousemove', handleCanvasMouseMove, { passive: true });
-    canvas.addEventListener('click', handleCanvasClick);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      canvas.removeEventListener('mousemove', handleCanvasMouseMove);
-      canvas.removeEventListener('click', handleCanvasClick);
-      cancelAnimationFrame(animId);
-    };
-  }, [selectedLeaderId]);
-
   return (
-    <section id="structure-and-members" className="structure-flow" aria-label="Chapters 06, 07, 08: Core Team, Structure, and Members">
+    <section id="structure-and-members" className="structure-flow" aria-label="Chapters 06 & 07: Core Team and The Living System">
       {/* 06 — THE CORE TEAM */}
       <div id="core-team" className="core-team-stage">
         <div className="section-container">
@@ -374,54 +222,8 @@ export default function CoreStructureMembersSection() {
         </div>
       </div>
 
-      {/* 07 — THE MEMBERS (The Digital Archive) */}
-      <div id="members" className="members-archive-stage">
-        <div className="section-container">
-          <header className="members-header">
-            <div className="chapter-eyebrow">
-              <span className="eyebrow-idx">CHAPTER 07</span>
-              <span className="eyebrow-divider">—</span>
-              <span className="eyebrow-theme">THE EXPANDING COLLECTIVE</span>
-            </div>
-
-            <h2 className="members-title reveal-title">THE MEMBERS<span className="title-accent-dot">.</span></h2>
-            <p className="members-desc">
-              The builders, creators, and contributors powering the heartbeat of GWD.
-            </p>
-          </header>
-
-          {/* Asymmetric Editorial Archive Grid */}
-          <div className="members-editorial-grid">
-            {MEMBERS_DATA.map((member, i) => (
-              <div
-                key={member.id}
-                className={`member-editorial-card card-variant-${i % 3}`}
-                data-cursor="image"
-                tabIndex={0}
-                aria-label={`Member: ${member.placeholderName}, ${member.team}`}
-              >
-                <div className="member-photo-frame">
-                  <div className="member-placeholder-box">
-                    <span className="member-placeholder-tag">{member.photoPlaceholder}</span>
-                  </div>
-                </div>
-
-                <div className="member-meta-block">
-                  <span className="member-team-tag">{member.team}</span>
-                  <h4 className="member-title">{member.placeholderName}</h4>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="members-notice-archive">
-            <span className="notice-tag">ARCHIVE STATUS</span>
-            <p className="notice-text">
-              Member roster and domain photographs will be cataloged progressively as real submissions are verified.
-            </p>
-          </div>
-        </div>
-      </div>
+      {/* 07 — THE LIVING SYSTEM (How GWD Moves) */}
+      <LivingSystemSection id="members" />
     </section>
   );
 }

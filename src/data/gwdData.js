@@ -22,7 +22,7 @@ export const CHAPTERS = [
   { id: "04", key: "leaders", title: "THE LEADERS", subtitle: "Current Leadership" },
   { id: "05", key: "voices", title: "VOICES OF GWD CLUB", subtitle: "Authentic Words" },
   { id: "06", key: "core-team", title: "THE CORE TEAM", subtitle: "One Club. Many Minds." },
-  { id: "07", key: "members", title: "THE MEMBERS", subtitle: "The Digital Archive" },
+  { id: "07", key: "members", title: "TEAM MEMBERS", subtitle: "Branch Directory" },
   { id: "08", key: "events", title: "THE EVENTS", subtitle: "Recovered Archives" },
   { id: "09", key: "projects", title: "THE PROJECTS", subtitle: "Case Files" },
   { id: "10", key: "memories", title: "THE MEMORIES", subtitle: "Photography Exhibition" },

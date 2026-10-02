@@ -1,335 +1,352 @@
 /* ============================================================
-   LIVING SYSTEM — Chapter 07
-   One Point → One Line → A Network
+   CHAPTER 07 — TEAM MEMBERS
    ============================================================ */
 
-.living-system-section {
+.team-members-stage {
   position: relative;
-  min-height: 100vh;
+  background-color: #0a0a0a;
+  color: #f2f2f2;
   padding: 120px 0 100px;
+  overflow: hidden;
+  border-top: 1px solid rgba(255, 27, 60, 0.12);
+}
+
+/* Subtle ambient background grid */
+.tm-ambient-grid {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(circle at 50% 20%, rgba(255, 27, 60, 0.035) 0%, transparent 60%),
+    linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+  background-size: 100% 100%, 80px 80px, 80px 80px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.tm-container {
+  position: relative;
+  z-index: 2;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+/* ── Chapter Header ────────────────────────────────── */
+.tm-header {
+  margin-bottom: 48px;
+}
+
+.tm-header .chapter-eyebrow {
   display: flex;
   align-items: center;
+  gap: 12px;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  color: #8a8a8a;
+  text-transform: uppercase;
+  margin-bottom: 18px;
 }
 
-.ls-header {
-  margin-bottom: 72px;
+.tm-header .eyebrow-idx {
+  color: #ff1b3c;
+  font-weight: 700;
 }
 
-.ls-main-title {
-  font-family: var(--font-display);
-  font-size: clamp(2.8rem, 6vw, 5.5rem);
+.tm-main-title {
+  font-family: var(--font-display, "Orbitron", sans-serif);
+  font-size: clamp(2.4rem, 5.5vw, 4.6rem);
   font-weight: 800;
   line-height: 1.05;
   letter-spacing: -0.01em;
-  color: var(--color-white);
-  margin-top: 28px;
+  color: #f2f2f2;
+  margin: 0 0 14px 0;
 }
 
-.ls-title-dim {
-  color: rgba(242, 242, 242, 0.55);
+.tm-main-title .title-accent-dot {
+  color: #ff1b3c;
+  text-shadow: 0 0 16px rgba(255, 27, 60, 0.8);
 }
 
-.ls-title-dimmer {
-  color: rgba(242, 242, 242, 0.28);
+.tm-main-subtitle {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.78rem;
+  letter-spacing: 0.2em;
+  color: rgba(242, 242, 242, 0.6);
+  text-transform: uppercase;
+  margin: 0;
 }
 
-/* ── Main Composition ─────────────────────────── */
-.ls-composition {
+/* ── Top Branch Selector (Exact Left-to-Right 01 -> 05) ── */
+.tm-branches-nav {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 60px;
-  align-items: center;
-  min-height: 480px;
-  margin-bottom: 64px;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-bottom: 40px;
 }
 
-/* ── Canvas Region ────────────────────────────── */
-.ls-canvas-region {
+.tm-branch-tab {
   position: relative;
-  height: 480px;
-  border: 1px solid var(--color-border-subtle);
-  background: rgba(10, 10, 10, 0.4);
-  overflow: hidden;
-}
-
-.ls-network-canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-
-/* Node labels positioned by chapter percent values */
-.ls-node-label {
-  position: absolute;
+  padding: 16px 18px;
+  background: rgba(18, 18, 18, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 2px solid transparent;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  color: #8a8a8a;
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  animation: nodeAppear 0.5s var(--ease-cinematic) forwards;
-  pointer-events: none;
+  gap: 4px;
 }
 
-@keyframes nodeAppear {
-  from { opacity: 0; transform: translateY(6px); }
+.tm-branch-tab:hover {
+  background: rgba(26, 26, 26, 0.9);
+  border-color: rgba(255, 27, 60, 0.35);
+  color: #f2f2f2;
+}
+
+.tm-branch-tab.active {
+  background: rgba(255, 27, 60, 0.06);
+  border-color: rgba(255, 27, 60, 0.55);
+  border-top: 2px solid #ff1b3c;
+  color: #f2f2f2;
+  box-shadow: 0 4px 20px rgba(255, 27, 60, 0.08);
+}
+
+.tm-tab-code {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  color: #8a8a8a;
+  transition: color 0.25s ease;
+}
+
+.tm-branch-tab.active .tm-tab-code {
+  color: #ff1b3c;
+  font-weight: 700;
+}
+
+.tm-tab-name {
+  font-family: var(--font-display, "Orbitron", sans-serif);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  white-space: normal;
+  line-height: 1.25;
+}
+
+.tm-tab-status {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.56rem;
+  letter-spacing: 0.12em;
+  color: rgba(242, 242, 242, 0.4);
+  margin-top: 2px;
+}
+
+.tm-branch-tab.active .tm-tab-status {
+  color: #ff1b3c;
+}
+
+/* ── Focused Branch Detail Stage ───────────────────── */
+.tm-branch-panel {
+  background: rgba(14, 14, 14, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-left: 3px solid #ff1b3c;
+  padding: 36px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  animation: tmPanelFade 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes tmPanelFade {
+  from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-.ls-node-aldrin {
-  top: calc(38% + 24px);
-  left: 50%;
-  transform: translateX(-50%);
-  text-align: center;
+/* Branch Meta Row */
+.tm-panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.ls-node-ismail {
-  top: calc(62% + 24px);
-  left: 50%;
-  transform: translateX(-50%);
-  text-align: center;
-}
-
-.ls-node-sravya {
-  top: 50%;
-  left: calc(30% + 18px);
-  transform: translateY(-50%);
-}
-
-.nk-name {
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  color: var(--color-white);
-}
-
-.nk-role {
-  font-family: var(--font-mono);
-  font-size: 0.52rem;
-  letter-spacing: 0.1em;
-  color: var(--color-grey-muted);
-}
-
-/* ── Info Region ──────────────────────────────── */
-.ls-info-region {
+.tm-panel-badge-group {
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 6px;
 }
 
-/* Photo frame — fixed size, never shifts */
-.ls-photo-frame {
-  position: relative;
-  width: 100%;
-  max-width: 340px;
-  aspect-ratio: 3 / 4;
-  background: rgba(15, 15, 15, 0.8);
-  border: 1px solid var(--color-border-subtle);
-  overflow: hidden;
-  flex-shrink: 0;
+.tm-panel-code {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  color: #ff1b3c;
+  font-weight: 700;
 }
 
-.ls-person-photo {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0;
-  transform: scale(1.03);
-  transition: opacity 0.8s var(--ease-cinematic), transform 0.8s var(--ease-cinematic);
+.tm-panel-title {
+  font-family: var(--font-display, "Orbitron", sans-serif);
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #ffffff;
+  margin: 0;
 }
 
-.ls-person-photo.revealed {
-  opacity: 1;
-  transform: scale(1);
-}
-
-/* Waiting signal placeholder */
-.ls-waiting-signal {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-}
-
-.ls-signal-ring {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 27, 60, 0.4);
-  animation: signalPulse 2s ease-in-out infinite;
-}
-
-.ls-signal-ring.transmitting {
-  border-color: rgba(255, 27, 60, 0.7);
-  animation: signalPulse 0.8s ease-in-out infinite;
-}
-
-@keyframes signalPulse {
-  0%, 100% { transform: scale(0.9); opacity: 0.4; }
-  50% { transform: scale(1.15); opacity: 0.9; }
-}
-
-.ls-identifying {
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.18em;
-  color: rgba(255, 27, 60, 0.6);
-  animation: identBlink 1.4s step-end infinite;
-}
-
-@keyframes identBlink {
-  0%, 100% { opacity: 0.8; }
-  50% { opacity: 0.2; }
-}
-
-/* ── Narrative Block ──────────────────────────── */
-.ls-narrative-block {
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.7s var(--ease-cinematic), transform 0.7s var(--ease-cinematic);
-}
-
-.ls-narrative-block.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.ls-phase-tag {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
+.tm-panel-category {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
   letter-spacing: 0.16em;
-  color: var(--color-red);
-  margin-bottom: 14px;
+  color: #00512e;
+  background: rgba(0, 81, 46, 0.15);
+  border: 1px solid rgba(0, 81, 46, 0.4);
+  padding: 6px 14px;
+  border-radius: 2px;
+  align-self: flex-start;
+  text-transform: uppercase;
 }
 
-.ls-narrative-text {
-  font-family: var(--font-body);
-  font-size: 0.93rem;
-  line-height: 1.8;
-  color: rgba(242, 242, 242, 0.62);
-  max-width: 420px;
+/* Branch Information Grid */
+.tm-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
 }
 
-/* ── Phase Navigation ─────────────────────────── */
-.ls-phase-nav {
+.tm-info-block {
   display: flex;
-  gap: 0;
-  border-top: 1px solid var(--color-border-subtle);
+  flex-direction: column;
+  gap: 8px;
 }
 
-.ls-phase-btn {
-  flex: 1;
-  position: relative;
-  padding: 24px 20px;
-  background: transparent;
-  border: none;
-  border-right: 1px solid var(--color-border-subtle);
-  cursor: pointer;
-  text-align: left;
-  transition: background 0.3s ease;
+.tm-info-label {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  color: #8a8a8a;
+  text-transform: uppercase;
 }
 
-.ls-phase-btn:last-child {
-  border-right: none;
-}
-
-.ls-phase-btn:hover {
-  background: rgba(255, 27, 60, 0.04);
-}
-
-.ls-phase-btn.active {
-  background: rgba(255, 27, 60, 0.06);
-}
-
-.ls-phase-btn.completed .ls-phase-label,
-.ls-phase-btn.completed .ls-phase-name {
-  opacity: 0.5;
-}
-
-.ls-phase-label {
-  display: block;
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.14em;
-  color: var(--color-grey-muted);
-  margin-bottom: 4px;
-}
-
-.ls-phase-btn.active .ls-phase-label {
-  color: var(--color-red);
-}
-
-.ls-phase-name {
-  display: block;
-  font-family: var(--font-display);
-  font-size: 0.82rem;
+.tm-info-value {
+  font-family: var(--font-display, "Space Grotesk", sans-serif);
+  font-size: 0.98rem;
   font-weight: 600;
+  color: #f2f2f2;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.tm-info-lead {
+  color: #ff1b3c;
+  font-weight: 700;
   letter-spacing: 0.06em;
-  color: var(--color-white);
+  font-family: var(--font-display, "Orbitron", sans-serif);
 }
 
-.ls-phase-active-bar {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--color-red);
-  box-shadow: 0 0 8px var(--color-red);
+/* Roster Archive Status Box */
+.tm-roster-status-box {
+  padding: 24px 28px;
+  background: rgba(10, 10, 10, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
 }
 
-/* ── Mobile ───────────────────────────────────── */
+.tm-roster-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.tm-status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff1b3c;
+  box-shadow: 0 0 10px #ff1b3c;
+}
+
+.tm-roster-title {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  color: #f2f2f2;
+  font-weight: 600;
+}
+
+.tm-roster-desc {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  color: #8a8a8a;
+  margin: 0;
+}
+
+.tm-roster-action-btn {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  color: #f2f2f2;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+}
+
+.tm-roster-action-btn:hover {
+  background: rgba(255, 27, 60, 0.12);
+  border-color: #ff1b3c;
+  color: #ffffff;
+}
+
+/* ── Responsive Behavior ───────────────────────────── */
+@media (max-width: 1024px) {
+  .tm-branches-nav {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+}
+
 @media (max-width: 768px) {
-  .living-system-section {
-    padding: 90px 0 80px;
+  .team-members-stage {
+    padding: 90px 0 70px;
   }
 
-  .ls-composition {
+  .tm-branches-nav {
     grid-template-columns: 1fr;
-    gap: 32px;
-    min-height: auto;
+    gap: 6px;
   }
 
-  .ls-canvas-region {
-    height: 320px;
+  .tm-branch-panel {
+    padding: 24px 20px;
+    gap: 20px;
   }
 
-  .ls-main-title {
-    font-size: clamp(2rem, 8vw, 3.5rem);
+  .tm-info-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
   }
 
-  .ls-phase-nav {
-    flex-direction: column;
-  }
-
-  .ls-phase-btn {
-    border-right: none;
-    border-bottom: 1px solid var(--color-border-subtle);
-    padding: 18px 20px;
-  }
-
-  .ls-photo-frame {
-    max-width: 240px;
-  }
-
-  .ls-node-label {
-    display: none;
+  .tm-main-title {
+    font-size: clamp(2rem, 8vw, 3.2rem);
   }
 }
 
+/* ── Reduced Motion ────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  .ls-signal-ring {
-    animation: none;
-    opacity: 0.6;
-  }
-  .ls-identifying {
-    animation: none;
-  }
-  .ls-person-photo {
-    transition: opacity 0.2s ease;
+  .tm-branch-panel {
+    animation: none !important;
   }
 }
