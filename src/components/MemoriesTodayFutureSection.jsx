@@ -1,13 +1,81 @@
-import React, { useState } from 'react';
-import { MEMORIES_DATA, ACHIEVEMENTS_DATA, LEADERSHIP } from '../data/gwdData';
+import React, { useState, useRef, useEffect } from 'react';
+import { MEMORIES_DATA, ACHIEVEMENTS_DATA } from '../data/gwdData';
+import { GWD_TODAY_PEOPLE } from '../data/gwdTodayData';
 import '../styles/future.css';
+
+/**
+ * Subcomponent for an individual name in Chapter 12 Name Field.
+ * Features slow, elegant scroll emergence (blur-to-focus, opacity, vertical settle)
+ * and subtle red highlight on center-scroll focus or hover.
+ */
+function NameItem({ name, index, activeIndex, setActiveIndex }) {
+  const [emerged, setEmerged] = useState(false);
+  const elementRef = useRef(null);
+
+  useEffect(() => {
+    const el = elementRef.current;
+    if (!el) return;
+
+    // 1. Reveal observer: smoothly emerge from darkness as element scrolls into view
+    const revealObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setEmerged(true);
+        }
+      },
+      {
+        threshold: 0.1,
+        rootMargin: '0px 0px -40px 0px',
+      }
+    );
+
+    // 2. Center band observer: subtle red highlight on currently active name as visitor scrolls
+    const activeObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setActiveIndex(index);
+        }
+      },
+      {
+        rootMargin: '-35% 0px -35% 0px',
+        threshold: 0.1,
+      }
+    );
+
+    revealObserver.observe(el);
+    activeObserver.observe(el);
+
+    return () => {
+      revealObserver.disconnect();
+      activeObserver.disconnect();
+    };
+  }, [index, setActiveIndex]);
+
+  const isActive = activeIndex === index;
+  const rhythmIndex = index % 8;
+
+  return (
+    <span
+      ref={elementRef}
+      className={`name-item rhythm-${rhythmIndex} ${emerged ? 'emerged' : ''} ${isActive ? 'active' : ''}`}
+      onMouseEnter={() => setActiveIndex(index)}
+      onMouseLeave={() => setActiveIndex(null)}
+      tabIndex={0}
+      role="text"
+      aria-label={name}
+    >
+      {name}
+    </span>
+  );
+}
 
 export default function MemoriesTodayFutureSection() {
   const [activeMemory, setActiveMemory] = useState(MEMORIES_DATA[0]);
+  const [activeNameIndex, setActiveNameIndex] = useState(null);
 
   return (
-    <section id="memories-today-future" className="future-flow" aria-label="Chapters 11, 12, 13, 14: Exhibition, Evidence, Today, and The Future">
-      {/* 11 — THE MEMORIES (Cinematic Photo Exhibition) */}
+    <section id="memories-today-future" className="future-flow" aria-label="Chapters 10, 11, 12, 13: Memories, Achievements, GWD Today, and The Future">
+      {/* 10 — THE MEMORIES (Cinematic Photo Exhibition) */}
       <div id="memories" className="memories-archive-stage">
         <div className="section-container">
           <header className="memories-header">
@@ -76,7 +144,7 @@ export default function MemoriesTodayFutureSection() {
         </div>
       </div>
 
-      {/* 12 — THE ACHIEVEMENTS (Verified Evidence & Checkpoints) */}
+      {/* 11 — THE ACHIEVEMENTS (Verified Evidence & Checkpoints) */}
       <div id="achievements" className="achievements-stage">
         <div className="section-container">
           <header className="achievements-header">
@@ -107,47 +175,45 @@ export default function MemoriesTodayFutureSection() {
         </div>
       </div>
 
-      {/* 13 — GWD TODAY (The Present State) */}
+      {/* 12 — GWD TODAY (The People of GWD: Names Only) */}
       <div id="today" className="gwd-today-stage">
         <div className="section-container">
+          {/* Chapter Opening: Extremely Minimal */}
           <header className="today-header">
             <div className="chapter-eyebrow">
               <span className="eyebrow-idx">CHAPTER 12</span>
               <span className="eyebrow-divider">—</span>
-              <span className="eyebrow-theme">CONVERGENCE // THE PRESENT</span>
+              <span className="eyebrow-theme">GWD TODAY</span>
             </div>
 
             <h2 className="today-title reveal-title">GWD TODAY<span className="title-accent-dot">.</span></h2>
-            <p className="today-sub">
-              Active, disciplined, and unified. A living snapshot of the current leadership cohort steering GWD.
-            </p>
+            <p className="today-people-sub">THE PEOPLE OF GWD</p>
           </header>
 
-          {/* Current Leaders Unified Roster Grid */}
-          <div className="current-cohort-grid">
-            {LEADERSHIP.map((leader) => (
-              <div
-                key={leader.id}
-                className="cohort-card reveal-fade"
-                data-cursor="image"
-                tabIndex={0}
-                aria-label={`Cohort: ${leader.name}, ${leader.position}`}
-              >
-                <div className="cohort-photo-slot">
-                  <span className="cohort-photo-tag">{leader.photoPlaceholder}</span>
-                </div>
-                <div className="cohort-info">
-                  <span className="cohort-role">{leader.position}</span>
-                  <h4 className="cohort-name">{leader.name}</h4>
-                  <span className="cohort-status">ACTIVE CADRE</span>
-                </div>
-              </div>
-            ))}
+          {/* Cinematic Name Field: Pure editorial names only */}
+          <div className="name-field-container">
+            <div className="name-field-stream" role="list" aria-label="The People of GWD">
+              {GWD_TODAY_PEOPLE.map((name, idx) => (
+                <NameItem
+                  key={idx}
+                  name={name}
+                  index={idx}
+                  activeIndex={activeNameIndex}
+                  setActiveIndex={setActiveNameIndex}
+                />
+              ))}
+            </div>
           </div>
+
+          {/* Minimal Final Statement */}
+          <footer className="today-minimal-ending">
+            <div className="today-ending-rule" aria-hidden="true" />
+            <p className="today-ending-statement">THESE ARE THE PEOPLE OF GWD.</p>
+          </footer>
         </div>
       </div>
 
-      {/* 14 — THE FUTURE (Minimal Void + Single Beacon) */}
+      {/* 13 — THE FUTURE (Minimal Void + Single Beacon) */}
       <div id="future" className="the-future-stage">
         <div className="future-abyss-aura" />
         <div className="future-red-beacon" />
