@@ -3,10 +3,10 @@
      COLOR IDENTITY (Strict Prompt Specifications)
      Black: 70-75% | Red: 15-20% | Green: 5-10%
      ============================================================ */
-  --color-void: #0a0a0a;
-  --color-void-deep: #050505;
-  --color-void-surface: #101010;
-  --color-void-card: rgba(16, 16, 16, 0.7);
+  --color-void: #090506;
+  --color-void-deep: #050203;
+  --color-void-surface: #12090b;
+  --color-void-card: rgba(16, 8, 10, 0.75);
 
   /* Primary Accent: Intense Crimson Red */
   --color-red: #ff1b3c;

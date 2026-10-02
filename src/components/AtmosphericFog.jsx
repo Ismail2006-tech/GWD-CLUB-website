@@ -217,29 +217,25 @@ void main() {
   float distToLight = length(aspectUV - lightPos);
   float lightCone = exp(-distToLight * 1.8);
 
-  // Center crimson scatter
-  float redScatter = exp(-distToCenter * 2.0);
+  // Center crimson scatter (matches the central crimson halo in the screenshot)
+  float redScatter = exp(-distToCenter * 2.2);
 
-  // Smoke color grading:
-  // Base cold atmospheric vapor
-  vec3 darkVapor = vec3(0.12, 0.13, 0.16);
-  vec3 midVaporCol = vec3(0.50, 0.52, 0.58);
-  vec3 brightSmoke = vec3(0.88, 0.90, 0.94);
-  vec3 smokeBody = mix(darkVapor, midVaporCol, smoothstep(0.25, 0.70, totalVapor));
-  smokeBody = mix(smokeBody, brightSmoke, smoothstep(0.65, 0.95, totalVapor) * 0.60);
+  // Smoke color grading: EXACT MATCH to the screenshot
+  // Zero cold grey/white smoke; pure deep velvet-black and crimson-wine vapor
+  vec3 darkAbyss = vec3(0.035, 0.012, 0.018);
+  vec3 wineSmoke = vec3(0.18, 0.028, 0.048);
+  vec3 crimsonVapor = vec3(0.55, 0.060, 0.11);
+  vec3 hotCrimson = vec3(1.0, 0.10, 0.22);
 
-  // Intense Crimson illumination
-  vec3 crimson = vec3(1.0, 0.11, 0.24);
-  float redFactor = clamp((lightCone * 0.70 + redScatter * 0.30) * u_intensity, 0.0, 1.0);
-  vec3 finalColor = mix(smokeBody, crimson, redFactor * 0.72);
+  vec3 smokeBody = mix(darkAbyss, wineSmoke, smoothstep(0.15, 0.55, totalVapor));
+  smokeBody = mix(smokeBody, crimsonVapor, smoothstep(0.50, 0.88, totalVapor) * 0.70);
 
-  // Subtle trace emerald green accent in corner (≤5%)
-  vec2 greenPos = vec2(0.10 * u_resolution.x / u_resolution.y, 0.88);
-  float greenTrace = exp(-length(aspectUV - greenPos) * 2.2) * 0.22;
-  finalColor = mix(finalColor, vec3(0.0, 0.38, 0.20), greenTrace * u_intensity);
+  // Red illumination cutting through the smoke curls
+  float redFactor = clamp((lightCone * 0.75 + redScatter * 0.45) * u_intensity, 0.0, 1.0);
+  vec3 finalColor = mix(smokeBody, hotCrimson, redFactor * 0.82);
 
-  // Net visible smoke alpha
-  float alpha = clamp(fogDensity * u_fog_opacity * 1.45, 0.0, 0.85);
+  // Net visible smoke alpha (subtle, translucent, seamlessly melting into void)
+  float alpha = clamp(fogDensity * u_fog_opacity * 1.30, 0.0, 0.78);
 
   // Output with premultiplied alpha for clean additive/translucent blending over black
   gl_FragColor = vec4(finalColor * alpha, alpha);
@@ -481,6 +477,9 @@ export default function AtmosphericFog({ activeChapter }) {
       {/* High-Performance WebGL Atmospheric Smoke Canvas */}
       <canvas ref={canvasRef} className="global-atmospheric-canvas" />
 
+      {/* Atmospheric Central Crimson Glow (matches the hero screenshot) */}
+      <div className="atmo-central-aura" />
+
       {/* Primary Volumetric Billow Banks (Left & Right rolling fog) */}
       <div className="fog-billow-bank left-bank" />
       <div className="fog-billow-bank right-bank" />
@@ -498,6 +497,9 @@ export default function AtmosphericFog({ activeChapter }) {
         <span className="mote mote-5" />
         <span className="mote mote-6" />
       </div>
+
+      {/* Deep Velvet Cinematic Vignette */}
+      <div className="atmo-vignette" />
 
       {/* Atmospheric 35mm Fine Film Grain */}
       <div className="atmo-grain-overlay" />
