@@ -5,7 +5,7 @@
 .people-leaders-flow {
   position: relative;
   width: 100vw;
-  background-color: var(--color-void);
+  background-color: transparent;
   border-top: 1px solid var(--color-border-subtle);
   overflow: hidden;
 }
@@ -573,7 +573,7 @@
   position: relative;
   padding: 100px 24px 120px;
   border-top: 1px solid var(--color-border-subtle);
-  background: linear-gradient(to bottom, var(--color-void), #060606);
+  background: transparent;
 }
 
 .voices-header {

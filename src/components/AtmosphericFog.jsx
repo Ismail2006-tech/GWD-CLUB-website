@@ -124,12 +124,12 @@ float noise(vec2 p) {
 // 4-Octave Fractal Brownian Motion with rotation matrix to avoid grid artifacts
 float fbm(vec2 p) {
   float v = 0.0;
-  float a = 0.5;
+  float a = 0.52;
   mat2 rot = mat2(0.80, 0.60, -0.60, 0.80);
   for (int i = 0; i < 4; i++) {
     v += a * (noise(p) * 0.5 + 0.5);
-    p = rot * p * 2.02;
-    a *= 0.5;
+    p = rot * p * 2.04;
+    a *= 0.50;
   }
   return v;
 }
@@ -139,72 +139,110 @@ void main() {
   vec2 aspectUV = uv;
   aspectUV.x *= u_resolution.x / u_resolution.y;
 
-  // Slow organic time speeds
-  float t = u_time * 0.028;
+  // Organic time speeds
+  float t = u_time * 0.032;
   float scrollY = u_scroll * 0.00018;
 
-  // Domain warping for fluid smoke physics:
-  // p -> q (large drift currents) -> r (swirling tendrils) -> final smoke density
-  vec2 p = aspectUV * 1.6;
-  p.y += scrollY;
+  // -------------------------------------------------------------
+  // 1. LEFT VOLUMETRIC FOG PLUME — Billowing in from left boundary
+  // -------------------------------------------------------------
+  vec2 pLeft = aspectUV * 1.5;
+  pLeft.x -= t * 0.28;
+  pLeft.y += scrollY + sin(t * 0.35) * 0.12;
 
-  // Layer 1: Slow horizontal and diagonal drift
-  vec2 q = vec2(
-    fbm(p + vec2(t * 0.35, t * 0.15)),
-    fbm(p + vec2(5.2, 1.3) + vec2(-t * 0.28, t * 0.12))
+  vec2 qLeft = vec2(
+    fbm(pLeft + vec2(t * 0.20, -t * 0.14)),
+    fbm(pLeft + vec2(3.1, 7.4) + vec2(-t * 0.16, t * 0.18))
   );
-
-  // Layer 2: Swirling organic smoke wisps
-  vec2 r = vec2(
-    fbm(p + 2.8 * q + vec2(1.7, 9.2) + vec2(t * 0.22, -t * 0.30)),
-    fbm(p + 2.8 * q + vec2(8.3, 2.8) + vec2(-t * 0.18, t * 0.25))
+  vec2 rLeft = vec2(
+    fbm(pLeft + 3.0 * qLeft + vec2(1.7, 9.2) + vec2(t * 0.15, -t * 0.20)),
+    fbm(pLeft + 3.0 * qLeft + vec2(8.3, 2.8) + vec2(-t * 0.18, t * 0.15))
   );
+  float leftCurl = fbm(pLeft + 2.6 * rLeft);
+  float leftFalloff = smoothstep(0.68, 0.02, uv.x);
+  float leftFog = leftCurl * leftFalloff * 1.75;
 
-  // Main volumetric smoke density field
-  float mainSmoke = fbm(p + 2.4 * r);
+  // -------------------------------------------------------------
+  // 2. RIGHT VOLUMETRIC FOG PLUME — Billowing in from right boundary
+  // -------------------------------------------------------------
+  vec2 pRight = aspectUV * 1.5;
+  pRight.x += t * 0.28;
+  pRight.y += scrollY - cos(t * 0.32) * 0.12;
 
-  // Layer 3: Finer atmospheric vapor wisps
-  float fineVapor = fbm(p * 2.4 + r * 1.6 + vec2(-t * 0.4, t * 0.35));
+  vec2 qRight = vec2(
+    fbm(pRight + vec2(-t * 0.18, t * 0.15)),
+    fbm(pRight + vec2(8.5, 2.3) + vec2(t * 0.14, -t * 0.20))
+  );
+  vec2 rRight = vec2(
+    fbm(pRight + 3.0 * qRight + vec2(2.5, 4.8) + vec2(-t * 0.16, t * 0.18)),
+    fbm(pRight + 3.0 * qRight + vec2(6.1, 3.7) + vec2(t * 0.18, -t * 0.14))
+  );
+  float rightCurl = fbm(pRight + 2.6 * rRight);
+  float rightFalloff = smoothstep(0.32, 0.98, uv.x);
+  float rightFog = rightCurl * rightFalloff * 1.75;
 
-  // Volumetric density thresholds (clear organic shapes with soft edges)
-  float smokeMask = smoothstep(0.25, 0.70, mainSmoke);
-  float vaporMask = smoothstep(0.32, 0.65, fineVapor) * 0.45;
-  float totalVapor = clamp(smokeMask + vaporMask, 0.0, 1.0);
+  // -------------------------------------------------------------
+  // 3. AMBIENT DOMAIN-WARPED MIST (Central drift and swirling wisps)
+  // -------------------------------------------------------------
+  vec2 pMid = aspectUV * 1.6;
+  pMid.y += scrollY;
+  vec2 qMid = vec2(
+    fbm(pMid + vec2(t * 0.35, t * 0.15)),
+    fbm(pMid + vec2(5.2, 1.3) + vec2(-t * 0.28, t * 0.12))
+  );
+  vec2 rMid = vec2(
+    fbm(pMid + 2.8 * qMid + vec2(1.7, 9.2) + vec2(t * 0.22, -t * 0.30)),
+    fbm(pMid + 2.8 * qMid + vec2(8.3, 2.8) + vec2(-t * 0.18, t * 0.25))
+  );
+  float midSmoke = fbm(pMid + 2.4 * rMid);
+  float midVapor = smoothstep(0.24, 0.68, midSmoke) * 0.55;
+
+  // Combine plumes
+  float totalVapor = clamp(leftFog + rightFog + midVapor, 0.0, 1.8);
+  float fogDensity = smoothstep(0.12, 0.65, totalVapor);
 
   // Soft edge vignette so smoke naturally lives within the frame
   vec2 borderFade = uv * (1.0 - uv);
   float edgeWeight = clamp(borderFade.x * borderFade.y * 24.0, 0.0, 1.0);
-  totalVapor *= edgeWeight;
+  fogDensity *= edgeWeight;
 
-  // Atmospheric Light Source Calculation
+  // Center relief around main reading area to keep content legible
+  vec2 centerPos = vec2(0.5 * u_resolution.x / u_resolution.y, 0.5);
+  float distToCenter = length(aspectUV - centerPos);
+  fogDensity *= mix(0.70, 1.0, smoothstep(0.16, 0.50, distToCenter));
+
+  // Volumetric Lighting & Crimson Glow
   vec2 lightPos = u_light_pos;
   lightPos.x *= u_resolution.x / u_resolution.y;
   float distToLight = length(aspectUV - lightPos);
-  float lightCone = exp(-distToLight * 1.5);
+  float lightCone = exp(-distToLight * 1.8);
 
-  // Broad ambient red diffusion
-  vec2 centerPos = vec2(0.5 * u_resolution.x / u_resolution.y, 0.5);
-  float ambientRed = exp(-length(aspectUV - centerPos) * 1.1) * 0.35;
+  // Center crimson scatter
+  float redScatter = exp(-distToCenter * 2.0);
 
   // Smoke color grading:
-  // Base vapor is subtle dark-slate atmospheric smoke
-  // Red light illuminates portions of the smoke organically
-  vec3 darkVapor = vec3(0.09, 0.09, 0.11);
-  vec3 redIllumination = vec3(0.96, 0.16, 0.28);
+  // Base cold atmospheric vapor
+  vec3 darkVapor = vec3(0.12, 0.13, 0.16);
+  vec3 midVaporCol = vec3(0.50, 0.52, 0.58);
+  vec3 brightSmoke = vec3(0.88, 0.90, 0.94);
+  vec3 smokeBody = mix(darkVapor, midVaporCol, smoothstep(0.25, 0.70, totalVapor));
+  smokeBody = mix(smokeBody, brightSmoke, smoothstep(0.65, 0.95, totalVapor) * 0.60);
 
-  float redLightFactor = clamp((lightCone * 0.75 + ambientRed * 0.25) * u_intensity, 0.0, 1.0);
-  vec3 illuminatedSmoke = mix(darkVapor, redIllumination, redLightFactor);
+  // Intense Crimson illumination
+  vec3 crimson = vec3(1.0, 0.11, 0.24);
+  float redFactor = clamp((lightCone * 0.70 + redScatter * 0.30) * u_intensity, 0.0, 1.0);
+  vec3 finalColor = mix(smokeBody, crimson, redFactor * 0.72);
 
-  // Rare subtle emerald green trace in the bottom corner (≤5%)
-  vec2 greenPos = vec2(0.10 * u_resolution.x / u_resolution.y, 0.90);
+  // Subtle trace emerald green accent in corner (≤5%)
+  vec2 greenPos = vec2(0.10 * u_resolution.x / u_resolution.y, 0.88);
   float greenTrace = exp(-length(aspectUV - greenPos) * 2.2) * 0.22;
-  illuminatedSmoke = mix(illuminatedSmoke, vec3(0.0, 0.38, 0.20), greenTrace * u_intensity);
+  finalColor = mix(finalColor, vec3(0.0, 0.38, 0.20), greenTrace * u_intensity);
 
-  // Net visible smoke alpha (typically 0.15 - 0.48)
-  float alpha = clamp(totalVapor * u_fog_opacity * 1.35, 0.0, 0.85);
+  // Net visible smoke alpha
+  float alpha = clamp(fogDensity * u_fog_opacity * 1.45, 0.0, 0.85);
 
   // Output with premultiplied alpha for clean additive/translucent blending over black
-  gl_FragColor = vec4(illuminatedSmoke * alpha, alpha);
+  gl_FragColor = vec4(finalColor * alpha, alpha);
 }
 `;
 
@@ -442,6 +480,24 @@ export default function AtmosphericFog({ activeChapter }) {
     <div className="atmospheric-fog-env" aria-hidden="true" role="presentation">
       {/* High-Performance WebGL Atmospheric Smoke Canvas */}
       <canvas ref={canvasRef} className="global-atmospheric-canvas" />
+
+      {/* Primary Volumetric Billow Banks (Left & Right rolling fog) */}
+      <div className="fog-billow-bank left-bank" />
+      <div className="fog-billow-bank right-bank" />
+
+      {/* Secondary Rolling Vapor Streams */}
+      <div className="fog-stream-wisp left-wisp" />
+      <div className="fog-stream-wisp right-wisp" />
+
+      {/* Cinematic Embers & Atmospheric Motes Drifting in the Fog */}
+      <div className="fog-cinematic-motes">
+        <span className="mote mote-1" />
+        <span className="mote mote-2" />
+        <span className="mote mote-3" />
+        <span className="mote mote-4" />
+        <span className="mote mote-5" />
+        <span className="mote mote-6" />
+      </div>
 
       {/* Atmospheric 35mm Fine Film Grain */}
       <div className="atmo-grain-overlay" />

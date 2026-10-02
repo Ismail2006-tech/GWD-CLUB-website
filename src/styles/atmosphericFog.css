@@ -1,14 +1,15 @@
 /* ================================================================
-   GWD CLUB — GLOBAL CINEMATIC ATMOSPHERIC SMOKE SYSTEM
+   GWD CLUB — GLOBAL CINEMATIC ATMOSPHERIC SMOKE & FOG SYSTEM
    
    Layering Architecture:
-   - Position: Fixed full-screen backdrop (z-index: 1)
-   - Sits strictly behind all story stream content (z-index: 2)
+   - Position: Fixed full-screen backdrop (z-index: 0)
+   - Sits strictly behind all story stream content (z-index: 1)
    - Pointer-events: none (zero interference with clicks, hover, scroll)
    - 75–85% Pure Void Black
    - 15–25% Organic Flowing Translucent Smoke & Atmospheric Fog
+   - Left & Right Volumetric Rolling Fog Plumes
    - Subtle Light-Red Illumination cutting through smoke curls
-   - Trace Deep Emerald Trace (≤5%)
+   - Floating atmospheric embers / dust motes
    ================================================================ */
 
 .atmospheric-fog-env {
@@ -16,7 +17,7 @@
   inset: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 1; /* Sits behind all story stream content */
+  z-index: 0;
   pointer-events: none;
   overflow: hidden;
 }
@@ -29,6 +30,244 @@
   height: 100%;
   pointer-events: none;
   display: block;
+}
+
+/* ------------------------------------------------------------
+   Primary Volumetric Billow Banks (Left & Right Rolling Fog)
+   ------------------------------------------------------------ */
+.fog-billow-bank {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 52vw;
+  max-width: 850px;
+  pointer-events: none;
+  filter: blur(48px);
+  mix-blend-mode: screen;
+  will-change: transform, opacity;
+}
+
+.fog-billow-bank.left-bank {
+  left: -10vw;
+  background: radial-gradient(
+    ellipse at 20% 50%,
+    rgba(225, 230, 240, 0.32) 0%,
+    rgba(180, 185, 200, 0.20) 35%,
+    rgba(255, 30, 60, 0.14) 60%,
+    transparent 80%
+  );
+  animation: leftFogRoll 14s ease-in-out infinite alternate;
+}
+
+.fog-billow-bank.right-bank {
+  right: -10vw;
+  background: radial-gradient(
+    ellipse at 80% 50%,
+    rgba(225, 230, 240, 0.32) 0%,
+    rgba(180, 185, 200, 0.20) 35%,
+    rgba(255, 30, 60, 0.14) 60%,
+    transparent 80%
+  );
+  animation: rightFogRoll 16s ease-in-out infinite alternate;
+}
+
+/* ------------------------------------------------------------
+   Secondary Rolling Vapor Tendrils (Left & Right)
+   ------------------------------------------------------------ */
+.fog-stream-wisp {
+  position: absolute;
+  pointer-events: none;
+  filter: blur(35px);
+  mix-blend-mode: screen;
+  will-change: transform, opacity;
+}
+
+.fog-stream-wisp.left-wisp {
+  top: 25%;
+  left: -5vw;
+  width: 45vw;
+  height: 55vh;
+  background: radial-gradient(
+    ellipse at 30% 45%,
+    rgba(240, 242, 250, 0.24) 0%,
+    rgba(255, 25, 55, 0.15) 48%,
+    transparent 75%
+  );
+  animation: leftWispCurl 10s ease-in-out infinite alternate;
+}
+
+.fog-stream-wisp.right-wisp {
+  top: 35%;
+  right: -5vw;
+  width: 45vw;
+  height: 55vh;
+  background: radial-gradient(
+    ellipse at 70% 55%,
+    rgba(240, 242, 250, 0.24) 0%,
+    rgba(255, 25, 55, 0.15) 48%,
+    transparent 75%
+  );
+  animation: rightWispCurl 12s ease-in-out infinite alternate;
+}
+
+/* Keyframe animations for physical smoke curling */
+@keyframes leftFogRoll {
+  0% {
+    transform: translate3d(-2%, -3%, 0) scale(0.96);
+    opacity: 0.50;
+  }
+  50% {
+    transform: translate3d(5%, 2%, 0) scale(1.08);
+    opacity: 0.72;
+  }
+  100% {
+    transform: translate3d(1%, -1%, 0) scale(1.02);
+    opacity: 0.55;
+  }
+}
+
+@keyframes rightFogRoll {
+  0% {
+    transform: translate3d(2%, 3%, 0) scale(1.04);
+    opacity: 0.52;
+  }
+  50% {
+    transform: translate3d(-5%, -2%, 0) scale(0.98);
+    opacity: 0.75;
+  }
+  100% {
+    transform: translate3d(-1%, 2%, 0) scale(1.06);
+    opacity: 0.58;
+  }
+}
+
+@keyframes leftWispCurl {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(-4deg);
+    opacity: 0.35;
+  }
+  50% {
+    transform: translate3d(6%, -4%, 0) rotate(2deg);
+    opacity: 0.60;
+  }
+  100% {
+    transform: translate3d(2%, 3%, 0) rotate(-1deg);
+    opacity: 0.40;
+  }
+}
+
+@keyframes rightWispCurl {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(4deg);
+    opacity: 0.38;
+  }
+  50% {
+    transform: translate3d(-6%, 3%, 0) rotate(-2deg);
+    opacity: 0.62;
+  }
+  100% {
+    transform: translate3d(-2%, -4%, 0) rotate(1deg);
+    opacity: 0.42;
+  }
+}
+
+/* ------------------------------------------------------------
+   Cinematic Embers & Atmospheric Motes Drifting in the Fog
+   ------------------------------------------------------------ */
+.fog-cinematic-motes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.mote {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: moteFloat 11s ease-in-out infinite;
+}
+
+.mote-1 {
+  width: 3px;
+  height: 3px;
+  top: 75%;
+  left: 18%;
+  background: rgba(255, 60, 80, 0.85);
+  box-shadow: 0 0 10px rgba(255, 60, 80, 0.9);
+  animation-duration: 9s;
+  animation-delay: 0s;
+}
+
+.mote-2 {
+  width: 2px;
+  height: 2px;
+  top: 60%;
+  left: 32%;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+  animation-duration: 13s;
+  animation-delay: 2s;
+}
+
+.mote-3 {
+  width: 4px;
+  height: 4px;
+  top: 80%;
+  right: 22%;
+  background: rgba(255, 60, 80, 0.8);
+  box-shadow: 0 0 12px rgba(255, 60, 80, 0.9);
+  animation-duration: 10s;
+  animation-delay: 1.5s;
+}
+
+.mote-4 {
+  width: 2.5px;
+  height: 2.5px;
+  top: 45%;
+  right: 35%;
+  background: rgba(255, 255, 255, 0.75);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+  animation-duration: 12s;
+  animation-delay: 4s;
+}
+
+.mote-5 {
+  width: 3px;
+  height: 3px;
+  top: 70%;
+  left: 12%;
+  background: rgba(255, 70, 90, 0.7);
+  box-shadow: 0 0 10px rgba(255, 70, 90, 0.8);
+  animation-duration: 11s;
+  animation-delay: 3s;
+}
+
+.mote-6 {
+  width: 3px;
+  height: 3px;
+  top: 68%;
+  right: 14%;
+  background: rgba(255, 70, 90, 0.7);
+  box-shadow: 0 0 10px rgba(255, 70, 90, 0.8);
+  animation-duration: 10.5s;
+  animation-delay: 0.8s;
+}
+
+@keyframes moteFloat {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.85;
+  }
+  80% {
+    opacity: 0.65;
+  }
+  100% {
+    transform: translate3d(25px, -90px, 0);
+    opacity: 0;
+  }
 }
 
 /* Authentic 35mm Film Grain Overlay (Prevents Banding, Documentary Tone) */
@@ -47,13 +286,26 @@
   0%, 100% { transform: translate3d(0, 0, 0); }
   20% { transform: translate3d(-2%, -3%, 0); }
   40% { transform: translate3d(3%, -2%, 0); }
-  60% { transform: translate3d(-3%, 2%, 0); }
+  50% { transform: translate3d(-3%, 2%, 0); }
   80% { transform: translate3d(2%, 3%, 0); }
+}
+
+@media (max-width: 768px) {
+  .fog-billow-bank {
+    width: 70vw;
+    filter: blur(35px);
+  }
+  .fog-stream-wisp {
+    width: 60vw;
+  }
 }
 
 /* Accessibility: Prefers-reduced-motion */
 @media (prefers-reduced-motion: reduce) {
-  .atmo-grain-overlay {
+  .atmo-grain-overlay,
+  .fog-billow-bank,
+  .fog-stream-wisp,
+  .mote {
     animation: none !important;
   }
 }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import AtmosphericFog from './components/AtmosphericFog';
 import BackgroundWorld from './components/BackgroundWorld';
 import Atmosphere from './components/Atmosphere';
 import MinimalNav from './components/MinimalNav';
@@ -95,6 +96,9 @@ export default function App() {
 
   return (
     <div className="gwd-journey-experience">
+      {/* Global Cinematic Atmospheric Smoke & Fog (Left & Right plumes + volumetric drift across all chapters) */}
+      <AtmosphericFog activeChapter={activeChapter} />
+
       {/* Evolving Background World (geometry, density, and movement per chapter) */}
       <BackgroundWorld activeChapter={activeChapter} />
 
