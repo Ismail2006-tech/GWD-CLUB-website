@@ -37,110 +37,62 @@
   max-width: 650px;
 }
 
-/* Vertical Cinematic Sequence of Memories */
+/* ── Chapter 10: Paired Photo Rows ── */
 .memories-cinematic-stream {
   display: flex;
   flex-direction: column;
   width: 100%;
+  /* Generous space from the section header */
+  padding-top: 20px;
 }
 
-.memory-stream-row {
+/* Each row holds a LEFT photo and a RIGHT photo */
+.memory-pair-row {
   display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: clamp(32px, 5vw, 64px);
+  /* Generous vertical breathing room between rows — not congested */
+  padding: 60px clamp(16px, 5vw, 72px) 60px;
   width: 100%;
-  min-height: 75vh;
-  padding: 90px 0 110px;
-  align-items: center;
   box-sizing: border-box;
 }
 
-/* Subtle Horizontal Offset Variations */
-.memory-stream-row.align-left {
-  justify-content: flex-start;
-  padding-left: clamp(12px, 5vw, 70px);
-}
+/* Individual photo cell — left or right */
+.memory-photo-cell {
+  flex: 0 0 auto;
+  width: clamp(220px, 42%, 480px);
 
-.memory-stream-row.align-center {
-  justify-content: center;
-}
-
-.memory-stream-row.align-right {
-  justify-content: flex-end;
-  padding-right: clamp(12px, 5vw, 70px);
-}
-
-/* Memory Monolith Card */
-.memory-monolith-card {
-  width: clamp(340px, 44vw, 560px);
-  max-width: 100%;
-  display: flex;
-  flex-direction: column;
-  background: transparent;
-  box-sizing: border-box;
-
-  /* Initial scroll-in state: dimmed, softly blurred, subtle offset */
-  opacity: 0.22;
-  filter: blur(8px) brightness(0.68);
-  transform: translateY(32px);
-  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1),
-              filter 1s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+  /* Scroll-in initial state */
+  opacity: 0.2;
+  filter: blur(7px) brightness(0.65);
+  transition: opacity 1.05s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 1.05s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 1.05s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, filter, transform;
 }
 
-.memory-stream-row.align-left .memory-monolith-card {
-  transform: translate(-16px, 32px);
-}
-.memory-stream-row.align-right .memory-monolith-card {
-  transform: translate(16px, 32px);
+/* Left photo drifts in from the left */
+.memory-photo-cell.side-left {
+  transform: translate(-20px, 18px);
 }
 
-/* Settle naturally into place when revealed */
-.memory-stream-row.is-revealed .memory-monolith-card {
+/* Right photo drifts in from the right */
+.memory-photo-cell.side-right {
+  transform: translate(20px, 18px);
+}
+
+/* Both settle when the row enters view */
+.memory-photo-cell.is-revealed {
   opacity: 1;
   filter: blur(0px) brightness(1);
   transform: translate(0, 0);
 }
 
-/* Metadata Strip: MEMORY 01 // GWD / ARCHIVE */
-.memory-meta-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 14px;
-  width: 100%;
-  padding: 0 2px;
-}
-
-.memory-meta-lead {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.memory-accent-dot {
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--color-red);
-  display: inline-block;
-  box-shadow: 0 0 8px var(--color-red-subtle);
-}
-
-.memory-tag-label {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.26em;
-  color: #f2f2f2;
-  text-transform: uppercase;
-  font-weight: 600;
-}
-
-.memory-tag-sub {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  letter-spacing: 0.2em;
-  color: #717171;
-  text-transform: uppercase;
+/* If only one photo in a row (last row with odd count), center it */
+.memory-pair-row .memory-photo-cell:only-child {
+  margin: 0 auto;
 }
 
 /* Medium-Sized Photo Frame */
@@ -149,7 +101,7 @@
   position: relative;
   background: #080808;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.85), 0 0 30px rgba(0, 81, 46, 0.02);
+  box-shadow: 0 20px 55px rgba(0, 0, 0, 0.85), 0 0 28px rgba(0, 81, 46, 0.02);
   overflow: hidden;
   line-height: 0;
 }
@@ -160,11 +112,11 @@
   display: block;
   object-fit: contain;
   filter: contrast(1.02);
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.memory-monolith-card:hover .memory-real-photo {
-  transform: scale(1.015);
+.memory-photo-cell:hover .memory-real-photo {
+  transform: scale(1.013);
 }
 
 /* 11 — THE ACHIEVEMENTS */
@@ -492,30 +444,35 @@
   }
 }
 
-@media (max-width: 768px) {
-  .memories-archive-stage {
-    padding: 90px 16px 130px;
+@media (max-width: 900px) {
+  .memory-pair-row {
+    gap: clamp(20px, 3vw, 40px);
+    padding: 40px clamp(12px, 4vw, 40px) 40px;
   }
-  .memories-header {
-    margin-bottom: 70px;
-  }
-  .memory-stream-row {
-    min-height: 55vh;
-    padding: 50px 0 70px;
-    justify-content: center !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
-  .memory-monolith-card {
-    width: min(85vw, 420px);
-    transform: translateY(24px) !important;
-  }
-  .memory-stream-row.is-revealed .memory-monolith-card {
-    transform: translate(0, 0) !important;
+  .memory-photo-cell {
+    width: clamp(180px, 45%, 400px);
   }
 }
 
 @media (max-width: 640px) {
+  /* Stack pairs vertically on mobile */
+  .memory-pair-row {
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+    padding: 32px 16px 32px;
+  }
+  .memory-photo-cell {
+    width: min(88vw, 400px);
+  }
+  /* Reset directional drift on mobile */
+  .memory-photo-cell.side-left,
+  .memory-photo-cell.side-right {
+    transform: translateY(18px);
+  }
+  .memory-photo-cell.is-revealed {
+    transform: translate(0, 0);
+  }
   .achievements-metrics-grid {
     grid-template-columns: 1fr;
   }
@@ -525,7 +482,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .memory-monolith-card {
+  .memory-photo-cell {
     transition: none !important;
     transform: none !important;
     opacity: 1 !important;

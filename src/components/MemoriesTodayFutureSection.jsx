@@ -2,30 +2,23 @@ import React, { useState } from 'react';
 import { MEMORIES_DATA, ACHIEVEMENTS_DATA } from '../data/gwdData';
 import '../styles/future.css';
 
-function MemoryStreamItem({ memory }) {
+function MemoryPhoto({ memory, side }) {
   const itemRef = React.useRef(null);
   const [inView, setInView] = React.useState(false);
 
   React.useEffect(() => {
     const el = itemRef.current;
     if (!el) return;
-
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setInView(true);
         } else {
-          if (entry.boundingClientRect.top > 0) {
-            setInView(false);
-          }
+          if (entry.boundingClientRect.top > 0) setInView(false);
         }
       },
-      {
-        threshold: 0.15,
-        rootMargin: '0px 0px -5% 0px'
-      }
+      { threshold: 0.12, rootMargin: '0px 0px -5% 0px' }
     );
-
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
@@ -33,29 +26,26 @@ function MemoryStreamItem({ memory }) {
   return (
     <div
       ref={itemRef}
-      className={`memory-stream-row align-${memory.position} ${inView ? 'is-revealed' : ''}`}
+      className={`memory-photo-cell side-${side} ${inView ? 'is-revealed' : ''}`}
     >
-      <article className="memory-monolith-card">
-        {/* Simple cinematic metadata */}
-        <div className="memory-meta-header">
-          <div className="memory-meta-lead">
-            <span className="memory-accent-dot" />
-            <span className="memory-tag-label">{memory.label}</span>
-          </div>
-          <span className="memory-tag-sub">{memory.sub}</span>
-        </div>
+      <div className="memory-image-container">
+        <img
+          src={memory.photo}
+          alt={memory.alt}
+          className="memory-real-photo"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+    </div>
+  );
+}
 
-        {/* Medium-sized real photograph */}
-        <div className="memory-image-container">
-          <img
-            src={memory.photo}
-            alt={memory.alt}
-            className="memory-real-photo"
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
-      </article>
+function MemoryPairRow({ left, right }) {
+  return (
+    <div className="memory-pair-row">
+      {left && <MemoryPhoto memory={left} side="left" />}
+      {right && <MemoryPhoto memory={right} side="right" />}
     </div>
   );
 }
@@ -77,10 +67,14 @@ export default function MemoriesTodayFutureSection() {
             <p className="memories-sub">An archive of moments from the GWD journey. Preserved in quiet space.</p>
           </header>
 
-          {/* Cinematic Vertical Memory Sequence */}
+          {/* Cinematic Paired Memory Sequence — two photos side by side per row */}
           <div className="memories-cinematic-stream">
-            {MEMORIES_DATA.map((mem) => (
-              <MemoryStreamItem key={mem.id} memory={mem} />
+            {Array.from({ length: Math.ceil(MEMORIES_DATA.length / 2) }, (_, i) => (
+              <MemoryPairRow
+                key={i}
+                left={MEMORIES_DATA[i * 2]}
+                right={MEMORIES_DATA[i * 2 + 1]}
+              />
             ))}
           </div>
         </div>
