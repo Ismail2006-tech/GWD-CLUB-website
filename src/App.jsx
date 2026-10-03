@@ -37,7 +37,6 @@ export default function App() {
       { id: '06', el: document.getElementById('core-team') },
       { id: '07', el: document.getElementById('members') },
       { id: '08', el: document.getElementById('events') },
-      { id: '09', el: document.getElementById('projects') },
       { id: '10', el: document.getElementById('memories') },
       { id: '11', el: document.getElementById('achievements') },
       { id: '13', el: document.getElementById('future') },
@@ -73,7 +72,6 @@ export default function App() {
       '06': 'core-team',
       '07': 'members',
       '08': 'events',
-      '09': 'projects',
       '10': 'memories',
       '11': 'achievements',
       '13': 'future',
@@ -123,7 +121,7 @@ export default function App() {
         {/* 06 — THE CORE TEAM, 07 — THE STRUCTURE, 08 — THE MEMBERS */}
         <CoreStructureMembersSection />
 
-        {/* 09 — THE JOURNEY, 10 — THE EVENTS, 11 — THE PROJECTS */}
+        {/* 08 — THE EVENTS */}
         <JourneyEventsProjectsSection />
 
         {/* 10 — THE MEMORIES, 11 — THE ACHIEVEMENTS, 13 — THE FUTURE */}

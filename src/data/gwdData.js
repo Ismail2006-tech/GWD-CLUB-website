@@ -24,7 +24,6 @@ export const CHAPTERS = [
   { id: "06", key: "core-team", title: "THE CORE TEAM", subtitle: "One Club. Many Minds." },
   { id: "07", key: "members", title: "TEAM MEMBERS", subtitle: "Branch Directory" },
   { id: "08", key: "events", title: "THE EVENTS", subtitle: "Recovered Archives" },
-  { id: "09", key: "projects", title: "THE PROJECTS", subtitle: "Case Files" },
   { id: "10", key: "memories", title: "THE MEMORIES", subtitle: "Photography Exhibition" },
   { id: "11", key: "achievements", title: "THE ACHIEVEMENTS", subtitle: "Verified Evidence" },
   { id: "13", key: "future", title: "THE FUTURE", subtitle: "The Unknown" }
