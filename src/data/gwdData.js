@@ -287,8 +287,8 @@ export const ACHIEVEMENTS_DATA = [
     title: "CONTRIVE 2K25",
     blocks: [
       {
-        label: "01 / ACHIEVEMENT",
-        text: "The UniMarket team secured 2nd Place at Contrive 2K25.",
+        label: "01 / ACHIEVEMENT OVERVIEW",
+        text: "Contrive 2K25 brought together student teams to showcase their ideas and projects in a competitive environment. The UniMarket team participated in the event and earned 2nd Place, marking an important achievement for the team and GWD.",
         isAccent: false
       },
       {
