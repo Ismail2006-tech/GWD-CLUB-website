@@ -1,77 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { MEMORIES_DATA, ACHIEVEMENTS_DATA } from '../data/gwdData';
-import { GWD_TODAY_PEOPLE } from '../data/gwdTodayData';
 import '../styles/future.css';
-
-/**
- * Subcomponent for an individual name in Chapter 12 Name Field.
- * Features slow, elegant scroll emergence (blur-to-focus, opacity, vertical settle)
- * and subtle red highlight on center-scroll focus or hover.
- */
-function NameItem({ name, index, activeIndex, setActiveIndex }) {
-  const [emerged, setEmerged] = useState(false);
-  const elementRef = useRef(null);
-
-  useEffect(() => {
-    const el = elementRef.current;
-    if (!el) return;
-
-    // 1. Reveal observer: smoothly emerge from darkness as element scrolls into view
-    const revealObserver = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setEmerged(true);
-        }
-      },
-      {
-        threshold: 0.1,
-        rootMargin: '0px 0px -40px 0px',
-      }
-    );
-
-    // 2. Center band observer: subtle red highlight on currently active name as visitor scrolls
-    const activeObserver = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setActiveIndex(index);
-        }
-      },
-      {
-        rootMargin: '-35% 0px -35% 0px',
-        threshold: 0.1,
-      }
-    );
-
-    revealObserver.observe(el);
-    activeObserver.observe(el);
-
-    return () => {
-      revealObserver.disconnect();
-      activeObserver.disconnect();
-    };
-  }, [index, setActiveIndex]);
-
-  const isActive = activeIndex === index;
-  const rhythmIndex = index % 8;
-
-  return (
-    <span
-      ref={elementRef}
-      className={`name-item rhythm-${rhythmIndex} ${emerged ? 'emerged' : ''} ${isActive ? 'active' : ''}`}
-      onMouseEnter={() => setActiveIndex(index)}
-      onMouseLeave={() => setActiveIndex(null)}
-      tabIndex={0}
-      role="text"
-      aria-label={name}
-    >
-      {name}
-    </span>
-  );
-}
 
 export default function MemoriesTodayFutureSection() {
   const [activeMemory, setActiveMemory] = useState(MEMORIES_DATA[0]);
-  const [activeNameIndex, setActiveNameIndex] = useState(null);
 
   return (
     <section id="memories-today-future" className="future-flow" aria-label="Chapters 10, 11, 12, 13: Memories, Achievements, GWD Today, and The Future">
@@ -175,41 +107,24 @@ export default function MemoriesTodayFutureSection() {
         </div>
       </div>
 
-      {/* 12 — GWD TODAY (The People of GWD: Names Only) */}
+      {/* 12 — GWD TODAY (Pure Reflection) */}
       <div id="today" className="gwd-today-stage">
-        <div className="section-container">
-          {/* Chapter Opening: Extremely Minimal */}
-          <header className="today-header">
-            <div className="chapter-eyebrow">
-              <span className="eyebrow-idx">CHAPTER 12</span>
-              <span className="eyebrow-divider">—</span>
-              <span className="eyebrow-theme">GWD TODAY</span>
-            </div>
+        <div className="today-inner">
 
-            <h2 className="today-title reveal-title">GWD TODAY<span className="title-accent-dot">.</span></h2>
-            <p className="today-people-sub">THE PEOPLE OF GWD</p>
-          </header>
+          {/* Chapter number — appears first */}
+          <span className="today-chapter-label" aria-label="Chapter 12">CHAPTER 12</span>
 
-          {/* Cinematic Name Field: Pure editorial names only */}
-          <div className="name-field-container">
-            <div className="name-field-stream" role="list" aria-label="The People of GWD">
-              {GWD_TODAY_PEOPLE.map((name, idx) => (
-                <NameItem
-                  key={idx}
-                  name={name}
-                  index={idx}
-                  activeIndex={activeNameIndex}
-                  setActiveIndex={setActiveNameIndex}
-                />
-              ))}
-            </div>
-          </div>
+          {/* Primary visual element: GWD TODAY */}
+          <h2 className="today-main-title">
+            GWD<br />TODAY
+          </h2>
 
-          {/* Minimal Final Statement */}
-          <footer className="today-minimal-ending">
-            <div className="today-ending-rule" aria-hidden="true" />
-            <p className="today-ending-statement">THESE ARE THE PEOPLE OF GWD.</p>
-          </footer>
+          {/* Three-line emotional thought */}
+          <p className="today-reflection">
+            Every chapter brought us here.<br />
+            Every person added something to the story.<br />
+            And the story is still being written.
+          </p>
         </div>
       </div>
 

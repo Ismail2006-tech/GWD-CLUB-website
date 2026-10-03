@@ -240,214 +240,126 @@
   color: var(--color-grey-dim);
 }
 
-/* 12 — GWD TODAY: CINEMATIC NAME FIELD */
+/* 12 — GWD TODAY: CINEMATIC REFLECTION */
 .gwd-today-stage {
   position: relative;
-  padding: 120px 24px 160px;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
   background: #0a0a0a;
-  background-image: radial-gradient(ellipse 70% 45% at 50% 25%, rgba(0, 81, 46, 0.06) 0%, transparent 70%);
   overflow: hidden;
 }
 
-.today-header {
-  margin-bottom: 70px;
-  text-align: left;
-  max-width: 1360px;
-  margin-left: auto;
-  margin-right: auto;
+/* Very subtle atmospheric red glow — consistent with site identity */
+.gwd-today-stage::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -55%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(255, 27, 60, 0.045) 0%, transparent 70%);
+  pointer-events: none;
 }
 
-.today-title {
-  font-family: var(--font-display, "Orbitron", sans-serif);
-  font-size: clamp(2.8rem, 7vw, 5.5rem);
-  font-weight: 900;
-  letter-spacing: 0.12em;
-  color: #f2f2f2;
-  text-transform: uppercase;
-  margin: 12px 0 16px;
-}
-
-.today-people-sub {
-  font-family: var(--font-mono, monospace);
-  font-size: clamp(0.95rem, 1.8vw, 1.2rem);
-  font-weight: 500;
-  letter-spacing: 0.28em;
-  color: #8a8a8a;
-  text-transform: uppercase;
-  margin: 0;
-}
-
-/* Name Field Container & Flow */
-.name-field-container {
-  width: 100%;
-  max-width: 1360px;
-  margin: 0 auto;
-  padding: 30px 0 60px;
-}
-
-.name-field-stream {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: flex-start;
-  gap: clamp(12px, 1.8vw, 22px) clamp(16px, 2.4vw, 32px);
-  line-height: 1.6;
-}
-
-/* Name Element Typographic Style */
-.name-item {
-  display: inline-block;
-  font-family: var(--font-display, "Orbitron", sans-serif);
-  font-size: clamp(1.05rem, 1.7vw, 1.5rem);
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #8a8a8a;
-  opacity: 0.16;
-  filter: blur(3px);
-  transform: translateY(12px);
-  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-              filter 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-              color 0.3s ease,
-              text-shadow 0.3s ease;
-  cursor: default;
-  user-select: none;
-  white-space: nowrap;
-  padding: 3px 5px;
-}
-
-/* Emerged State (on scroll into view) */
-.name-item.emerged {
-  color: #f2f2f2;
-  opacity: 0.75;
-  filter: blur(0px);
-  transform: translateY(0);
-}
-
-/* Active Highlight (center viewport focus or hover) */
-.name-item.emerged:hover,
-.name-item.active {
-  color: #ff1b3c;
-  opacity: 1;
-  filter: blur(0px);
-  transform: translateY(-2px);
-  text-shadow: 0 0 20px rgba(255, 27, 60, 0.4), 0 0 6px rgba(255, 27, 60, 0.2);
-}
-
-/* Editorial Rhythmic Variations (Avoids spreadsheet alignment) */
-.name-item.rhythm-0 {
-  margin-right: clamp(6px, 1vw, 16px);
-}
-
-.name-item.rhythm-1 {
-  margin-left: clamp(8px, 1.2vw, 20px);
-  margin-right: clamp(8px, 1.2vw, 18px);
-}
-
-.name-item.rhythm-2 {
-  margin-right: clamp(4px, 0.8vw, 12px);
-  letter-spacing: 0.1em;
-}
-
-.name-item.rhythm-3 {
-  margin-left: clamp(12px, 1.8vw, 28px);
-}
-
-.name-item.rhythm-4 {
-  margin-right: clamp(10px, 1.5vw, 24px);
-}
-
-.name-item.rhythm-5 {
-  margin-left: clamp(6px, 1vw, 14px);
-  margin-right: clamp(6px, 1vw, 16px);
-}
-
-.name-item.rhythm-6 {
-  margin-right: clamp(14px, 2vw, 30px);
-  letter-spacing: 0.07em;
-}
-
-.name-item.rhythm-7 {
-  margin-left: clamp(10px, 1.4vw, 22px);
-}
-
-/* Minimal Final Ending Statement */
-.today-minimal-ending {
-  margin-top: 80px;
+/* Inner centred column */
+.today-inner {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 24px;
-  max-width: 1360px;
-  margin-left: auto;
-  margin-right: auto;
+  align-items: flex-start;
+  gap: 0;
+  max-width: 800px;
+  width: 90%;
+  padding: 100px 0;
 }
 
-.today-ending-rule {
-  width: 44px;
-  height: 1px;
-  background: rgba(255, 27, 60, 0.35);
-}
-
-.today-ending-statement {
+/* CHAPTER 12 label */
+.today-chapter-label {
   font-family: var(--font-mono, monospace);
-  font-size: clamp(0.8rem, 1.4vw, 1.05rem);
-  font-weight: 600;
-  letter-spacing: 0.3em;
+  font-size: clamp(0.65rem, 1.1vw, 0.8rem);
+  letter-spacing: 0.32em;
   color: #8a8a8a;
   text-transform: uppercase;
-  margin: 0;
+  opacity: 0;
+  transform: translateY(12px);
+  animation: today-rise 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+  margin-bottom: 32px;
 }
 
+/* GWD TODAY — primary visual element */
+.today-main-title {
+  font-family: var(--font-display, "Orbitron", sans-serif);
+  font-size: clamp(4rem, 11vw, 10rem);
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  line-height: 0.92;
+  color: #f2f2f2;
+  text-transform: uppercase;
+  margin: 0 0 60px 0;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: today-rise 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
+}
+
+/* Three-line emotional thought */
+.today-reflection {
+  font-family: var(--font-body, "Inter", sans-serif);
+  font-size: clamp(1rem, 1.8vw, 1.25rem);
+  font-weight: 400;
+  line-height: 1.85;
+  color: #8a8a8a;
+  font-style: italic;
+  letter-spacing: 0.01em;
+  margin: 0;
+  max-width: 540px;
+  opacity: 0;
+  transform: translateY(14px);
+  animation: today-rise 1s cubic-bezier(0.16, 1, 0.3, 1) 1s forwards;
+}
+
+/* Shared entrance keyframe */
+@keyframes today-rise {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
 @media (max-width: 768px) {
-  .gwd-today-stage {
-    padding: 80px 18px 100px;
+  .today-inner {
+    padding: 80px 0;
   }
 
-  .today-header {
-    margin-bottom: 36px;
+  .today-main-title {
+    font-size: clamp(3rem, 14vw, 5rem);
+    margin-bottom: 44px;
   }
 
-  .name-field-stream {
-    gap: 10px 14px;
-    justify-content: flex-start;
-  }
-
-  .name-item {
-    font-size: clamp(0.92rem, 3.8vw, 1.15rem);
-    letter-spacing: 0.06em;
-  }
-
-  .name-item.rhythm-0,
-  .name-item.rhythm-1,
-  .name-item.rhythm-2,
-  .name-item.rhythm-3,
-  .name-item.rhythm-4,
-  .name-item.rhythm-5,
-  .name-item.rhythm-6,
-  .name-item.rhythm-7 {
-    margin-left: 0;
-    margin-right: 0;
-  }
-
-  .today-minimal-ending {
-    margin-top: 50px;
+  .today-reflection {
+    font-size: clamp(0.95rem, 4.2vw, 1.1rem);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .name-item {
-    transition: none !important;
-    filter: none !important;
+  .today-chapter-label,
+  .today-main-title,
+  .today-reflection {
+    animation: none !important;
+    opacity: 1 !important;
     transform: none !important;
-    opacity: 0.8 !important;
   }
 }
 
-/* 15 — THE FUTURE (Mirrors The Void) */
+
+
+
+/* 13 — THE FUTURE (Mirrors The Void) */
 .the-future-stage {
   position: relative;
   width: 100vw;
