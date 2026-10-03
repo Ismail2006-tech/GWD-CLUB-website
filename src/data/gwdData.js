@@ -353,31 +353,38 @@ export const ACHIEVEMENTS_DATA = [
   {
     id: "ach-02",
     dossierLabel: "DOSSIER 02",
-    date: "[ACHIEVEMENT DATE]",
-    subtitle: "",
-    title: "[ACHIEVEMENT 02 TITLE]",
+    date: "EUREKA! 2024",
+    subtitle: "TOP 3 — PITCHQUEST",
+    title: "EUREKA! 2024",
     blocks: [
       {
-        label: "01 / HISTORY & CONTEXT",
-        text: "[ACHIEVEMENT HISTORY]",
+        label: "01 / ACHIEVEMENT OVERVIEW",
+        text: "Eureka! 2024 featured PitchQuest, where the GWD team presented its business idea, “GWD: Get Work Done.” The team secured a position in the Top 3 and advanced to the zonal round in Bangalore.",
         isAccent: false
       },
       {
-        label: "02 / ACHIEVEMENT",
-        text: "[ACHIEVEMENT RESULT]",
+        label: "02 / POSITION / RESULT",
+        text: "🏆 TOP 3 — PITCHQUEST",
         isAccent: false
       },
       {
-        label: "03 / OUTCOME & IMPACT",
-        text: "[ACHIEVEMENT IMPACT]",
+        label: "03 / EVENT",
+        text: "Eureka! 2024",
+        isAccent: false
+      },
+      {
+        label: "04 / BUSINESS IDEA",
+        text: "GWD: Get Work Done",
+        isAccent: false
+      },
+      {
+        label: "05 / NEXT STAGE",
+        text: "Advanced to the Zonal Round — Bangalore",
         isAccent: true
       }
     ],
     photos: [
-      "/photos/achievement-01-02.jpg",
-      "/photos/achievement-01-03.jpg",
-      "/photos/achievement-01-04.png",
-      "/photos/achievement-01-05.jpg"
+      "/photos/achievement-02-01.jpg"
     ]
   }
 ];
