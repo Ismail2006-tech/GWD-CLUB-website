@@ -357,6 +357,16 @@
   color: var(--color-grey-muted);
 }
 
+.ach-subtitle-tag {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--color-red);
+  text-transform: uppercase;
+  margin-bottom: -10px;
+}
+
 .ach-event-title {
   font-family: var(--font-display);
   font-size: clamp(1.8rem, 3.5vw, 2.8rem);

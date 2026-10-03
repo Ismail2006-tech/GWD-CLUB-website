@@ -282,11 +282,26 @@ export const ACHIEVEMENTS_DATA = [
   {
     id: "ach-01",
     dossierLabel: "DOSSIER 01",
-    title: "[ACHIEVEMENT 01 TITLE]",
-    date: "[ACHIEVEMENT DATE]",
-    history: "[ACHIEVEMENT HISTORY]",
-    result: "[ACHIEVEMENT RESULT]",
-    impact: "[ACHIEVEMENT IMPACT]",
+    date: "01 MARCH 2025",
+    subtitle: "2ND PLACE",
+    title: "CONTRIVE 2K25",
+    blocks: [
+      {
+        label: "01 / ACHIEVEMENT",
+        text: "The UniMarket team secured 2nd Place at Contrive 2K25.",
+        isAccent: false
+      },
+      {
+        label: "02 / RESULT",
+        text: "🥈 2nd Place",
+        isAccent: false
+      },
+      {
+        label: "03 / TEAM / PROJECT",
+        text: "UniMarket",
+        isAccent: true
+      }
+    ],
     photos: [
       "/photos/achievement-01-01.png",
       "/photos/achievement-01-02.jpg",
@@ -298,11 +313,26 @@ export const ACHIEVEMENTS_DATA = [
   {
     id: "ach-02",
     dossierLabel: "DOSSIER 02",
-    title: "[ACHIEVEMENT 02 TITLE]",
     date: "[ACHIEVEMENT DATE]",
-    history: "[ACHIEVEMENT HISTORY]",
-    result: "[ACHIEVEMENT RESULT]",
-    impact: "[ACHIEVEMENT IMPACT]",
+    subtitle: "",
+    title: "[ACHIEVEMENT 02 TITLE]",
+    blocks: [
+      {
+        label: "01 / HISTORY & CONTEXT",
+        text: "[ACHIEVEMENT HISTORY]",
+        isAccent: false
+      },
+      {
+        label: "02 / ACHIEVEMENT",
+        text: "[ACHIEVEMENT RESULT]",
+        isAccent: false
+      },
+      {
+        label: "03 / OUTCOME & IMPACT",
+        text: "[ACHIEVEMENT IMPACT]",
+        isAccent: true
+      }
+    ],
     photos: [
       "/photos/achievement-01-02.jpg",
       "/photos/achievement-01-03.jpg",

@@ -254,22 +254,17 @@ export default function MemoriesTodayFutureSection() {
                 <span className="ach-status-indicator">VERIFIED RECORD</span>
               </div>
 
+              {currentAchievement.subtitle && (
+                <div className="ach-subtitle-tag">{currentAchievement.subtitle}</div>
+              )}
               <h3 className="ach-event-title">{currentAchievement.title}</h3>
 
-              <div className="ach-description-block">
-                <span className="ach-block-label">01 / HISTORY & CONTEXT</span>
-                <p className="ach-block-text">{currentAchievement.history}</p>
-              </div>
-
-              <div className="ach-description-block">
-                <span className="ach-block-label">02 / ACHIEVEMENT</span>
-                <p className="ach-block-text">{currentAchievement.result}</p>
-              </div>
-
-              <div className="ach-outcome-block">
-                <span className="ach-block-label">03 / OUTCOME & IMPACT</span>
-                <p className="ach-block-text accent-red">{currentAchievement.impact}</p>
-              </div>
+              {currentAchievement.blocks?.map((block, bIdx) => (
+                <div key={bIdx} className="ach-description-block">
+                  <span className="ach-block-label">{block.label}</span>
+                  <p className={`ach-block-text ${block.isAccent ? 'accent-red' : ''}`}>{block.text}</p>
+                </div>
+              ))}
             </div>
           </article>
         </div>
