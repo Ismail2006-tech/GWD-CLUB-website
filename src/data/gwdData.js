@@ -148,34 +148,41 @@ export const JOURNEY_TIMELINE = [
   }
 ];
 
-// Events Data
+// Events Data — Recovered Archives
 export const EVENTS_DATA = [
   {
     id: "event-01",
-    name: "[ADD EVENT NAME]",
-    date: "[ADD DATE]",
-    description: "[ADD EVENT DESCRIPTION]",
-    outcome: "[ADD OUTCOME / IMPACT]",
-    leadId: "bhavya-chaudhary",
-    photoPlaceholder: "[PHOTO — EVENT NAME]",
-  },
-  {
-    id: "event-02",
-    name: "[ADD EVENT NAME]",
-    date: "[ADD DATE]",
-    description: "[ADD EVENT DESCRIPTION]",
-    outcome: "[ADD OUTCOME / IMPACT]",
-    leadId: "anvitha-reddy",
-    photoPlaceholder: "[PHOTO — EVENT NAME]",
-  },
-  {
-    id: "event-03",
-    name: "[ADD EVENT NAME]",
-    date: "[ADD DATE]",
-    description: "[ADD EVENT DESCRIPTION]",
-    outcome: "[ADD OUTCOME / IMPACT]",
-    leadId: "deekshit",
-    photoPlaceholder: "[PHOTO — EVENT NAME]",
+    dossierLabel: "DOSSIER 01",
+    name: "ONE DAY. ONE ROOM. THIRTY STUDIOS.",
+    date: "[ADD VERIFIED DATE]",
+    subtitle: "NOT A LECTURE. A BUILD.",
+    overview: "A one-day build experience at VJIT where 160 students formed 30 teams and built immersive 3D websites before the day ended.",
+    keyMetrics: [
+      "160 PARTICIPANTS",
+      "30 TEAMS",
+      "27 IMMERSIVE 3D WEBSITES SHIPPED"
+    ],
+    format: "NOT A LECTURE. A BUILD.",
+    hostedBy: "The Directors of GWD Global Pvt Ltd",
+    associations: [
+      "Department of CSE (AI & ML)",
+      "ACM Student Chapter",
+      "In association with IIIC — VJIT"
+    ],
+    builtWith: [
+      "Google Antigravity",
+      "Google Stitch",
+      "Claude Opus 5",
+      "Higgsfield MCP",
+      "GWD Skill Library"
+    ],
+    closingQuote: "“The tools are free. The skill is not. Now they have both.”",
+    photos: [
+      "/photos/event-01-01.jpg",
+      "/photos/event-01-02.png",
+      "/photos/event-01-03.png",
+      "/photos/event-01-04.jpg"
+    ]
   }
 ];
 
