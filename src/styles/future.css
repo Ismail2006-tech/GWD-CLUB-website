@@ -1,5 +1,5 @@
 /* ============================================================
-   10, 11, 12 — MEMORIES, ACHIEVEMENTS, AND THE FUTURE
+   10, 11, 13 — MEMORIES, ACHIEVEMENTS, AND THE FUTURE
    ============================================================ */
 
 .future-flow {
@@ -10,7 +10,7 @@
   overflow: hidden;
 }
 
-/* 12 — MEMORIES ARCHIVE */
+/* 10 — THE MEMORIES ARCHIVE */
 .memories-archive-stage {
   position: relative;
   padding: 100px 24px 130px;
@@ -161,7 +161,7 @@
   color: var(--color-red);
 }
 
-/* 13 — THE ACHIEVEMENTS */
+/* 11 — THE ACHIEVEMENTS */
 .achievements-stage {
   position: relative;
   padding: 100px 24px 130px;
@@ -372,6 +372,109 @@
   height: 6px;
   background: var(--color-red);
   border-radius: 50%;
+}
+
+/* Final Ending — Social Media & Email */
+.final-connect-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-top: 64px;
+  width: 100%;
+  max-width: 720px;
+}
+
+.connect-kicker {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  letter-spacing: 0.3em;
+  color: var(--color-red, #ff1b3c);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  display: inline-block;
+}
+
+.connect-message {
+  font-family: var(--font-heading, sans-serif);
+  font-size: clamp(1.1rem, 2.4vw, 1.45rem);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  line-height: 1.45;
+  color: #f2f2f2;
+  text-transform: uppercase;
+  margin: 0 0 44px 0;
+}
+
+.connect-links-group {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 28px 48px;
+  width: 100%;
+}
+
+.connect-link-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  cursor: pointer;
+  padding: 12px 18px;
+  background: transparent;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+  transition: transform 0.25s ease, border-color 0.25s ease;
+}
+
+.connect-platform {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.65rem;
+  letter-spacing: 0.28em;
+  color: #8a8a8a;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  transition: color 0.25s ease;
+}
+
+.connect-handle {
+  font-family: var(--font-heading, sans-serif);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #cccccc;
+  transition: color 0.25s ease;
+}
+
+.connect-link-item:hover,
+.connect-link-item:focus-visible {
+  transform: translateY(-2px);
+  border-bottom-color: var(--color-red, #ff1b3c);
+  outline: none;
+}
+
+.connect-link-item:hover .connect-platform,
+.connect-link-item:focus-visible .connect-platform {
+  color: var(--color-red, #ff1b3c);
+}
+
+.connect-link-item:hover .connect-handle,
+.connect-link-item:focus-visible .connect-handle {
+  color: #ffffff;
+}
+
+@media (max-width: 640px) {
+  .final-connect-section {
+    margin-top: 50px;
+  }
+  .connect-links-group {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .connect-link-item {
+    width: 100%;
+    padding: 12px 0;
+  }
 }
 
 @media (max-width: 1024px) {

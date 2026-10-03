@@ -142,6 +142,49 @@ export default function MemoriesTodayFutureSection() {
             <span className="silence-dot" />
             <span className="silence-code">END OF CURRENT ARCHIVE // HORIZON ACTIVE</span>
           </div>
+
+          {/* Social & Contact Information — Existing Final Ending */}
+          <div className="final-connect-section">
+            <span className="connect-kicker">STAY CONNECTED</span>
+
+            <p className="connect-message">
+              THE JOURNEY CONTINUES<br />
+              BEYOND THIS SCREEN.
+            </p>
+
+            <div className="connect-links-group">
+              <a
+                href="https://www.instagram.com/gwdclub.vjit"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="connect-link-item"
+                aria-label="Instagram: GWD CLUB VJIT"
+              >
+                <span className="connect-platform">INSTAGRAM</span>
+                <span className="connect-handle">GWD CLUB VJIT</span>
+              </a>
+
+              <a
+                href="https://www.linkedin.com/showcase/gwd-club-vjit/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="connect-link-item"
+                aria-label="LinkedIn: GWD CLUB VJIT"
+              >
+                <span className="connect-platform">LINKEDIN</span>
+                <span className="connect-handle">GWD CLUB VJIT</span>
+              </a>
+
+              <a
+                href="mailto:gwdclubvjit@gmail.com"
+                className="connect-link-item"
+                aria-label="Email: gwdclubvjit@gmail.com"
+              >
+                <span className="connect-platform">EMAIL</span>
+                <span className="connect-handle">gwdclubvjit@gmail.com</span>
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </section>

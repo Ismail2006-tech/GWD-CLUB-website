@@ -42,8 +42,7 @@ const CHAPTER_ATMOSPHERE = {
   '10': { intensity: 0.44, fogOpacity: 0.34, lightPos: [0.50, 0.50] },
   // 11 — ACHIEVEMENTS: cleaner atmosphere, sharper red highlights
   '11': { intensity: 0.52, fogOpacity: 0.40, lightPos: [0.46, 0.52] },
-  // 12 — THE FUTURE: gradually fade toward deeper black
-  '12': { intensity: 0.24, fogOpacity: 0.20, lightPos: [0.50, 0.50] },
+  // 13 — THE FUTURE: gradually fade toward deeper black
   '13': { intensity: 0.24, fogOpacity: 0.20, lightPos: [0.50, 0.50] },
   '15': { intensity: 0.24, fogOpacity: 0.20, lightPos: [0.50, 0.50] },
 };
@@ -63,10 +62,9 @@ const KEY_ALIASES = {
   journey: '09',
   events: '10',
   projects: '11',
-  memories: '12',
-  achievements: '13',
-  today: '14',
-  future: '15',
+  memories: '10',
+  achievements: '11',
+  future: '13',
 };
 
 function normalizeChapter(key) {

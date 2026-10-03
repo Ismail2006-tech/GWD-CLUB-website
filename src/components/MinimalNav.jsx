@@ -4,8 +4,9 @@ import './MinimalNav.css';
 export default function MinimalNav({ activeChapter, chapters, onSelectChapter }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const currentChapter = chapters.find(c => c.id === activeChapter) || chapters[0];
-  const activeNum = parseInt(activeChapter, 10) || 0;
-  const progressPercent = (activeNum / (chapters.length - 1)) * 100;
+  const currentIndex = chapters.findIndex(c => c.id === activeChapter);
+  const safeIndex = currentIndex >= 0 ? currentIndex : 0;
+  const progressPercent = (safeIndex / (chapters.length - 1)) * 100;
 
   return (
     <header className="minimal-hud-nav" aria-label="Experience HUD">
@@ -24,7 +25,7 @@ export default function MinimalNav({ activeChapter, chapters, onSelectChapter })
       {/* Top Right: Minimal Persistent Chapter Progress Indicator */}
       <div className="hud-current-chapter" aria-live="polite">
         <span className="chapter-num">{currentChapter.id}</span>
-        <span className="chapter-total">/ {chapters[chapters.length - 1]?.id || '12'}</span>
+        <span className="chapter-total">/ {chapters[chapters.length - 1]?.id || '13'}</span>
         <span className="chapter-dash">—</span>
         <span className="chapter-title">{currentChapter.title}</span>
       </div>
