@@ -207,7 +207,7 @@ export const MEMORIES_DATA = [
     id: "mem-01",
     label: "MEMORY 01",
     sub: "GWD / ARCHIVE",
-    photo: "/photos/memory-01.jpg",
+    photo: "/photos/memory-03.jpg",
     alt: "GWD Archive Memory 01",
     position: "left"
   },
@@ -215,39 +215,39 @@ export const MEMORIES_DATA = [
     id: "mem-02",
     label: "MEMORY 02",
     sub: "GWD / ARCHIVE",
-    photo: "/photos/memory-02.jpg",
+    photo: "/photos/memory-05.jpg",
     alt: "GWD Archive Memory 02",
-    position: "center"
+    position: "right"
   },
   {
     id: "mem-03",
     label: "MEMORY 03",
     sub: "GWD / ARCHIVE",
-    photo: "/photos/memory-03.jpg",
+    photo: "/photos/memory-06.jpg",
     alt: "GWD Archive Memory 03",
-    position: "right"
+    position: "left"
   },
   {
     id: "mem-04",
     label: "MEMORY 04",
     sub: "GWD / ARCHIVE",
-    photo: "/photos/memory-04.jpg",
+    photo: "/photos/memory-07.jpg",
     alt: "GWD Archive Memory 04",
-    position: "left"
+    position: "right"
   },
   {
     id: "mem-05",
     label: "MEMORY 05",
     sub: "GWD / ARCHIVE",
-    photo: "/photos/memory-05.jpg",
+    photo: "/photos/memory-08.png",
     alt: "GWD Archive Memory 05",
-    position: "center"
+    position: "left"
   },
   {
     id: "mem-06",
     label: "MEMORY 06",
     sub: "GWD / ARCHIVE",
-    photo: "/photos/memory-06.jpg",
+    photo: "/photos/memory-09.png",
     alt: "GWD Archive Memory 06",
     position: "right"
   },
@@ -255,7 +255,7 @@ export const MEMORIES_DATA = [
     id: "mem-07",
     label: "MEMORY 07",
     sub: "GWD / ARCHIVE",
-    photo: "/photos/memory-07.jpg",
+    photo: "/photos/memory-10.jpg",
     alt: "GWD Archive Memory 07",
     position: "left"
   },
@@ -263,17 +263,33 @@ export const MEMORIES_DATA = [
     id: "mem-08",
     label: "MEMORY 08",
     sub: "GWD / ARCHIVE",
-    photo: "/photos/memory-08.png",
+    photo: "/photos/memory-11.png",
     alt: "GWD Archive Memory 08",
-    position: "center"
+    position: "right"
   },
   {
     id: "mem-09",
     label: "MEMORY 09",
     sub: "GWD / ARCHIVE",
-    photo: "/photos/memory-09.png",
+    photo: "/photos/memory-12.jpg",
     alt: "GWD Archive Memory 09",
+    position: "left"
+  },
+  {
+    id: "mem-10",
+    label: "MEMORY 10",
+    sub: "GWD / ARCHIVE",
+    photo: "/photos/memory-13.jpg",
+    alt: "GWD Archive Memory 10",
     position: "right"
+  },
+  {
+    id: "mem-11",
+    label: "MEMORY 11",
+    sub: "GWD / ARCHIVE",
+    photo: "/photos/memory-14.jpg",
+    alt: "GWD Archive Memory 11",
+    position: "center"
   }
 ];
 
