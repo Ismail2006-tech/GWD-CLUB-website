@@ -277,12 +277,39 @@ export const MEMORIES_DATA = [
   }
 ];
 
-// Achievements Data
+// Achievements Data — Structured Dossiers with multi-photo support
 export const ACHIEVEMENTS_DATA = [
-  { label: "EVENTS EXECUTED", value: "[VERIFIED COUNT]", placeholder: "[ADD VERIFIED STATISTICS]" },
-  { label: "MEMBERS & BUILDERS", value: "[VERIFIED COUNT]", placeholder: "[ADD VERIFIED STATISTICS]" },
-  { label: "PROJECTS DELIVERED", value: "[VERIFIED COUNT]", placeholder: "[ADD VERIFIED STATISTICS]" },
-  { label: "YEARS OF IMPACT", value: "[VERIFIED COUNT]", placeholder: "[ADD VERIFIED STATISTICS]" },
+  {
+    id: "ach-01",
+    dossierLabel: "DOSSIER 01",
+    title: "[ACHIEVEMENT 01 TITLE]",
+    date: "[ACHIEVEMENT DATE]",
+    history: "[ACHIEVEMENT HISTORY]",
+    result: "[ACHIEVEMENT RESULT]",
+    impact: "[ACHIEVEMENT IMPACT]",
+    photos: [
+      "/photos/achievement-01-01.png",
+      "/photos/achievement-01-02.jpg",
+      "/photos/achievement-01-03.jpg",
+      "/photos/achievement-01-04.png",
+      "/photos/achievement-01-05.jpg"
+    ]
+  },
+  {
+    id: "ach-02",
+    dossierLabel: "DOSSIER 02",
+    title: "[ACHIEVEMENT 02 TITLE]",
+    date: "[ACHIEVEMENT DATE]",
+    history: "[ACHIEVEMENT HISTORY]",
+    result: "[ACHIEVEMENT RESULT]",
+    impact: "[ACHIEVEMENT IMPACT]",
+    photos: [
+      "/photos/achievement-01-02.jpg",
+      "/photos/achievement-01-03.jpg",
+      "/photos/achievement-01-04.png",
+      "/photos/achievement-01-05.jpg"
+    ]
+  }
 ];
 
 // Voices of GWD Quotes (Official Leadership Words)

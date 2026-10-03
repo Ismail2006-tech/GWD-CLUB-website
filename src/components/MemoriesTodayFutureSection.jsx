@@ -50,7 +50,137 @@ function MemoryPairRow({ left, right }) {
   );
 }
 
+function AchievementPhotoCarousel({ photos, title }) {
+  const [photoIdx, setPhotoIdx] = useState(0);
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
+  const total = photos?.length || 0;
+
+  // Reset photo index when photos change
+  React.useEffect(() => {
+    setPhotoIdx(0);
+  }, [photos]);
+
+  const handlePrev = (e) => {
+    e.stopPropagation();
+    if (total <= 1) return;
+    setPhotoIdx((prev) => (prev === 0 ? total - 1 : prev - 1));
+  };
+
+  const handleNext = (e) => {
+    e.stopPropagation();
+    if (total <= 1) return;
+    setPhotoIdx((prev) => (prev === total - 1 ? 0 : prev + 1));
+  };
+
+  // Touch handlers for mobile swipe
+  const minSwipeDistance = 45;
+  const onTouchStart = (e) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+  const onTouchMove = (e) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+    if (isLeftSwipe) {
+      if (total > 1) setPhotoIdx((prev) => (prev === total - 1 ? 0 : prev + 1));
+    }
+    if (isRightSwipe) {
+      if (total > 1) setPhotoIdx((prev) => (prev === 0 ? total - 1 : prev - 1));
+    }
+  };
+
+  const currentPhoto = photos && photos[photoIdx] ? photos[photoIdx] : null;
+
+  return (
+    <div className="achievement-visual-side">
+      <div
+        className="achievement-photo-box"
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+        aria-label={`Photo ${photoIdx + 1} of ${total} for ${title}`}
+      >
+        <div className="doc-photo-corner tl" />
+        <div className="doc-photo-corner br" />
+        <div className="archive-stamp-overlay">AUTHENTICATED ARCHIVE // EVIDENCE</div>
+
+        {currentPhoto ? (
+          <img
+            key={currentPhoto}
+            src={currentPhoto}
+            alt={`${title} - Photo ${photoIdx + 1}`}
+            className="achievement-real-photo"
+            loading="lazy"
+            decoding="async"
+          />
+        ) : (
+          <div className="achievement-photo-placeholder">
+            <span>[ACHIEVEMENT PHOTOGRAPH]</span>
+          </div>
+        )}
+      </div>
+
+      {/* Photo Carousel Navigation Bar */}
+      {total > 0 && (
+        <div className="achievement-carousel-bar">
+          <button
+            className="ach-nav-arrow ach-nav-prev"
+            onClick={handlePrev}
+            aria-label="Previous photograph"
+            disabled={total <= 1}
+          >
+            ← PREV
+          </button>
+
+          <div className="ach-counter-display">
+            <span className="ach-counter-current">
+              {String(photoIdx + 1).padStart(2, '0')}
+            </span>
+            <span className="ach-counter-sep">/</span>
+            <span className="ach-counter-total">
+              {String(total).padStart(2, '0')}
+            </span>
+          </div>
+
+          <button
+            className="ach-nav-arrow ach-nav-next"
+            onClick={handleNext}
+            aria-label="Next photograph"
+            disabled={total <= 1}
+          >
+            NEXT →
+          </button>
+        </div>
+      )}
+
+      {/* Pagination Dots */}
+      {total > 1 && (
+        <div className="achievement-carousel-dots" role="tablist" aria-label="Photo pagination">
+          {photos.map((_, i) => (
+            <button
+              key={i}
+              className={`ach-dot ${i === photoIdx ? 'active' : ''}`}
+              onClick={() => setPhotoIdx(i)}
+              aria-label={`Jump to photo ${i + 1}`}
+              aria-selected={i === photoIdx}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function MemoriesTodayFutureSection() {
+  const [activeAchIdx, setActiveAchIdx] = useState(0);
+  const currentAchievement = ACHIEVEMENTS_DATA[activeAchIdx] || ACHIEVEMENTS_DATA[0];
+
   return (
     <section id="memories-today-future" className="future-flow" aria-label="Chapters 10, 11, 13: Memories, Achievements, and The Future">
       {/* 10 — THE MEMORIES (Cinematic Photo Archive) */}
@@ -80,34 +210,68 @@ export default function MemoriesTodayFutureSection() {
         </div>
       </div>
 
-      {/* 11 — THE ACHIEVEMENTS (Verified Evidence & Checkpoints) */}
+      {/* 11 — THE ACHIEVEMENTS (Premium Digital Archive Dossiers) */}
       <div id="achievements" className="achievements-stage">
         <div className="section-container">
           <header className="achievements-header">
             <div className="chapter-eyebrow">
               <span className="eyebrow-idx">CHAPTER 11</span>
               <span className="eyebrow-divider">—</span>
-              <span className="eyebrow-theme">VERIFIED EVIDENCE & CHECKPOINTS</span>
+              <span className="eyebrow-theme">VERIFIED EVIDENCE & DOSSIERS</span>
             </div>
 
-            <h2 className="achievements-title reveal-title">THE ACHIEVEMENTS<span className="title-accent-dot">.</span></h2>
-            <p className="achievements-sub">Every milestone backed by tangible execution and community footprint.</p>
+            <div className="achievements-headline-split">
+              <h2 className="achievements-title reveal-title">THE ACHIEVEMENTS<span className="title-accent-dot">.</span></h2>
+              <div className="achievement-tabs" role="tablist" aria-label="Achievement dossiers">
+                {ACHIEVEMENTS_DATA.map((ach, idx) => (
+                  <button
+                    key={ach.id}
+                    onClick={() => setActiveAchIdx(idx)}
+                    className={`achievement-tab-btn ${activeAchIdx === idx ? 'active' : ''}`}
+                    role="tab"
+                    aria-selected={activeAchIdx === idx}
+                    data-cursor="button"
+                  >
+                    {ach.dossierLabel || `DOSSIER 0${idx + 1}`}
+                  </button>
+                ))}
+              </div>
+            </div>
           </header>
 
-          <div className="achievements-metrics-grid">
-            {ACHIEVEMENTS_DATA.map((item, idx) => (
-              <div key={idx} className="metric-monolith evidence-card reveal-fade">
-                <div className="evidence-header-row">
-                  <span className="evidence-checkpoint-tag">CHECKPOINT 0{idx + 1}</span>
-                  <span className="evidence-status-pill">AUTHENTICATED</span>
-                </div>
-                <div className="metric-tick" />
-                <span className="metric-number-placeholder">{item.placeholder}</span>
-                <span className="metric-label">{item.label}</span>
-                <span className="metric-subtext">OFFICIAL CLUB EVIDENCE LOG</span>
+          {/* Achievement Dossier Feature (Two-Column Layout) */}
+          <article className="achievement-dossier-feature">
+            {/* Left Side: Photo Archive with Multi-Photo Carousel */}
+            <AchievementPhotoCarousel
+              photos={currentAchievement.photos}
+              title={currentAchievement.title}
+            />
+
+            {/* Right Side: Achievement Information Panel */}
+            <div className="achievement-narrative-side">
+              <div className="ach-meta-strip">
+                <span className="ach-date-tag">ARCHIVE DATE // {currentAchievement.date}</span>
+                <span className="ach-status-indicator">VERIFIED RECORD</span>
               </div>
-            ))}
-          </div>
+
+              <h3 className="ach-event-title">{currentAchievement.title}</h3>
+
+              <div className="ach-description-block">
+                <span className="ach-block-label">01 / HISTORY & CONTEXT</span>
+                <p className="ach-block-text">{currentAchievement.history}</p>
+              </div>
+
+              <div className="ach-description-block">
+                <span className="ach-block-label">02 / ACHIEVEMENT</span>
+                <p className="ach-block-text">{currentAchievement.result}</p>
+              </div>
+
+              <div className="ach-outcome-block">
+                <span className="ach-block-label">03 / OUTCOME & IMPACT</span>
+                <p className="ach-block-text accent-red">{currentAchievement.impact}</p>
+              </div>
+            </div>
+          </article>
         </div>
       </div>
 
