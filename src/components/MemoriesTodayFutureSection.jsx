@@ -6,7 +6,7 @@ export default function MemoriesTodayFutureSection() {
   const [activeMemory, setActiveMemory] = useState(MEMORIES_DATA[0]);
 
   return (
-    <section id="memories-today-future" className="future-flow" aria-label="Chapters 10, 11, 12, 13: Memories, Achievements, GWD Today, and The Future">
+    <section id="memories-today-future" className="future-flow" aria-label="Chapters 10, 11, 13: Memories, Achievements, and The Future">
       {/* 10 — THE MEMORIES (Cinematic Photo Exhibition) */}
       <div id="memories" className="memories-archive-stage">
         <div className="section-container">
@@ -107,26 +107,6 @@ export default function MemoriesTodayFutureSection() {
         </div>
       </div>
 
-      {/* 12 — GWD TODAY (Pure Reflection) */}
-      <div id="today" className="gwd-today-stage">
-        <div className="today-inner">
-
-          {/* Chapter number — appears first */}
-          <span className="today-chapter-label" aria-label="Chapter 12">CHAPTER 12</span>
-
-          {/* Primary visual element: GWD TODAY */}
-          <h2 className="today-main-title">
-            GWD<br />TODAY
-          </h2>
-
-          {/* Three-line emotional thought */}
-          <p className="today-reflection">
-            Every chapter brought us here.<br />
-            Every person added something to the story.<br />
-            And the story is still being written.
-          </p>
-        </div>
-      </div>
 
       {/* 13 — THE FUTURE (Minimal Void + Single Beacon) */}
       <div id="future" className="the-future-stage">

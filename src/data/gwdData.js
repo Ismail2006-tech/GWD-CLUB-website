@@ -27,8 +27,7 @@ export const CHAPTERS = [
   { id: "09", key: "projects", title: "THE PROJECTS", subtitle: "Case Files" },
   { id: "10", key: "memories", title: "THE MEMORIES", subtitle: "Photography Exhibition" },
   { id: "11", key: "achievements", title: "THE ACHIEVEMENTS", subtitle: "Verified Evidence" },
-  { id: "12", key: "today", title: "GWD TODAY", subtitle: "Convergence" },
-  { id: "13", key: "future", title: "THE FUTURE", subtitle: "The Unknown" }
+  { id: "12", key: "future", title: "THE FUTURE", subtitle: "The Unknown" }
 ];
 
 // Single source of truth for all leaders (strictly provided names only)

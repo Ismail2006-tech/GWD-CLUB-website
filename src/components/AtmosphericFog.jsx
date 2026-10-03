@@ -38,17 +38,13 @@ const CHAPTER_ATMOSPHERE = {
   '08': { intensity: 0.50, fogOpacity: 0.38, lightPos: [0.38, 0.60] },
   // 09 — THE JOURNEY: gradual movement, travelling through time
   '09': { intensity: 0.56, fogOpacity: 0.44, lightPos: [0.52, 0.46] },
-  // 10 — EVENTS: slightly more movement, still subtle
-  '10': { intensity: 0.60, fogOpacity: 0.46, lightPos: [0.58, 0.48] },
-  // 11 — PROJECTS / WORK: cleaner atmosphere, less fog behind important info
-  '11': { intensity: 0.48, fogOpacity: 0.36, lightPos: [0.44, 0.54] },
-  // 12 — MEMORIES: softer, dreamier haze, slightly more diffuse
-  '12': { intensity: 0.44, fogOpacity: 0.34, lightPos: [0.50, 0.50] },
-  // 13 — ACHIEVEMENTS: cleaner atmosphere, sharper red highlights
-  '13': { intensity: 0.52, fogOpacity: 0.40, lightPos: [0.46, 0.52] },
-  // 14 — GWD TODAY: clearer, more confident atmosphere
-  '14': { intensity: 0.58, fogOpacity: 0.44, lightPos: [0.50, 0.55] },
-  // 15 — THE FUTURE: gradually fade toward deeper black
+  // 10 — MEMORIES: softer, dreamier haze, slightly more diffuse
+  '10': { intensity: 0.44, fogOpacity: 0.34, lightPos: [0.50, 0.50] },
+  // 11 — ACHIEVEMENTS: cleaner atmosphere, sharper red highlights
+  '11': { intensity: 0.52, fogOpacity: 0.40, lightPos: [0.46, 0.52] },
+  // 12 — THE FUTURE: gradually fade toward deeper black
+  '12': { intensity: 0.24, fogOpacity: 0.20, lightPos: [0.50, 0.50] },
+  '13': { intensity: 0.24, fogOpacity: 0.20, lightPos: [0.50, 0.50] },
   '15': { intensity: 0.24, fogOpacity: 0.20, lightPos: [0.50, 0.50] },
 };
 

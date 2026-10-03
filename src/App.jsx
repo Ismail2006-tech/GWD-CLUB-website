@@ -40,8 +40,7 @@ export default function App() {
       { id: '09', el: document.getElementById('projects') },
       { id: '10', el: document.getElementById('memories') },
       { id: '11', el: document.getElementById('achievements') },
-      { id: '12', el: document.getElementById('today') },
-      { id: '13', el: document.getElementById('future') },
+      { id: '12', el: document.getElementById('future') },
     ];
 
     const handleScroll = () => {
@@ -77,8 +76,7 @@ export default function App() {
       '09': 'projects',
       '10': 'memories',
       '11': 'achievements',
-      '12': 'today',
-      '13': 'future',
+      '12': 'future',
     };
     const targetEl = document.getElementById(idMap[chapterId]);
     if (targetEl) targetEl.scrollIntoView({ behavior: 'smooth' });
@@ -128,7 +126,7 @@ export default function App() {
         {/* 09 — THE JOURNEY, 10 — THE EVENTS, 11 — THE PROJECTS */}
         <JourneyEventsProjectsSection />
 
-        {/* 12 — THE MEMORIES, 13 — THE ACHIEVEMENTS, 14 — GWD TODAY, 15 — THE FUTURE */}
+        {/* 10 — THE MEMORIES, 11 — THE ACHIEVEMENTS, 12 — THE FUTURE */}
         <MemoriesTodayFutureSection />
       </main>
     </div>
