@@ -202,39 +202,47 @@ export const PROJECTS_DATA = [
   }
 ];
 
-// Memories Archive Data
+// Memories Archive Data (Real Photos)
 export const MEMORIES_DATA = [
   {
     id: "mem-01",
-    event: "[EVENT NAME]",
-    date: "[DATE]",
-    caption: "[ADD CAPTION]",
-    photoPlaceholder: "[PHOTO — MEMORY 01]",
-    depth: 1.2
+    label: "MEMORY 01",
+    sub: "GWD / ARCHIVE",
+    photo: "/photos/memory-01.jpg",
+    alt: "GWD Archive Memory 01",
+    position: "left"
   },
   {
     id: "mem-02",
-    event: "[EVENT NAME]",
-    date: "[DATE]",
-    caption: "[ADD CAPTION]",
-    photoPlaceholder: "[PHOTO — MEMORY 02]",
-    depth: 0.8
+    label: "MEMORY 02",
+    sub: "GWD / ARCHIVE",
+    photo: "/photos/memory-02.jpg",
+    alt: "GWD Archive Memory 02",
+    position: "center"
   },
   {
     id: "mem-03",
-    event: "[EVENT NAME]",
-    date: "[DATE]",
-    caption: "[ADD CAPTION]",
-    photoPlaceholder: "[PHOTO — MEMORY 03]",
-    depth: 1.5
+    label: "MEMORY 03",
+    sub: "GWD / ARCHIVE",
+    photo: "/photos/memory-03.jpg",
+    alt: "GWD Archive Memory 03",
+    position: "right"
   },
   {
     id: "mem-04",
-    event: "[EVENT NAME]",
-    date: "[DATE]",
-    caption: "[ADD CAPTION]",
-    photoPlaceholder: "[PHOTO — MEMORY 04]",
-    depth: 0.6
+    label: "MEMORY 04",
+    sub: "GWD / ARCHIVE",
+    photo: "/photos/memory-04.jpg",
+    alt: "GWD Archive Memory 04",
+    position: "left"
+  },
+  {
+    id: "mem-05",
+    label: "MEMORY 05",
+    sub: "GWD / ARCHIVE",
+    photo: "/photos/memory-05.jpg",
+    alt: "GWD Archive Memory 05",
+    position: "center"
   }
 ];
 

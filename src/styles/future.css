@@ -37,128 +37,134 @@
   max-width: 650px;
 }
 
-.memories-viewport-space {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: 36px;
-  align-items: start;
-}
-
-.memories-grid-cluster {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-}
-
-.memory-frame {
-  background: rgba(14, 14, 14, 0.85);
-  border: 1px solid var(--color-border-subtle);
-  padding: 14px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.memory-frame:hover, .memory-frame.active {
-  border-color: var(--color-red);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 15px var(--color-red-subtle);
-}
-
-.memory-photo-box {
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  background: #080808;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(242, 242, 242, 0.05);
-}
-
-.mem-tag {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.15em;
-  color: var(--color-grey-dim);
-}
-
-.memory-quick-meta {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 10px;
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  color: var(--color-grey-muted);
-}
-
-.active-memory-spotlight {
-  background: rgba(16, 16, 16, 0.95);
-  border: 1px solid var(--color-border-subtle);
-  border-top: 3px solid var(--color-red);
-  padding: 36px;
+/* Vertical Cinematic Sequence of Memories */
+.memories-cinematic-stream {
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  position: sticky;
-  top: 100px;
-}
-
-.spotlight-badge {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  letter-spacing: 0.25em;
-  color: var(--color-red);
-}
-
-.spotlight-title {
-  font-family: var(--font-heading);
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: var(--color-white);
-  letter-spacing: 0.06em;
-}
-
-.spotlight-date {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.18em;
-  color: var(--color-grey-muted);
-}
-
-.spotlight-caption-box {
-  background: #090909;
-  border-left: 2px solid var(--color-green-emerald);
-  padding: 16px 20px;
-}
-
-.caption-tag {
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.2em;
-  color: var(--color-grey-muted);
-  display: block;
-  margin-bottom: 4px;
-}
-
-.caption-text {
-  font-family: var(--font-body);
-  font-size: 0.95rem;
-  color: var(--color-white);
-}
-
-.spotlight-photo-frame {
   width: 100%;
-  aspect-ratio: 16 / 9;
-  background: #080808;
+}
+
+.memory-stream-row {
+  display: flex;
+  width: 100%;
+  min-height: 75vh;
+  padding: 90px 0 110px;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+/* Subtle Horizontal Offset Variations */
+.memory-stream-row.align-left {
+  justify-content: flex-start;
+  padding-left: clamp(12px, 5vw, 70px);
+}
+
+.memory-stream-row.align-center {
+  justify-content: center;
+}
+
+.memory-stream-row.align-right {
+  justify-content: flex-end;
+  padding-right: clamp(12px, 5vw, 70px);
+}
+
+/* Memory Monolith Card */
+.memory-monolith-card {
+  width: clamp(340px, 44vw, 560px);
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  background: transparent;
+  box-sizing: border-box;
+
+  /* Initial scroll-in state: dimmed, softly blurred, subtle offset */
+  opacity: 0.22;
+  filter: blur(8px) brightness(0.68);
+  transform: translateY(32px);
+  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 1s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, filter, transform;
+}
+
+.memory-stream-row.align-left .memory-monolith-card {
+  transform: translate(-16px, 32px);
+}
+.memory-stream-row.align-right .memory-monolith-card {
+  transform: translate(16px, 32px);
+}
+
+/* Settle naturally into place when revealed */
+.memory-stream-row.is-revealed .memory-monolith-card {
+  opacity: 1;
+  filter: blur(0px) brightness(1);
+  transform: translate(0, 0);
+}
+
+/* Metadata Strip: MEMORY 01 // GWD / ARCHIVE */
+.memory-meta-header {
   display: flex;
   align-items: center;
-  justify-content: center;
-  border: 1px dashed var(--color-border-subtle);
+  justify-content: space-between;
+  margin-bottom: 14px;
+  width: 100%;
+  padding: 0 2px;
 }
 
-.spotlight-placeholder {
+.memory-meta-lead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.memory-accent-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--color-red);
+  display: inline-block;
+  box-shadow: 0 0 8px var(--color-red-subtle);
+}
+
+.memory-tag-label {
   font-family: var(--font-mono);
-  font-size: 0.85rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.26em;
+  color: #f2f2f2;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.memory-tag-sub {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
   letter-spacing: 0.2em;
-  color: var(--color-red);
+  color: #717171;
+  text-transform: uppercase;
+}
+
+/* Medium-Sized Photo Frame */
+.memory-image-container {
+  width: 100%;
+  position: relative;
+  background: #080808;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.85), 0 0 30px rgba(0, 81, 46, 0.02);
+  overflow: hidden;
+  line-height: 0;
+}
+
+.memory-real-photo {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  filter: contrast(1.02);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.memory-monolith-card:hover .memory-real-photo {
+  transform: scale(1.015);
 }
 
 /* 11 — THE ACHIEVEMENTS */
@@ -478,14 +484,34 @@
 }
 
 @media (max-width: 1024px) {
-  .memories-viewport-space {
-    grid-template-columns: 1fr;
-  }
   .achievements-metrics-grid {
     grid-template-columns: repeat(2, 1fr);
   }
   .current-cohort-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .memories-archive-stage {
+    padding: 90px 16px 130px;
+  }
+  .memories-header {
+    margin-bottom: 70px;
+  }
+  .memory-stream-row {
+    min-height: 55vh;
+    padding: 50px 0 70px;
+    justify-content: center !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  .memory-monolith-card {
+    width: min(85vw, 420px);
+    transform: translateY(24px) !important;
+  }
+  .memory-stream-row.is-revealed .memory-monolith-card {
+    transform: translate(0, 0) !important;
   }
 }
 
@@ -496,7 +522,13 @@
   .current-cohort-grid {
     grid-template-columns: 1fr;
   }
-  .memories-grid-cluster {
-    grid-template-columns: 1fr;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .memory-monolith-card {
+    transition: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+    filter: none !important;
   }
 }

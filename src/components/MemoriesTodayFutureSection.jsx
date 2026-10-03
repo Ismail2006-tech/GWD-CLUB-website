@@ -2,76 +2,86 @@ import React, { useState } from 'react';
 import { MEMORIES_DATA, ACHIEVEMENTS_DATA } from '../data/gwdData';
 import '../styles/future.css';
 
-export default function MemoriesTodayFutureSection() {
-  const [activeMemory, setActiveMemory] = useState(MEMORIES_DATA[0]);
+function MemoryStreamItem({ memory }) {
+  const itemRef = React.useRef(null);
+  const [inView, setInView] = React.useState(false);
+
+  React.useEffect(() => {
+    const el = itemRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+        } else {
+          if (entry.boundingClientRect.top > 0) {
+            setInView(false);
+          }
+        }
+      },
+      {
+        threshold: 0.15,
+        rootMargin: '0px 0px -5% 0px'
+      }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   return (
+    <div
+      ref={itemRef}
+      className={`memory-stream-row align-${memory.position} ${inView ? 'is-revealed' : ''}`}
+    >
+      <article className="memory-monolith-card">
+        {/* Simple cinematic metadata */}
+        <div className="memory-meta-header">
+          <div className="memory-meta-lead">
+            <span className="memory-accent-dot" />
+            <span className="memory-tag-label">{memory.label}</span>
+          </div>
+          <span className="memory-tag-sub">{memory.sub}</span>
+        </div>
+
+        {/* Medium-sized real photograph */}
+        <div className="memory-image-container">
+          <img
+            src={memory.photo}
+            alt={memory.alt}
+            className="memory-real-photo"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+      </article>
+    </div>
+  );
+}
+
+export default function MemoriesTodayFutureSection() {
+  return (
     <section id="memories-today-future" className="future-flow" aria-label="Chapters 10, 11, 13: Memories, Achievements, and The Future">
-      {/* 10 — THE MEMORIES (Cinematic Photo Exhibition) */}
+      {/* 10 — THE MEMORIES (Cinematic Photo Archive) */}
       <div id="memories" className="memories-archive-stage">
         <div className="section-container">
           <header className="memories-header">
             <div className="chapter-eyebrow">
               <span className="eyebrow-idx">CHAPTER 10</span>
               <span className="eyebrow-divider">—</span>
-              <span className="eyebrow-theme">PHOTOGRAPHY EXHIBITION</span>
+              <span className="eyebrow-theme">THE MEMORIES</span>
             </div>
 
             <h2 className="memories-title reveal-title">THE MEMORIES<span className="title-accent-dot">.</span></h2>
-            <p className="memories-sub">An immersive photographic exhibition. Fragments of time, emotion, and shared effort preserved in darkness.</p>
+            <p className="memories-sub">An archive of moments from the GWD journey. Preserved in quiet space.</p>
           </header>
 
-          <div className="memories-viewport-space">
-            {/* Gallery Filmstrip Cluster */}
-            <div className="memories-grid-cluster">
-              {MEMORIES_DATA.map((mem, idx) => {
-                const isSelected = activeMemory.id === mem.id;
-                return (
-                  <div
-                    key={mem.id}
-                    onClick={() => setActiveMemory(mem)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        setActiveMemory(mem);
-                      }
-                    }}
-                    className={`memory-frame ${isSelected ? 'active' : ''}`}
-                    data-cursor="image"
-                    role="button"
-                    tabIndex={0}
-                    aria-label={`Exhibition plate: ${mem.event}`}
-                    style={{ transform: `scale(${isSelected ? 1.04 : 1})` }}
-                  >
-                    <div className="exhibition-plate-num">FRAME 0{idx + 1}</div>
-                    <div className="memory-photo-box">
-                      <span className="mem-tag">{mem.photoPlaceholder}</span>
-                    </div>
-                    <div className="memory-quick-meta">
-                      <span className="mem-event-name">{mem.event}</span>
-                      <span className="mem-date">{mem.date}</span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Active Exhibition Spotlight Frame */}
-            <div className="active-memory-spotlight">
-              <div className="spotlight-badge">EXHIBITION SPOTLIGHT // ACTIVE PLATE</div>
-              <h3 className="spotlight-title">{activeMemory.event}</h3>
-              <span className="spotlight-date">ARCHIVE RECORD // {activeMemory.date}</span>
-
-              <div className="spotlight-caption-box">
-                <span className="caption-tag">EXHIBITION NOTES:</span>
-                <p className="caption-text">{activeMemory.caption}</p>
-              </div>
-
-              <div className="spotlight-photo-frame" data-cursor="image">
-                <div className="spotlight-beam-glow" />
-                <span className="spotlight-placeholder">{activeMemory.photoPlaceholder}</span>
-              </div>
-            </div>
+          {/* Cinematic Vertical Memory Sequence */}
+          <div className="memories-cinematic-stream">
+            {MEMORIES_DATA.map((mem) => (
+              <MemoryStreamItem key={mem.id} memory={mem} />
+            ))}
           </div>
         </div>
       </div>
