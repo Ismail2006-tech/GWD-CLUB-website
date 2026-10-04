@@ -5,10 +5,10 @@
 
 export const TEAM_BRANCHES = [
   {
-    id: "event-management",
-    code: "BRANCH 01",
-    name: "EVENT MANAGEMENT TEAM",
-    category: "OPERATIONS & EXPERIENCES",
+    id: "management",
+    code: "01",
+    name: "MANAGEMENT TEAM",
+    category: "OPERATIONS & STRATEGY",
     status: "ARCHIVE ACTIVE",
     photoUrl: "/photos/team-management.jpg",
     description: "Orchestrating strategy, operations, and cross-team execution across all GWD initiatives.",
@@ -23,7 +23,7 @@ export const TEAM_BRANCHES = [
   },
   {
     id: "marketing",
-    code: "BRANCH 02",
+    code: "02",
     name: "MARKETING TEAM",
     category: "STRATEGIC OUTREACH & GROWTH",
     status: "ARCHIVE ACTIVE",
@@ -41,7 +41,7 @@ export const TEAM_BRANCHES = [
   },
   {
     id: "pr",
-    code: "BRANCH 03",
+    code: "03",
     name: "PR TEAM",
     category: "PUBLIC RELATIONS & COMMUNICATIONS",
     status: "ARCHIVE ACTIVE",
@@ -56,7 +56,7 @@ export const TEAM_BRANCHES = [
   },
   {
     id: "creative",
-    code: "BRANCH 04",
+    code: "04",
     name: "CREATIVE & VISUAL MEDIA",
     category: "VISUAL EXPRESSION & PRODUCTION",
     status: "ARCHIVE ACTIVE",
@@ -74,7 +74,7 @@ export const TEAM_BRANCHES = [
   },
   {
     id: "technical",
-    code: "BRANCH 05",
+    code: "05",
     name: "TECHNICAL TEAM",
     category: "SYSTEMS & DIGITAL INFRASTRUCTURE",
     status: "ARCHIVE ACTIVE",

@@ -1,27 +1,34 @@
-import React, { useState } from 'react';
-import { EVENTS_DATA } from '../data/gwdData';
+import React, { useState, useEffect, useRef } from 'react';
+import { EVENTS_DATA, JOURNEY_DATA, PROJECTS_DATA } from '../data/gwdData';
 import '../styles/journey.css';
 
 function EventPhotoCarousel({ photos, title }) {
   const [photoIdx, setPhotoIdx] = useState(0);
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
+  const [isDeveloping, setIsDeveloping] = useState(false);
   const total = photos?.length || 0;
 
-  React.useEffect(() => {
+  useEffect(() => {
     setPhotoIdx(0);
   }, [photos]);
+
+  const switchPhoto = (newIdx) => {
+    setIsDeveloping(true);
+    setPhotoIdx(newIdx);
+    setTimeout(() => setIsDeveloping(false), 300);
+  };
 
   const handlePrev = (e) => {
     e.stopPropagation();
     if (total <= 1) return;
-    setPhotoIdx((prev) => (prev === 0 ? total - 1 : prev - 1));
+    switchPhoto(photoIdx === 0 ? total - 1 : photoIdx - 1);
   };
 
   const handleNext = (e) => {
     e.stopPropagation();
     if (total <= 1) return;
-    setPhotoIdx((prev) => (prev === total - 1 ? 0 : prev + 1));
+    switchPhoto(photoIdx === total - 1 ? 0 : photoIdx + 1);
   };
 
   const minSwipeDistance = 45;
@@ -35,13 +42,11 @@ function EventPhotoCarousel({ photos, title }) {
   const onTouchEnd = () => {
     if (!touchStart || !touchEnd) return;
     const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > minSwipeDistance;
-    const isRightSwipe = distance < -minSwipeDistance;
-    if (isLeftSwipe && total > 1) {
-      setPhotoIdx((prev) => (prev === total - 1 ? 0 : prev + 1));
+    if (distance > minSwipeDistance && total > 1) {
+      switchPhoto(photoIdx === total - 1 ? 0 : photoIdx + 1);
     }
-    if (isRightSwipe && total > 1) {
-      setPhotoIdx((prev) => (prev === 0 ? total - 1 : prev - 1));
+    if (distance < -minSwipeDistance && total > 1) {
+      switchPhoto(photoIdx === 0 ? total - 1 : photoIdx - 1);
     }
   };
 
@@ -65,7 +70,7 @@ function EventPhotoCarousel({ photos, title }) {
             key={currentPhoto}
             src={currentPhoto}
             alt={`${title} - Photo ${photoIdx + 1}`}
-            className="doc-real-photo"
+            className={`doc-real-photo ${isDeveloping ? 'photo-developing' : ''}`}
             loading="lazy"
             decoding="async"
           />
@@ -74,7 +79,6 @@ function EventPhotoCarousel({ photos, title }) {
         )}
       </div>
 
-      {/* Photo Carousel Navigation Bar */}
       {total > 0 && (
         <div className="doc-carousel-bar">
           <button
@@ -107,14 +111,13 @@ function EventPhotoCarousel({ photos, title }) {
         </div>
       )}
 
-      {/* Pagination Dots */}
       {total > 1 && (
         <div className="doc-carousel-dots" role="tablist" aria-label="Photo pagination">
           {photos.map((_, i) => (
             <button
               key={i}
               className={`doc-dot ${i === photoIdx ? 'active' : ''}`}
-              onClick={() => setPhotoIdx(i)}
+              onClick={() => switchPhoto(i)}
               aria-label={`Jump to photo ${i + 1}`}
               aria-selected={i === photoIdx}
             />
@@ -127,11 +130,39 @@ function EventPhotoCarousel({ photos, title }) {
 
 export default function JourneyEventsProjectsSection() {
   const [activeEventIdx, setActiveEventIdx] = useState(0);
+  const [activeProjectIdx, setActiveProjectIdx] = useState(0);
+  const [timelineProgress, setTimelineProgress] = useState(0.2);
+
+  const timelineRef = useRef(null);
   const currentEvent = EVENTS_DATA[activeEventIdx] || EVENTS_DATA[0];
+  const currentProject = PROJECTS_DATA[activeProjectIdx] || PROJECTS_DATA[0];
+
+  // Scroll listener for Chapter 09 travelling line
+  useEffect(() => {
+    const handleScroll = () => {
+      const el = timelineRef.current;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      if (rect.top <= windowHeight && rect.bottom >= 0) {
+        const total = rect.height;
+        const current = windowHeight * 0.7 - rect.top;
+        const progress = Math.max(0, Math.min(1, current / total));
+        setTimelineProgress(progress);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
-    <section id="journey-events-projects" className="journey-flow" aria-label="Chapter 08: Recovered Archive">
-      {/* 08 — THE EVENTS (Recovered Archive) */}
+    <section id="journey-events-projects" className="journey-flow" aria-label="Chapters 08, 09, 11: Events, Journey, Projects">
+
+      {/* ─────────────────────────────────────────────
+         08 — THE EVENTS (Recovered Archive)
+         ───────────────────────────────────────────── */}
       <div id="events" className="events-documentary-stage">
         <div className="section-container">
           <header className="events-header">
@@ -160,15 +191,12 @@ export default function JourneyEventsProjectsSection() {
             </div>
           </header>
 
-          {/* Recovered Archive Feature */}
           <article className="documentary-feature">
-            {/* Cinematic Large Photo Frame Carousel */}
             <EventPhotoCarousel
               photos={currentEvent.photos}
               title={currentEvent.name}
             />
 
-            {/* Archive Dossier Details */}
             <div className="documentary-narrative-side">
               <div className="doc-meta-strip">
                 <span className="doc-date-tag">ARCHIVE DATE // {currentEvent.date}</span>
@@ -282,6 +310,170 @@ export default function JourneyEventsProjectsSection() {
           </article>
         </div>
       </div>
+
+      {/* ─────────────────────────────────────────────
+         09 — THE JOURNEY (The Travelling Line Timeline)
+         ───────────────────────────────────────────── */}
+      <div id="journey" className="journey-timeline-stage" ref={timelineRef}>
+        <div className="section-container">
+          <header className="journey-header">
+            <div className="chapter-eyebrow">
+              <span className="eyebrow-idx">CHAPTER 09</span>
+              <span className="eyebrow-divider">—</span>
+              <span className="eyebrow-theme">THE TRAVELLING LINE</span>
+            </div>
+            <h2 className="journey-title reveal-title">THE JOURNEY<span className="title-accent-dot">.</span></h2>
+            <p className="journey-sub">
+              A visible path through the growing story of GWD. From the first spark to competitive execution.
+            </p>
+          </header>
+
+          <div className="vertical-timeline-track">
+            {/* The Physical Red Travelling Line */}
+            <div
+              className="central-timeline-laser"
+              style={{
+                height: `${Math.max(10, Math.min(100, timelineProgress * 100))}%`,
+                transition: 'height 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
+              }}
+            />
+
+            {JOURNEY_DATA.map((item, idx) => {
+              const nodeThreshold = (idx + 0.5) / JOURNEY_DATA.length;
+              const isPassed = timelineProgress >= nodeThreshold;
+              const isSideLeft = idx % 2 === 0;
+
+              return (
+                <div
+                  key={item.id}
+                  className={`timeline-node-row ${isSideLeft ? 'left' : 'right'} ${isPassed ? 'node-reached' : ''}`}
+                >
+                  <div className={`node-marker ${isPassed ? 'active' : ''}`}>
+                    <div className="node-glow-ring" />
+                    <div className="node-inner-point" />
+                  </div>
+
+                  <div className="timeline-node-card">
+                    <div className="timeline-card-header">
+                      <span className="timeline-phase-tag">{item.phase} // {item.code}</span>
+                      <span className="timeline-period-badge">{item.period}</span>
+                    </div>
+                    <h3 className="timeline-card-title">{item.title}</h3>
+                    <p className="timeline-card-desc">{item.summary}</p>
+                    <span className="timeline-anchor-tag">{item.tag}</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* ─────────────────────────────────────────────
+         11 — THE PROJECTS / WORK (Case Files)
+         ───────────────────────────────────────────── */}
+      <div id="projects" className="projects-story-stage">
+        <div className="section-container">
+          <header className="projects-header">
+            <div className="chapter-eyebrow">
+              <span className="eyebrow-idx">CHAPTER 11</span>
+              <span className="eyebrow-divider">—</span>
+              <span className="eyebrow-theme">CASE FILES &amp; BUILDS</span>
+            </div>
+
+            <div className="events-headline-split">
+              <h2 className="projects-title reveal-title">THE PROJECTS<span className="title-accent-dot">.</span></h2>
+              <div className="event-tabs" role="tablist" aria-label="Project Case Files">
+                {PROJECTS_DATA.map((proj, pIdx) => (
+                  <button
+                    key={proj.id}
+                    onClick={() => setActiveProjectIdx(pIdx)}
+                    className={`event-tab-btn ${activeProjectIdx === pIdx ? 'active' : ''}`}
+                    role="tab"
+                    aria-selected={activeProjectIdx === pIdx}
+                    data-cursor="button"
+                  >
+                    {proj.caseLabel}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <p className="projects-sub">
+              Verified project files executed by GWD squads. Problem → Idea → People → Build → Result.
+            </p>
+          </header>
+
+          <article className="project-case-dossier">
+            <div className="project-case-header">
+              <span className="case-id-badge">{currentProject.caseLabel}</span>
+              <h3 className="case-main-title">{currentProject.title}</h3>
+              <span className="case-lead-tag">{currentProject.lead}</span>
+            </div>
+
+            <div className="case-progression-stream">
+              {/* 01 // PROBLEM */}
+              <div className="case-step-node">
+                <div className="case-node-pin">
+                  <span className="pin-dot" />
+                  <span className="pin-line" />
+                </div>
+                <div className="case-step-content">
+                  <span className="step-label">01 // THE PROBLEM</span>
+                  <p className="step-text">{currentProject.problem}</p>
+                </div>
+              </div>
+
+              {/* 02 // IDEA */}
+              <div className="case-step-node">
+                <div className="case-node-pin">
+                  <span className="pin-dot" />
+                  <span className="pin-line" />
+                </div>
+                <div className="case-step-content">
+                  <span className="step-label">02 // THE IDEA</span>
+                  <p className="step-text">{currentProject.idea}</p>
+                </div>
+              </div>
+
+              {/* 03 // PEOPLE */}
+              <div className="case-step-node">
+                <div className="case-node-pin">
+                  <span className="pin-dot" />
+                  <span className="pin-line" />
+                </div>
+                <div className="case-step-content">
+                  <span className="step-label">03 // THE PEOPLE</span>
+                  <p className="step-text">{currentProject.people}</p>
+                </div>
+              </div>
+
+              {/* 04 // BUILD */}
+              <div className="case-step-node">
+                <div className="case-node-pin">
+                  <span className="pin-dot" />
+                  <span className="pin-line" />
+                </div>
+                <div className="case-step-content">
+                  <span className="step-label">04 // THE BUILD</span>
+                  <p className="step-text">{currentProject.build}</p>
+                </div>
+              </div>
+
+              {/* 05 // RESULT */}
+              <div className="case-step-node result-step">
+                <div className="case-node-pin">
+                  <span className="pin-dot accent" />
+                </div>
+                <div className="case-step-content">
+                  <span className="step-label accent">05 // THE RESULT</span>
+                  <p className="step-text accent-red">{currentProject.result}</p>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+
     </section>
   );
 }

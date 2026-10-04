@@ -8,11 +8,11 @@ import '../styles/livingSystem.css';
  * Shows: MARKETING, PR, CREATIVE & VISUAL MEDIA, TECHNICAL
  */
 
-// Per master prompt §18: Do NOT include EVENT MANAGEMENT in this branch selector.
-const DISPLAYED_BRANCHES = TEAM_BRANCHES.filter(b => b.id !== 'event-management');
+// Per master prompt §18: Exact branch order: 01 MANAGEMENT, 02 MARKETING, 03 PR, 04 CREATIVE, 05 TECHNICAL
+const DISPLAYED_BRANCHES = TEAM_BRANCHES;
 
 export default function LivingSystemSection({ id = "members" }) {
-  const [activeBranchId, setActiveBranchId] = useState(DISPLAYED_BRANCHES[0]?.id || 'marketing');
+  const [activeBranchId, setActiveBranchId] = useState(DISPLAYED_BRANCHES[0]?.id || 'management');
   const [photoRevealed, setPhotoRevealed] = useState(false);
   const photoRef = useRef(null);
 

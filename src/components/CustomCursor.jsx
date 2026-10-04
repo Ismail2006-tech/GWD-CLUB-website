@@ -38,9 +38,42 @@ export default function CustomCursor() {
       const target = e.target;
       if (!target || !(target instanceof Element)) return;
 
-      // Image or media container
+      // Master Prompt §30 Cursor States:
+      // PERSON → TRACE
+      const personEl = target.closest('.leader-monolith-card, .constellation-node, .tm-member-pill, .emergence-stage');
+      if (personEl) {
+        setCursorType('image');
+        setCursorText('TRACE');
+        return;
+      }
+
+      // PROJECT → OPEN
+      const projectEl = target.closest('.project-case-dossier, .projects-story-stage');
+      if (projectEl) {
+        setCursorType('button');
+        setCursorText('OPEN');
+        return;
+      }
+
+      // CHAPTER → ENTER
+      const chapterEl = target.closest('.rail-point, .drawer-chapter-row, .hud-index-toggle, .stage-pill');
+      if (chapterEl) {
+        setCursorType('button');
+        setCursorText('ENTER');
+        return;
+      }
+
+      // EVENT → ENTER
+      const eventEl = target.closest('.events-documentary-stage, .event-tab-btn');
+      if (eventEl) {
+        setCursorType('button');
+        setCursorText('ENTER');
+        return;
+      }
+
+      // PHOTO → VIEW
       const imageEl = target.closest(
-        '[data-cursor="image"], .leader-photo-frame, .leader-photo-viewport, .node-photo-disc, .group-photo-viewport, .member-editorial-card, .doc-photo-box, .proj-photo-frame, .memory-frame, .cohort-card, .timeline-photo-slot'
+        '[data-cursor="image"], .doc-photo-box, .memory-image-container, .achievement-photo-box, .core-team-group-frame, .tm-photo-frame'
       );
       if (imageEl) {
         setCursorType('image');
@@ -50,7 +83,7 @@ export default function CustomCursor() {
 
       // Buttons and CTA triggers
       const buttonEl = target.closest(
-        'button, [role="button"], [role="tab"], .void-scroll-invitation, .audio-atmosphere-hud, .stage-pill, .control-nav-btn, .event-tab-btn, .hud-index-toggle, .rail-point, .drawer-chapter-row, .roster-item'
+        'button, [role="button"], [role="tab"], .void-scroll-invitation, .audio-atmosphere-hud, .control-nav-btn'
       );
       if (buttonEl) {
         setCursorType('button');

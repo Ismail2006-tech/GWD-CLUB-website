@@ -22,11 +22,13 @@ export const CHAPTERS = [
   { id: "04", key: "leaders", title: "THE LEADERS", subtitle: "Current Leadership" },
   { id: "05", key: "voices", title: "VOICES OF GWD CLUB", subtitle: "Authentic Words" },
   { id: "06", key: "core-team", title: "THE CORE TEAM", subtitle: "One Club. Many Minds." },
-  { id: "07", key: "members", title: "TEAM MEMBERS", subtitle: "Branch Directory" },
+  { id: "07", key: "members", title: "TEAM MEMBERS", subtitle: "Five Core Domains" },
   { id: "08", key: "events", title: "THE EVENTS", subtitle: "Recovered Archives" },
+  { id: "09", key: "journey", title: "THE JOURNEY", subtitle: "The Travelling Line" },
   { id: "10", key: "memories", title: "THE MEMORIES", subtitle: "Photography Exhibition" },
-  { id: "11", key: "achievements", title: "THE ACHIEVEMENTS", subtitle: "Verified Evidence" },
-  { id: "13", key: "future", title: "THE FUTURE", subtitle: "The Unknown" }
+  { id: "11", key: "projects", title: "THE PROJECTS", subtitle: "Case Files" },
+  { id: "achievements", key: "achievements", title: "THE ACHIEVEMENTS", subtitle: "Verified Evidence" },
+  { id: "future", key: "future", title: "THE FUTURE", subtitle: "The Story is Still Being Written" }
 ];
 
 // Single source of truth for all leaders (strictly provided names only)
@@ -222,25 +224,78 @@ export const EVENTS_DATA = [
   }
 ];
 
-// Projects Data
+// Chapter 09 — The Journey Timeline Milestones (Travelling Line Progression)
+export const JOURNEY_DATA = [
+  {
+    id: "journey-01",
+    phase: "PHASE 01",
+    code: "GENESIS",
+    title: "THE INCEPTION",
+    period: "ORIGIN",
+    summary: "Every journey begins with a single point — an ambition to connect theoretical learning with tangible real-world building.",
+    tag: "ORIGIN POINT"
+  },
+  {
+    id: "journey-02",
+    phase: "PHASE 02",
+    code: "ORIENTATION",
+    title: "ORIENTATION DAY",
+    period: "CAMPUS ARCHIVE",
+    summary: "Introducing GWD Club to the college community at VJIT. Building awareness and connecting with curious minds.",
+    tag: "FIRST CONNECTION"
+  },
+  {
+    id: "journey-03",
+    phase: "PHASE 03",
+    code: "STRUCTURE",
+    title: "CORE TEAM EXPANSION",
+    period: "LEADERSHIP",
+    summary: "Welcoming dedicated minds across five specialized domains. Transforming one idea into an organized collective.",
+    tag: "ORGANIZATION"
+  },
+  {
+    id: "journey-04",
+    phase: "PHASE 04",
+    code: "EXECUTION",
+    title: "ONE DAY. ONE ROOM. THIRTY STUDIOS.",
+    period: "MAJOR SPRINT",
+    summary: "160 participants, 30 teams, and 27 immersive 3D websites shipped in a high-intensity build day.",
+    tag: "MAJOR SPRINT"
+  },
+  {
+    id: "journey-05",
+    phase: "PHASE 05",
+    code: "VALIDATION",
+    title: "CONTRIVE 2K25 & EUREKA",
+    period: "COMPETITIVE PODIUM",
+    summary: "UniMarket team takes 2nd Place at Contrive 2K25; GWD team reaches Top 3 in PitchQuest at Eureka 2024.",
+    tag: "EVIDENCE"
+  }
+];
+
+// Chapter 11 — Projects / Work (Case Files: PROBLEM → IDEA → PEOPLE → BUILD → RESULT)
 export const PROJECTS_DATA = [
   {
     id: "proj-01",
-    title: "[ADD PROJECT]",
-    whyCreated: "[ADD PURPOSE / REASON]",
-    whatCreated: "[ADD WHAT WAS CREATED]",
-    result: "[ADD RESULT]",
-    leadId: "deekshit",
-    photoPlaceholder: "[PHOTO — PROJECT]",
+    caseLabel: "CASE FILE 01",
+    title: "IMMERSIVE 3D WEB ARCHITECTURE",
+    lead: "Deekshit // Technical Lead",
+    problem: "Traditional 2D web interfaces create passive browsing experiences rather than active engagement.",
+    idea: "Empower 160 students to master 3D spatial web design and AI-assisted workflows in a single-day intensive sprint.",
+    people: "160 Participants • 30 Studios • Technical & Creative Domain Leads",
+    build: "Google Antigravity, Google Stitch, Claude Opus 5, Higgsfield MCP, GWD Skill Library",
+    result: "27 Production 3D websites shipped and demonstrated within hours."
   },
   {
     id: "proj-02",
-    title: "[ADD PROJECT]",
-    whyCreated: "[ADD PURPOSE / REASON]",
-    whatCreated: "[ADD WHAT WAS CREATED]",
-    result: "[ADD RESULT]",
-    leadId: "nishta",
-    photoPlaceholder: "[PHOTO — PROJECT]",
+    caseLabel: "CASE FILE 02",
+    title: "UNIMARKET CAMPUS COMMERCE",
+    lead: "GWD Builder Team",
+    problem: "Campus peer commerce and student project asset sharing lacked a verified, secure platform.",
+    idea: "An intuitive student-verified marketplace and resource exchange engine.",
+    people: "Cross-disciplinary GWD Development Squad",
+    build: "React, responsive architecture, structured data flows, friction-free UX",
+    result: "Secured 2nd Place at Contrive 2K25 showcase."
   }
 ];
 

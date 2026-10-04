@@ -24,8 +24,8 @@ export default function MinimalNav({ activeChapter, chapters, onSelectChapter })
 
       {/* Top Right: Minimal Persistent Chapter Progress Indicator */}
       <div className="hud-current-chapter" aria-live="polite">
-        <span className="chapter-num">{currentChapter.id}</span>
-        <span className="chapter-total">/ {chapters[chapters.length - 1]?.id || '13'}</span>
+        <span className="chapter-num">{currentChapter.id.length <= 2 ? currentChapter.id : currentChapter.id.slice(0, 3).toUpperCase()}</span>
+        <span className="chapter-total">/ 11</span>
         <span className="chapter-dash">—</span>
         <span className="chapter-title">{currentChapter.title}</span>
       </div>

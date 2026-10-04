@@ -11,7 +11,7 @@ const PHASE_DESCRIPTIONS = [
   "The story expands beyond a single connection — a third point emerges, and what began as one point becomes a network. Different people, different roles, and different connections begin coming together, creating the foundation of a growing community."
 ];
 
-// Single source of truth for Chapter 01 Phase Leaders
+// Single source of truth for Chapter 00 / 01 Phase Leaders
 const PHASE_LEADERS = [
   {
     phaseIndex: 0,
@@ -36,7 +36,6 @@ const PHASE_LEADERS = [
   }
 ];
 
-// Smooth cinematic easing: gentle start, continuous momentum, seamless settle
 function easeCinematic(t) {
   return t < 0.5 
     ? 4 * t * t * t 
@@ -48,25 +47,28 @@ export default function BeginningSection() {
 
   // Active phase tab selection (0, 1, or 2)
   const [activeStageIndex, setActiveStageIndex] = useState(0);
-
-  // Currently displayed leader in DOM (strictly ONLY ONE leader at a time)
   const [displayedStageIndex, setDisplayedStageIndex] = useState(0);
 
-  // Narrative description reveal
-  const [showDesc, setShowDesc] = useState(false);
+  // Network connection state
+  const [node1Active, setNode1Active] = useState(false);
+  const [line1Progress, setLine1Progress] = useState(0); // 0 to 1
+  const [node2Active, setNode2Active] = useState(false);
+  const [node3Active, setNode3Active] = useState(false);
+  const [networkTriadConnected, setNetworkTriadConnected] = useState(false);
 
-  // Identity visibility flags for staggered reveal
+  // Narrative and identity reveal
+  const [showDesc, setShowDesc] = useState(false);
   const [nameVisible, setNameVisible] = useState(false);
   const [roleVisible, setRoleVisible] = useState(false);
 
-  // DOM refs
+  // Founding archive suspense state
+  const [archiveStage, setArchiveStage] = useState(0); // 0=fragment, 1=partial, 2=full
+
   const sectionRef = useRef(null);
   const heroImgRef = useRef(null);
+  const archiveRef = useRef(null);
 
-  // Flag to ensure initial President reveal only triggers ONCE on first viewport entry
   const hasTriggeredInitialRevealRef = useRef(false);
-
-  // Animation frame and timer tracking
   const rafIdRef = useRef(null);
   const transitionIdRef = useRef(0);
   const timersRef = useRef([]);
@@ -78,7 +80,7 @@ export default function BeginningSection() {
 
   const currentLeader = PHASE_LEADERS[displayedStageIndex];
 
-  // Eagerly pre-cache all leadership photos immediately on mount
+  // Pre-cache photos
   useEffect(() => {
     PHASE_LEADERS.forEach((l) => {
       const img = new Image();
@@ -86,12 +88,11 @@ export default function BeginningSection() {
     });
   }, []);
 
-  // Unified single-progress emergence animation runner (0 → 1 continuous motion)
+  // Emergence animation runner
   const runEmergenceAnimation = useCallback((thisTransition) => {
     const el = heroImgRef.current;
     if (!el) return;
 
-    // Reset styles for emergence starting from hidden state
     el.style.transition = 'none';
     el.style.opacity = '0';
     el.style.transform = 'scale(0.94)';
@@ -101,7 +102,7 @@ export default function BeginningSection() {
     el.style.webkitMaskImage = initialMask;
     el.style.maskImage = initialMask;
 
-    const duration = 1400; // 1.4s continuous cinematic reveal
+    const duration = 1200;
     const startTime = performance.now();
 
     const frameStep = (now) => {
@@ -112,7 +113,6 @@ export default function BeginningSection() {
       const p = easeCinematic(u);
 
       if (heroImgRef.current) {
-        // Organic expanding feathered reveal from center (50% 45%) outward
         const inner = (p * 72).toFixed(1);
         const mid = (p * 92 + 8).toFixed(1);
         const outer = (p * 115 + 18).toFixed(1);
@@ -128,7 +128,6 @@ export default function BeginningSection() {
       if (u < 1) {
         rafIdRef.current = requestAnimationFrame(frameStep);
       } else {
-        // Complete & fully settled: remove temporary reveal mask so the permanent soft edge feathering takes over
         if (heroImgRef.current) {
           heroImgRef.current.style.webkitMaskImage = '';
           heroImgRef.current.style.maskImage = '';
@@ -137,10 +136,7 @@ export default function BeginningSection() {
           heroImgRef.current.style.transform = 'scale(1)';
         }
 
-        // Reveal Name smoothly
         setNameVisible(true);
-
-        // Then reveal Role 180ms later
         const tRole = setTimeout(() => {
           if (transitionIdRef.current !== thisTransition) return;
           setRoleVisible(true);
@@ -153,9 +149,8 @@ export default function BeginningSection() {
     rafIdRef.current = requestAnimationFrame(frameStep);
   }, []);
 
-  // Handle phase changes with clean sequential transitions
+  // Handle phase transitions with physical travelling line and node sequence
   const handlePhaseChange = useCallback((targetIdx) => {
-    if (targetIdx === activeStageIndex && nameVisible && roleVisible) return;
     setActiveStageIndex(targetIdx);
 
     if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
@@ -167,7 +162,7 @@ export default function BeginningSection() {
     setRoleVisible(false);
     setShowDesc(false);
 
-    // Step 1: Current photo smoothly dissolves into black (220ms)
+    // Fade out current photo
     if (heroImgRef.current) {
       heroImgRef.current.style.transition = 'opacity 0.22s ease, transform 0.22s ease, filter 0.22s ease';
       heroImgRef.current.style.opacity = '0';
@@ -175,69 +170,135 @@ export default function BeginningSection() {
       heroImgRef.current.style.filter = 'brightness(0.2)';
     }
 
-    const tExit = setTimeout(() => {
-      if (transitionIdRef.current !== thisTransition) return;
-      setDisplayedStageIndex(targetIdx);
+    if (targetIdx === 0) {
+      // PHASE 01 — ONE POINT: Aldrin node activates, then photo emerges
+      setNode1Active(true);
+      setLine1Progress(0);
+      setNode2Active(false);
+      setNode3Active(false);
+      setNetworkTriadConnected(false);
 
-      // Step 2: Brief clean dark transition (180ms)
-      const tDark = setTimeout(() => {
+      const t1 = setTimeout(() => {
         if (transitionIdRef.current !== thisTransition) return;
+        setDisplayedStageIndex(0);
         runEmergenceAnimation(thisTransition);
-      }, 180);
-      timersRef.current.push(tDark);
-    }, 220);
-    timersRef.current.push(tExit);
-  }, [activeStageIndex, nameVisible, roleVisible, runEmergenceAnimation]);
+      }, 260);
+      timersRef.current.push(t1);
 
-  // Initial President emergence: triggers automatically when Chapter 01 enters viewport
+    } else if (targetIdx === 1) {
+      // PHASE 02 — ONE LINE: Line physically travels from Node 1 to Node 2.
+      // ONLY when line reaches Node 2 does Node 2 activate and Mohd appear!
+      setNode1Active(true);
+      setNode2Active(false);
+      setNode3Active(false);
+      setNetworkTriadConnected(false);
+      setLine1Progress(0);
+
+      const lineTravelDuration = 700; // ms
+      const lineStart = performance.now();
+
+      const animateLine = (now) => {
+        if (transitionIdRef.current !== thisTransition) return;
+        const p = Math.min(1, (now - lineStart) / lineTravelDuration);
+        setLine1Progress(p);
+
+        if (p < 1) {
+          requestAnimationFrame(animateLine);
+        } else {
+          // Line has physically reached Node 2!
+          setNode2Active(true);
+          const tReveal = setTimeout(() => {
+            if (transitionIdRef.current !== thisTransition) return;
+            setDisplayedStageIndex(1);
+            runEmergenceAnimation(thisTransition);
+          }, 120);
+          timersRef.current.push(tReveal);
+        }
+      };
+
+      const tStartLine = setTimeout(() => {
+        if (transitionIdRef.current !== thisTransition) return;
+        requestAnimationFrame(animateLine);
+      }, 200);
+      timersRef.current.push(tStartLine);
+
+    } else if (targetIdx === 2) {
+      // PHASE 03 — A NETWORK:
+      // G. Sravya appears FIRST.
+      // Wait approx 2-3 seconds, ONLY AFTER THAT do all 3 connect into final network.
+      setNode1Active(true);
+      setLine1Progress(1);
+      setNode2Active(true);
+      setNode3Active(true);
+      setNetworkTriadConnected(false);
+
+      const tRevealSravya = setTimeout(() => {
+        if (transitionIdRef.current !== thisTransition) return;
+        setDisplayedStageIndex(2);
+        runEmergenceAnimation(thisTransition);
+
+        // After 2.5 seconds, physically connect into the final triangular network
+        const tNetworkConnect = setTimeout(() => {
+          if (transitionIdRef.current !== thisTransition) return;
+          setNetworkTriadConnected(true);
+        }, 2500);
+        timersRef.current.push(tNetworkConnect);
+      }, 260);
+      timersRef.current.push(tRevealSravya);
+    }
+  }, [runEmergenceAnimation]);
+
+  // Initial trigger when viewport reaches chapter
   useEffect(() => {
     const sectionEl = sectionRef.current;
     if (!sectionEl) return;
 
-    // If IntersectionObserver is supported
-    if ('IntersectionObserver' in window) {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          const entry = entries[0];
-          if (entry.isIntersecting && !hasTriggeredInitialRevealRef.current) {
-            hasTriggeredInitialRevealRef.current = true;
-            observer.disconnect(); // Never replay on subsequent scroll movements
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry.isIntersecting && !hasTriggeredInitialRevealRef.current) {
+          hasTriggeredInitialRevealRef.current = true;
+          observer.disconnect();
 
-            // Short pause (120ms) after entering so the visitor clearly experiences the dark state first
-            const thisTransition = ++transitionIdRef.current;
-            const tStart = setTimeout(() => {
-              runEmergenceAnimation(thisTransition);
-            }, 120);
-            timersRef.current.push(tStart);
-          }
-        },
-        {
-          threshold: 0.2, // Triggers when 20% of Chapter 01 enters the viewport
-          rootMargin: '0px 0px -50px 0px'
+          setNode1Active(true);
+          const thisTransition = ++transitionIdRef.current;
+          const tStart = setTimeout(() => {
+            runEmergenceAnimation(thisTransition);
+          }, 150);
+          timersRef.current.push(tStart);
         }
-      );
+      },
+      { threshold: 0.15 }
+    );
 
-      observer.observe(sectionEl);
-
-      return () => {
-        observer.disconnect();
-        if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
-        clearAllTimers();
-      };
-    } else {
-      // Fallback if observer is unavailable
-      const thisTransition = ++transitionIdRef.current;
-      const tInit = setTimeout(() => {
-        runEmergenceAnimation(thisTransition);
-      }, 200);
-      timersRef.current.push(tInit);
-
-      return () => {
-        if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
-        clearAllTimers();
-      };
-    }
+    observer.observe(sectionEl);
+    return () => {
+      observer.disconnect();
+      if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
+      clearAllTimers();
+    };
   }, [runEmergenceAnimation]);
+
+  // Archive suspense reveal on scroll into archive area
+  useEffect(() => {
+    const archiveEl = archiveRef.current;
+    if (!archiveEl) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          // fragment (stage 0) -> partial (stage 1) -> full (stage 2)
+          setTimeout(() => setArchiveStage(1), 300);
+          setTimeout(() => setArchiveStage(2), 900);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.25 }
+    );
+
+    observer.observe(archiveEl);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <section ref={sectionRef} id="beginning" className="beginning-section" aria-label="Chapter 01: The Beginning">
@@ -260,12 +321,59 @@ export default function BeginningSection() {
           </div>
         </header>
 
+        {/* ── PHYSICAL NETWORK CONSTELLATION BAR ── */}
+        <div className="network-constellation-track" aria-hidden="true">
+          <svg className="network-svg-canvas" viewBox="0 0 800 60" preserveAspectRatio="none">
+            {/* Background trace line */}
+            <line x1="160" y1="30" x2="640" y2="30" className="constellation-bg-line" />
+
+            {/* Line 1 -> 2: Physically travelling line */}
+            {activeStageIndex >= 1 && (
+              <line
+                x1="160"
+                y1="30"
+                x2={160 + (400 - 160) * line1Progress}
+                y2="30"
+                className="constellation-active-line"
+              />
+            )}
+
+            {/* Triad Network Line 2 -> 3 and 1 -> 3 when fully connected */}
+            {networkTriadConnected && (
+              <>
+                <line x1="400" y1="30" x2="640" y2="30" className="constellation-active-line pulse-glow" />
+                <path d="M 160 30 Q 400 6 640 30" className="constellation-active-line triad-arc pulse-glow" />
+              </>
+            )}
+          </svg>
+
+          {/* Node 1: Aldrin Paul */}
+          <div className={`constellation-node node-1 ${node1Active ? 'active' : ''} ${activeStageIndex === 0 ? 'selected' : ''}`}>
+            <div className="node-glow-ring" />
+            <div className="node-core-dot" />
+            <span className="node-label">01 / ONE POINT</span>
+          </div>
+
+          {/* Node 2: Mohd Ismail */}
+          <div className={`constellation-node node-2 ${node2Active ? 'active' : ''} ${activeStageIndex === 1 ? 'selected' : ''}`}>
+            <div className="node-glow-ring" />
+            <div className="node-core-dot" />
+            <span className="node-label">02 / ONE LINE</span>
+          </div>
+
+          {/* Node 3: G. Sravya */}
+          <div className={`constellation-node node-3 ${node3Active ? 'active' : ''} ${activeStageIndex === 2 ? 'selected' : ''}`}>
+            <div className="node-glow-ring" />
+            <div className="node-core-dot" />
+            <span className="node-label">{networkTriadConnected ? '03 / A NETWORK' : '03 / THIRD POINT'}</span>
+          </div>
+        </div>
+
         {/* Visual Metaphor / Emergence from Darkness Centerpiece */}
         <div className="metaphor-wrapper">
           <div className="emergence-stage">
             {/* The Frameless, Borderless Floating Photograph */}
             <div className="emergence-photo-stage">
-              {/* Permanent feathered mask frame: center sharp, corners & edges dissolve into pure black */}
               <div className="emergence-photo-frame">
                 <img
                   ref={heroImgRef}
@@ -318,6 +426,30 @@ export default function BeginningSection() {
             <p className={`active-detail-desc phase-desc-reveal ${showDesc ? 'desc-visible' : ''}`}>
               {PHASE_DESCRIPTIONS[activeStageIndex]}
             </p>
+          </div>
+        </div>
+
+        {/* ── CHAPTER 01: FOUNDING ARCHIVE DOSSIER (§12) ── */}
+        <div ref={archiveRef} className={`founding-archive-dossier stage-${archiveStage}`}>
+          <div className="archive-dossier-header">
+            <div className="archive-doc-tag">DOC // GWD-FOUNDING-ARCHIVE</div>
+            <div className="archive-status-tag">
+              <span className="status-blink-dot" />
+              STATUS: ARCHIVE INCOMPLETE
+            </div>
+          </div>
+
+          <h3 className="archive-dossier-title">THE BEGINNING OF GWD</h3>
+
+          <div className="archive-dossier-body">
+            <p className="archive-verified-placeholder">[ADD VERIFIED GWD CLUB FOUNDING STORY]</p>
+            <p className="archive-verified-note">
+              FOUNDING DETAILS, ORIGINAL PURPOSE, IMPORTANT DATES, AND EARLY MILESTONES WILL BE ADDED HERE ONCE VERIFIED.
+            </p>
+          </div>
+
+          <div className="archive-stamp-footer">
+            <span className="stamp-code">SEC-GWD-ORIGIN // CLASSIFIED RECORD</span>
           </div>
         </div>
       </div>

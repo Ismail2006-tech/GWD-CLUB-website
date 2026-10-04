@@ -13,22 +13,25 @@ export default function PeopleLeadersSection() {
     timersRef.current.forEach(t => clearTimeout(t));
     timersRef.current = [];
 
-    setActiveLeaderIdx(newIdx);
-    setDevStage(0); // Identifying / dark blur
+    // Outward dissolve exit on current leader
+    setDevStage(0); // Exit / blackout
 
-    const t1 = setTimeout(() => {
-      setDevStage(1); // Photo emerges
-    }, 280);
+    const tSwitch = setTimeout(() => {
+      setActiveLeaderIdx(newIdx);
+      setDevStage(1); // PHASE 01: IDENTIFYING... (700-900ms pause)
 
-    const t2 = setTimeout(() => {
-      setDevStage(2); // Name reveals
-    }, 600);
+      const tPhase2 = setTimeout(() => {
+        setDevStage(2); // PHASE 02: SIGNAL WEAK... LOCKING ON... (red scan + dark silhouette)
 
-    const t3 = setTimeout(() => {
-      setDevStage(3); // Role reveals
-    }, 850);
+        const tPhase3 = setTimeout(() => {
+          setDevStage(3); // PHASE 03: Chromatic snap, blur clears, name & role reveal
+        }, 650);
+        timersRef.current.push(tPhase3);
+      }, 750);
+      timersRef.current.push(tPhase2);
+    }, 180);
 
-    timersRef.current = [t1, t2, t3];
+    timersRef.current = [tSwitch];
   }, []);
 
   // Eagerly pre-cache all leadership photos immediately on mount
@@ -109,10 +112,18 @@ export default function PeopleLeadersSection() {
               <div className="frame-corner c-br" />
 
               {/* Development status overlay */}
-              {devStage === 0 && (
-                <div className="photo-identifying-overlay" aria-live="polite">
+              {/* Phase 01 / Phase 02 Development status overlay */}
+              {devStage === 1 && (
+                <div className="photo-identifying-overlay phase-identifying" aria-live="polite">
                   <div className="identifying-scan-beam" />
-                  <span className="identifying-tag-text">IDENTIFYING ARCHIVE...</span>
+                  <span className="identifying-tag-text">IDENTIFYING...</span>
+                </div>
+              )}
+
+              {devStage === 2 && (
+                <div className="photo-identifying-overlay phase-locking" aria-live="polite">
+                  <div className="identifying-scan-beam locking-beam" />
+                  <span className="identifying-tag-text locking-text">SIGNAL WEAK... LOCKING ON...</span>
                 </div>
               )}
 
@@ -120,13 +131,15 @@ export default function PeopleLeadersSection() {
                 {LEADERSHIP.map((leader, idx) => {
                   if (!leader.photoUrl) return null;
                   const isActive = activeLeaderIdx === idx;
-                  const isDeveloping = isActive && devStage < 1;
+                  const isExit = isActive && devStage === 0;
+                  const isPhase1 = isActive && devStage === 1;
+                  const isPhase2 = isActive && devStage === 2;
                   return (
                     <img
                       key={leader.id}
                       src={leader.photoUrl}
                       alt={leader.name}
-                      className={`leader-actual-img ${isActive ? 'is-active' : 'is-hidden'} ${isDeveloping ? 'is-developing' : ''}`}
+                      className={`leader-actual-img ${isActive ? 'is-active' : 'is-hidden'} ${isExit ? 'is-exit' : ''} ${isPhase1 ? 'is-phase1' : ''} ${isPhase2 ? 'is-phase2' : ''}`}
                       loading="eager"
                       decoding="async"
                     />

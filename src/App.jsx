@@ -37,9 +37,11 @@ export default function App() {
       { id: '06', el: document.getElementById('core-team') },
       { id: '07', el: document.getElementById('members') },
       { id: '08', el: document.getElementById('events') },
+      { id: '09', el: document.getElementById('journey') },
       { id: '10', el: document.getElementById('memories') },
-      { id: '11', el: document.getElementById('achievements') },
-      { id: '13', el: document.getElementById('future') },
+      { id: '11', el: document.getElementById('projects') },
+      { id: 'achievements', el: document.getElementById('achievements') },
+      { id: 'future', el: document.getElementById('future') },
     ];
 
     const handleScroll = () => {
@@ -72,9 +74,11 @@ export default function App() {
       '06': 'core-team',
       '07': 'members',
       '08': 'events',
+      '09': 'journey',
       '10': 'memories',
-      '11': 'achievements',
-      '13': 'future',
+      '11': 'projects',
+      'achievements': 'achievements',
+      'future': 'future',
     };
     const targetEl = document.getElementById(idMap[chapterId]);
     if (targetEl) targetEl.scrollIntoView({ behavior: 'smooth' });

@@ -210,14 +210,14 @@ export default function MemoriesTodayFutureSection() {
         </div>
       </div>
 
-      {/* 11 — THE ACHIEVEMENTS (Premium Digital Archive Dossiers) */}
+      {/* THE ACHIEVEMENTS (Premium Digital Archive Dossiers) */}
       <div id="achievements" className="achievements-stage">
         <div className="section-container">
           <header className="achievements-header">
             <div className="chapter-eyebrow">
-              <span className="eyebrow-idx">CHAPTER 11</span>
+              <span className="eyebrow-idx">VERIFIED EVIDENCE</span>
               <span className="eyebrow-divider">—</span>
-              <span className="eyebrow-theme">VERIFIED EVIDENCE & DOSSIERS</span>
+              <span className="eyebrow-theme">COMPETITIVE DOSSIERS</span>
             </div>
 
             <div className="achievements-headline-split">
@@ -271,7 +271,7 @@ export default function MemoriesTodayFutureSection() {
       </div>
 
 
-      {/* 13 — THE FUTURE (Minimal Void + Single Beacon) */}
+      {/* THE FUTURE (Minimal Void + Expanding Network Canvas) */}
       <div id="future" className="the-future-stage">
         <div className="future-abyss-aura" />
         <div className="future-red-beacon" />
