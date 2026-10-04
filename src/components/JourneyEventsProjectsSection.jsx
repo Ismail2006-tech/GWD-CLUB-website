@@ -181,50 +181,72 @@ export default function JourneyEventsProjectsSection() {
 
               <h3 className="doc-event-title">{currentEvent.name}</h3>
 
-              {/* 01 / SHORT OVERVIEW */}
-              <div className="doc-description-block">
-                <span className="block-label">01 / SHORT OVERVIEW</span>
-                <p className="block-text">{currentEvent.overview}</p>
-              </div>
+              {/* 01 / OVERVIEW */}
+              {currentEvent.overview && (
+                <div className="doc-description-block">
+                  <span className="block-label">01 / OVERVIEW</span>
+                  <p className="block-text">{currentEvent.overview}</p>
+                </div>
+              )}
 
               {/* 02 / KEY INFORMATION */}
-              <div className="doc-description-block">
-                <span className="block-label">02 / KEY INFORMATION</span>
-                <div className="event-metrics-row">
-                  {currentEvent.keyMetrics?.map((metric, mIdx) => (
-                    <span key={mIdx} className="event-metric-pill">{metric}</span>
-                  ))}
+              {currentEvent.keyMetrics && currentEvent.keyMetrics.length > 0 && (
+                <div className="doc-description-block">
+                  <span className="block-label">02 / KEY INFORMATION</span>
+                  <div className="event-metrics-row">
+                    {currentEvent.keyMetrics.map((metric, mIdx) => (
+                      <span key={mIdx} className="event-metric-pill">{metric}</span>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
+
+              {/* 02 / FOCUS (for Orientation Day) */}
+              {currentEvent.focus && currentEvent.focus.length > 0 && (
+                <div className="doc-description-block">
+                  <span className="block-label">02 / FOCUS</span>
+                  <div className="event-metrics-row">
+                    {currentEvent.focus.map((fItem, fIdx) => (
+                      <span key={fIdx} className="event-metric-pill">{fItem}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* 03 / EVENT FORMAT & HOSTS */}
-              <div className="doc-description-block">
-                <span className="block-label">03 / EVENT FORMAT & HOSTED BY</span>
-                <p className="block-text">
-                  <span className="doc-sub-highlight">Format:</span> {currentEvent.format}<br />
-                  <span className="doc-sub-highlight">Hosted by:</span> {currentEvent.hostedBy}
-                </p>
-              </div>
+              {(currentEvent.format || currentEvent.hostedBy) && (
+                <div className="doc-description-block">
+                  <span className="block-label">03 / EVENT FORMAT & HOSTED BY</span>
+                  <p className="block-text">
+                    {currentEvent.format && <><span className="doc-sub-highlight">Format:</span> {currentEvent.format}<br /></>}
+                    {currentEvent.hostedBy && <><span className="doc-sub-highlight">Hosted by:</span> {currentEvent.hostedBy}</>}
+                  </p>
+                </div>
+              )}
 
               {/* 04 / ASSOCIATIONS */}
-              <div className="doc-description-block">
-                <span className="block-label">04 / ASSOCIATIONS</span>
-                <ul className="doc-list-clean">
-                  {currentEvent.associations?.map((assoc, aIdx) => (
-                    <li key={aIdx}>{assoc}</li>
-                  ))}
-                </ul>
-              </div>
+              {currentEvent.associations && currentEvent.associations.length > 0 && (
+                <div className="doc-description-block">
+                  <span className="block-label">04 / ASSOCIATIONS</span>
+                  <ul className="doc-list-clean">
+                    {currentEvent.associations.map((assoc, aIdx) => (
+                      <li key={aIdx}>{assoc}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
               {/* 05 / BUILT WITH */}
-              <div className="doc-description-block">
-                <span className="block-label">05 / BUILT WITH</span>
-                <div className="event-tech-tags">
-                  {currentEvent.builtWith?.map((tech, tIdx) => (
-                    <span key={tIdx} className="event-tech-tag">{tech}</span>
-                  ))}
+              {currentEvent.builtWith && currentEvent.builtWith.length > 0 && (
+                <div className="doc-description-block">
+                  <span className="block-label">05 / BUILT WITH</span>
+                  <div className="event-tech-tags">
+                    {currentEvent.builtWith.map((tech, tIdx) => (
+                      <span key={tIdx} className="event-tech-tag">{tech}</span>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* 06 / CLOSING DIRECTIVE */}
               {currentEvent.closingQuote && (

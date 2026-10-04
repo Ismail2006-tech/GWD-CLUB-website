@@ -183,6 +183,23 @@ export const EVENTS_DATA = [
       "/photos/event-01-03.png",
       "/photos/event-01-04.jpg"
     ]
+  },
+  {
+    id: "event-02",
+    dossierLabel: "DOSSIER 02",
+    name: "GWD CLUB — INTRODUCTION & ORIENTATION",
+    date: "[ADD VERIFIED DATE]",
+    subtitle: "ORIENTATION DAY",
+    overview: "An orientation session introducing GWD Club to the college community, its purpose, activities, and opportunities for students to get involved.",
+    focus: [
+      "INTRODUCING GWD",
+      "BUILDING AWARENESS",
+      "CONNECTING WITH STUDENTS"
+    ],
+    photos: [
+      "/photos/event-02-01.png",
+      "/photos/event-02-02.png"
+    ]
   }
 ];
 
