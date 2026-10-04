@@ -248,11 +248,34 @@ export default function JourneyEventsProjectsSection() {
                 </div>
               )}
 
+              {/* 03 / MILESTONE (for Core Team event) */}
+              {currentEvent.milestone && (
+                <div className="doc-description-block">
+                  <span className="block-label">03 / MILESTONE</span>
+                  <p className="block-text doc-sub-highlight">{currentEvent.milestone}</p>
+                  {currentEvent.milestoneDescription && (
+                    <p className="block-text" style={{ marginTop: '8px' }}>{currentEvent.milestoneDescription}</p>
+                  )}
+                </div>
+              )}
+
+              {/* 04 / THEMES (for Core Team event) */}
+              {currentEvent.themes && currentEvent.themes.length > 0 && (
+                <div className="doc-description-block">
+                  <span className="block-label">04 / THEMES</span>
+                  <div className="event-metrics-row">
+                    {currentEvent.themes.map((theme, tIdx) => (
+                      <span key={tIdx} className="event-metric-pill">{theme}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* 06 / CLOSING DIRECTIVE */}
               {currentEvent.closingQuote && (
                 <div className="doc-outcome-block">
                   <span className="block-label">06 / CLOSING DIRECTIVE</span>
-                  <p className="block-text accent-red quote-text">{currentEvent.closingQuote}</p>
+                  <p className="block-text accent-red quote-text" style={{ whiteSpace: 'pre-line' }}>{currentEvent.closingQuote}</p>
                 </div>
               )}
             </div>

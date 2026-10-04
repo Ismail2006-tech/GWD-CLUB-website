@@ -26,7 +26,6 @@ const CHAPTER_ENVIRONMENTS = {
   '09': { name:'recovered-archive', pointDensity:18, connectionDensity:0.25, movementSpeed:0.22, particleSize:1.3, colorMode:'aged-archive',   geometryType:'trail',         ambientIntensity:0.12 },
   '10': { name:'case-files',        pointDensity:14, connectionDensity:0.2,  movementSpeed:0.18, particleSize:1.2, colorMode:'file-system',    geometryType:'structural-grid',ambientIntensity:0.10 },
   '11': { name:'photo-exhibition',  pointDensity:8,  connectionDensity:0.05, movementSpeed:0.08, particleSize:1.6, colorMode:'exhibition',     geometryType:'gallery-dust',  ambientIntensity:0.07 },
-  '12': { name:'evidence',          pointDensity:18, connectionDensity:0.35, movementSpeed:0.20, particleSize:1.2, colorMode:'evidence-red',   geometryType:'evidence-nodes',ambientIntensity:0.16 },
   '13': { name:'convergence',       pointDensity:30, connectionDensity:0.60, movementSpeed:0.25, particleSize:1.1, colorMode:'convergence',    geometryType:'converging',    ambientIntensity:0.20 },
   '14': { name:'minimal-unknown',   pointDensity:3,  connectionDensity:0,    movementSpeed:0.05, particleSize:1.5, colorMode:'void-future',    geometryType:'single-signal', ambientIntensity:0.04 },
 };

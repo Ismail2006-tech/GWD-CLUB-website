@@ -288,9 +288,9 @@ export default function MemoriesTodayFutureSection() {
           </div>
 
           <div className="future-narrative-flow">
-            <p className="future-step step-one">WHAT COMES NEXT?</p>
-            <p className="future-step step-two">THE STORY ISN'T OVER.</p>
-            <p className="future-step step-three">THE UNKNOWN AWAITS.</p>
+            <p className="future-step step-one">THE FUTURE.</p>
+            <p className="future-step step-two">THE UNKNOWN AWAITS.</p>
+            <p className="future-step step-three">THE STORY IS STILL BEING WRITTEN.</p>
           </div>
 
           <div className="future-final-brand">

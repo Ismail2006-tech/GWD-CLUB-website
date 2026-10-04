@@ -200,6 +200,25 @@ export const EVENTS_DATA = [
       "/photos/event-02-01.png",
       "/photos/event-02-02.png"
     ]
+  },
+  {
+    id: "event-03",
+    dossierLabel: "DOSSIER 03",
+    name: "GWD CORE TEAM",
+    date: "[ADD VERIFIED DATE]",
+    subtitle: "CORE TEAM MEMBER",
+    overview: "A new milestone in the GWD journey, welcoming a new Core Team Member to the GWD (Get Work Done) team.",
+    milestone: "CORE TEAM MEMBER",
+    milestoneDescription: "An opportunity to work closely with the team, take responsibility, share ideas, contribute, learn through challenges, and grow.",
+    themes: [
+      "LEARNING",
+      "COLLABORATION",
+      "RESPONSIBILITY",
+      "CONTRIBUTION",
+      "GROWTH"
+    ],
+    closingQuote: "PROUD TO BE A PART OF GWD.\nLET'S GET WORK DONE!",
+    photos: []
   }
 ];
 

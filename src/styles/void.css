@@ -45,7 +45,7 @@
   z-index: 1;
 }
 
-/* ── Core wrapper — always visible, no own transition ── */
+/* ── Core wrapper — positions text below the particle canvas formation ── */
 .void-core-experience {
   position: relative;
   z-index: 2;
@@ -55,6 +55,8 @@
   text-align: center;
   padding: 40px 24px;
   max-width: 900px;
+  /* Push text content to the lower portion — particles occupy center-upper */
+  margin-top: 20vh;
 }
 
 /* ============================================================

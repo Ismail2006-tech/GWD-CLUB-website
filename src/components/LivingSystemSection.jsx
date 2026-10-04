@@ -4,15 +4,20 @@ import '../styles/livingSystem.css';
 
 /**
  * Chapter 07 — TEAM MEMBERS
- * 5 official domain branches with verified leads, members, cinematic photos, and mission scope.
+ * 5 official domain branches — EVENT MANAGEMENT excluded from selector per design.
+ * Shows: MARKETING, PR, CREATIVE & VISUAL MEDIA, TECHNICAL
  */
 
+// Per master prompt §18: Do NOT include EVENT MANAGEMENT in this branch selector.
+const DISPLAYED_BRANCHES = TEAM_BRANCHES.filter(b => b.id !== 'event-management');
+
 export default function LivingSystemSection({ id = "members" }) {
-  const [activeBranchId, setActiveBranchId] = useState('event-management');
+  const [activeBranchId, setActiveBranchId] = useState(DISPLAYED_BRANCHES[0]?.id || 'marketing');
   const [photoRevealed, setPhotoRevealed] = useState(false);
   const photoRef = useRef(null);
 
-  const currentBranch = TEAM_BRANCHES.find(b => b.id === activeBranchId) || TEAM_BRANCHES[0];
+  const currentBranch = DISPLAYED_BRANCHES.find(b => b.id === activeBranchId) || DISPLAYED_BRANCHES[0];
+
 
   // Reset photo reveal on branch switch, then trigger reveal
   useEffect(() => {
@@ -51,9 +56,9 @@ export default function LivingSystemSection({ id = "members" }) {
           </p>
         </header>
 
-        {/* ── Branch Selector (BRANCH 01 → 05 left-to-right) ── */}
+        {/* ── Branch Selector (BRANCH 02 → 05, excluding EVENT MANAGEMENT per design) ── */}
         <nav className="tm-branches-nav" aria-label="Team Branches" role="tablist">
-          {TEAM_BRANCHES.map((branch) => {
+          {DISPLAYED_BRANCHES.map((branch) => {
             const isActive = branch.id === activeBranchId;
             return (
               <button
@@ -159,8 +164,8 @@ export default function LivingSystemSection({ id = "members" }) {
             <button
               className="tm-roster-action-btn"
               onClick={() => {
-                const idx = TEAM_BRANCHES.findIndex(b => b.id === activeBranchId);
-                handleSelectBranch(TEAM_BRANCHES[(idx + 1) % TEAM_BRANCHES.length].id);
+                const idx = DISPLAYED_BRANCHES.findIndex(b => b.id === activeBranchId);
+                handleSelectBranch(DISPLAYED_BRANCHES[(idx + 1) % DISPLAYED_BRANCHES.length].id);
               }}
             >
               NEXT BRANCH →
