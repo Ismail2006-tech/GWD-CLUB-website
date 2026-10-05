@@ -7,19 +7,6 @@ import '../styles/backgroundWorld.css';
  * Transferred directly from HTML Demo Source of Truth
  */
 
-const PHOTO_URLS = [
-  // Hub 0 (The People)
-  ['/photos/mohd-ismail.webp', '/photos/g-sravya.webp', '/photos/anvitha-reddy.webp'],
-  // Hub 1 (The Core Team)
-  ['/photos/core-team.jpg', '/photos/aldrin-paul.webp', '/photos/bhavya-chaudhary.webp'],
-  // Hub 2 (The Events)
-  ['/photos/event-01-01.jpg', '/photos/event-01-02.png', '/photos/event-02-01.png'],
-  // Hub 3 (The Memories)
-  ['/photos/memory-01.jpg', '/photos/memory-04.jpg', '/photos/memory-08.png'],
-  // Hub 4 (The Future / Achievements)
-  ['/photos/achievement-01-01.png', '/photos/achievement-02-01.jpg', '/photos/team-creative.jpg']
-];
-
 export default function BackgroundWorld({ activeChapter }) {
   const canvasRef = useRef(null);
   const tagRef = useRef(null);
@@ -241,75 +228,6 @@ export default function BackgroundWorld({ activeChapter }) {
       `
     });
     scene.add(new THREE.LineSegments(lg, lm));
-
-    /* ---------- photo frames (real photos texture loading) ---------- */
-    const textureLoader = new THREE.TextureLoader();
-    function createFallbackTexture(k, w, h) {
-      const c = document.createElement('canvas');
-      c.width = w;
-      c.height = h;
-      const g = c.getContext('2d');
-      const bg = g.createLinearGradient(0, 0, w, h);
-      bg.addColorStop(0, k % 2 ? '#0d1a14' : '#1d0d11');
-      bg.addColorStop(1, '#080405');
-      g.fillStyle = bg;
-      g.fillRect(0, 0, w, h);
-      g.strokeStyle = 'rgba(255,27,60,.55)';
-      g.lineWidth = 4;
-      g.strokeRect(4, 4, w - 8, h - 8);
-      return new THREE.CanvasTexture(c);
-    }
-
-    const frames = [];
-    const layout = [
-      [[-12, 3, 6], [0, -4, 11], [12, 4, 3]],
-      [[-13, -2, 5], [1, 5, 10], [13, -3, 4]],
-      [[-14, 2, 4], [0, -3, 10], [14, 3, 5]],
-      [[-12, 4, 5], [2, -2, 11], [13, -4, 3]],
-      [[-10, 0, 6], [4, 3, 9], [12, -3, 4]]
-    ];
-
-    H.forEach((h, k) => {
-      layout[k].forEach((o, i) => {
-        const land = k >= 2;
-        const sz = land ? [15, 10.3] : [10, 12.5];
-        const photoUrl = (PHOTO_URLS[k] && PHOTO_URLS[k][i]) || null;
-        let mat;
-
-        if (photoUrl) {
-          const texMap = textureLoader.load(
-            photoUrl,
-            undefined,
-            undefined,
-            () => {
-              // fallback if failed to load
-              mat.map = createFallbackTexture(k, 600, 400);
-              mat.needsUpdate = true;
-            }
-          );
-          mat = new THREE.MeshBasicMaterial({
-            map: texMap,
-            transparent: true,
-            opacity: 0,
-            depthWrite: false
-          });
-        } else {
-          mat = new THREE.MeshBasicMaterial({
-            map: createFallbackTexture(k, 600, 400),
-            transparent: true,
-            opacity: 0,
-            depthWrite: false
-          });
-        }
-
-        const m = new THREE.Mesh(new THREE.PlaneGeometry(sz[0], sz[1]), mat);
-        const ox = (k % 2 ? -1 : 1) * (o[0] * 0.6 + 5);
-        m.position.set(h.x + ox, h.y + o[1], h.z + o[2]);
-        m.rotation.y = (k % 2 ? 1 : -1) * 0.18 * (i - 1);
-        scene.add(m);
-        frames.push({ m, k, base: m.position.clone() });
-      });
-    });
 
     /* ---------- opening wordmark particles ---------- */
     let wordPts = null;
@@ -672,17 +590,6 @@ export default function BackgroundWorld({ activeChapter }) {
       tv.z += (tg[2] - tv.z) * 0.03;
       SU.uT.value = t;
       sky.position.copy(camera.position);
-
-      // Photo frames opacity and float
-      frames.forEach((f) => {
-        const d = Math.abs(p - (0.4175 + f.k * 0.115));
-        const a = clamp(1 - (d - 0.035) / 0.04, 0, 1);
-        const e = sm(a);
-        f.m.material.opacity = e;
-        f.m.scale.setScalar(0.88 + 0.12 * e);
-        f.m.position.y = f.base.y + Math.sin(t * 0.6 + f.base.x) * 0.35;
-        f.m.visible = e > 0.01;
-      });
 
       // HUD elements
       if (hintRef.current) {
