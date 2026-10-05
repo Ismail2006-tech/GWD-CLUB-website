@@ -180,7 +180,6 @@ export const EVENTS_DATA = [
     ],
     closingQuote: "“The tools are free. The skill is not. Now they have both.”",
     photos: [
-      "/photos/event-01-01.jpg",
       "/photos/event-01-02.png",
       "/photos/event-01-03.png",
       "/photos/event-01-04.jpg"
