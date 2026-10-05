@@ -53,7 +53,7 @@ function EventPhotoCarousel({ photos, title }) {
   const currentPhoto = photos && photos[photoIdx] ? photos[photoIdx] : null;
 
   return (
-    <div className="documentary-visual-side">
+    <div className="documentary-visual-side reveal-from-left">
       <div
         className="doc-photo-box"
         onTouchStart={onTouchStart}
@@ -166,7 +166,7 @@ export default function JourneyEventsProjectsSection() {
       <div id="events" className="events-documentary-stage">
         <div className="section-container">
           <header className="events-header">
-            <div className="chapter-eyebrow">
+            <div className="chapter-eyebrow reveal-eyebrow">
               <span className="eyebrow-idx">CHAPTER 08</span>
               <span className="eyebrow-divider">—</span>
               <span className="eyebrow-theme">RECOVERED ARCHIVES</span>
@@ -197,7 +197,7 @@ export default function JourneyEventsProjectsSection() {
               title={currentEvent.name}
             />
 
-            <div className="documentary-narrative-side">
+            <div className="documentary-narrative-side reveal-from-right">
               <div className="doc-meta-strip">
                 <span className="doc-date-tag">ARCHIVE DATE // {currentEvent.date}</span>
                 <span className="doc-status-indicator">VERIFIED RECORD</span>
@@ -317,7 +317,7 @@ export default function JourneyEventsProjectsSection() {
       <div id="journey" className="journey-timeline-stage" ref={timelineRef}>
         <div className="section-container">
           <header className="journey-header">
-            <div className="chapter-eyebrow">
+            <div className="chapter-eyebrow reveal-eyebrow">
               <span className="eyebrow-idx">CHAPTER 09</span>
               <span className="eyebrow-divider">—</span>
               <span className="eyebrow-theme">THE TRAVELLING LINE</span>
@@ -353,7 +353,7 @@ export default function JourneyEventsProjectsSection() {
                     <div className="node-inner-point" />
                   </div>
 
-                  <div className="timeline-node-card">
+                  <div className="timeline-node-card reveal-stagger" data-stagger={idx}>
                     <div className="timeline-card-header">
                       <span className="timeline-phase-tag">{item.phase} // {item.code}</span>
                       <span className="timeline-period-badge">{item.period}</span>
@@ -375,7 +375,7 @@ export default function JourneyEventsProjectsSection() {
       <div id="projects" className="projects-story-stage">
         <div className="section-container">
           <header className="projects-header">
-            <div className="chapter-eyebrow">
+            <div className="chapter-eyebrow reveal-eyebrow">
               <span className="eyebrow-idx">CHAPTER 11</span>
               <span className="eyebrow-divider">—</span>
               <span className="eyebrow-theme">CASE FILES &amp; BUILDS</span>
@@ -412,7 +412,7 @@ export default function JourneyEventsProjectsSection() {
 
             <div className="case-progression-stream">
               {/* 01 // PROBLEM */}
-              <div className="case-step-node">
+              <div className="case-step-node reveal-stagger">
                 <div className="case-node-pin">
                   <span className="pin-dot" />
                   <span className="pin-line" />
@@ -424,7 +424,7 @@ export default function JourneyEventsProjectsSection() {
               </div>
 
               {/* 02 // IDEA */}
-              <div className="case-step-node">
+              <div className="case-step-node reveal-stagger">
                 <div className="case-node-pin">
                   <span className="pin-dot" />
                   <span className="pin-line" />
@@ -436,7 +436,7 @@ export default function JourneyEventsProjectsSection() {
               </div>
 
               {/* 03 // PEOPLE */}
-              <div className="case-step-node">
+              <div className="case-step-node reveal-stagger">
                 <div className="case-node-pin">
                   <span className="pin-dot" />
                   <span className="pin-line" />
@@ -448,7 +448,7 @@ export default function JourneyEventsProjectsSection() {
               </div>
 
               {/* 04 // BUILD */}
-              <div className="case-step-node">
+              <div className="case-step-node reveal-stagger">
                 <div className="case-node-pin">
                   <span className="pin-dot" />
                   <span className="pin-line" />

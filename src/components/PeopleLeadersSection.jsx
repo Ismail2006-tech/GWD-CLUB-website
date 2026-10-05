@@ -66,7 +66,7 @@ export default function PeopleLeadersSection() {
       <div id="people" className="people-manifesto-stage">
         <div className="people-backdrop-gradient" />
         <div className="people-manifesto-container">
-          <div className="chapter-eyebrow center">
+          <div className="chapter-eyebrow center reveal-eyebrow">
             <span className="eyebrow-idx">CHAPTER 03</span>
             <span className="eyebrow-divider">—</span>
             <span className="eyebrow-theme">THE HUMAN FACTOR</span>
@@ -85,7 +85,7 @@ export default function PeopleLeadersSection() {
       <div id="leaders" className="leaders-cinematic-stage">
         <div className="section-container">
           <header className="leaders-header">
-            <div className="chapter-eyebrow">
+            <div className="chapter-eyebrow reveal-eyebrow">
               <span className="eyebrow-idx">CHAPTER 04</span>
               <span className="eyebrow-divider">—</span>
               <span className="eyebrow-theme">THE ARCHITECTS OF EXECUTION</span>
@@ -236,7 +236,7 @@ export default function PeopleLeadersSection() {
       <div id="voices" className="voices-section">
         <div className="section-container">
           <header className="voices-header">
-            <div className="chapter-eyebrow">
+            <div className="chapter-eyebrow reveal-eyebrow">
               <span className="eyebrow-idx">CHAPTER 05</span>
               <span className="eyebrow-divider">—</span>
               <span className="eyebrow-theme">AUTHENTIC ECHOES</span>
@@ -246,7 +246,7 @@ export default function PeopleLeadersSection() {
 
           <div className="voices-grid">
             {VOICES_OF_GWD.map((v, i) => (
-              <div key={i} className="voice-card">
+              <div key={i} className="voice-card reveal-stagger" data-stagger={i}>
                 <div className="voice-indicator-pip" />
                 <div className="voice-strict-text">{v.quote}</div>
                 <div className="voice-attribution">

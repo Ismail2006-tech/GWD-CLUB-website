@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import AtmosphericFog from './components/AtmosphericFog';
 import BackgroundWorld from './components/BackgroundWorld';
 import Atmosphere from './components/Atmosphere';
 import MinimalNav from './components/MinimalNav';
+import CustomCursor from './components/CustomCursor';
 import useScrollReveal from './hooks/useScrollReveal';
 import { scrollStore } from './hooks/useScrollStore';
 
@@ -19,6 +20,28 @@ import { CHAPTERS } from './data/gwdData';
 import './styles/variables.css';
 import './styles/microInteractions.css';
 import './App.css';
+
+function ScrollProgressBar() {
+  const barRef = useRef(null);
+
+  useEffect(() => {
+    const bar = barRef.current;
+    if (!bar) return;
+
+    const onScroll = () => {
+      const scrollY = window.scrollY || window.pageYOffset;
+      const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      const pct = Math.min(100, (scrollY / maxScroll) * 100);
+      bar.style.width = `${pct}%`;
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  return <div ref={barRef} className="scroll-progress-bar" aria-hidden="true" />;
+}
 
 export default function App() {
   const [activeChapter, setActiveChapter] = useState('00');
@@ -76,6 +99,8 @@ export default function App() {
 
   return (
     <div className="gwd-journey-experience">
+      {/* Crimson Scroll Progress Bar — fixed at top */}
+      <ScrollProgressBar />
 
       {/* Global Cinematic Atmospheric Smoke & Fog — subtle red/crimson haze behind all content */}
       <AtmosphericFog activeChapter={activeChapter} />

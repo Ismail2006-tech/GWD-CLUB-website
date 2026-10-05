@@ -98,7 +98,7 @@ function AchievementPhotoCarousel({ photos, title }) {
   const currentPhoto = photos && photos[photoIdx] ? photos[photoIdx] : null;
 
   return (
-    <div className="achievement-visual-side">
+    <div className="achievement-visual-side reveal-from-left">
       <div
         className="achievement-photo-box"
         onTouchStart={onTouchStart}
@@ -187,7 +187,7 @@ export default function MemoriesTodayFutureSection() {
       <div id="memories" className="memories-archive-stage">
         <div className="section-container">
           <header className="memories-header">
-            <div className="chapter-eyebrow">
+            <div className="chapter-eyebrow reveal-eyebrow">
               <span className="eyebrow-idx">CHAPTER 10</span>
               <span className="eyebrow-divider">—</span>
               <span className="eyebrow-theme">THE MEMORIES</span>
@@ -214,7 +214,7 @@ export default function MemoriesTodayFutureSection() {
       <div id="achievements" className="achievements-stage">
         <div className="section-container">
           <header className="achievements-header">
-            <div className="chapter-eyebrow">
+            <div className="chapter-eyebrow reveal-eyebrow">
               <span className="eyebrow-idx">VERIFIED EVIDENCE</span>
               <span className="eyebrow-divider">—</span>
               <span className="eyebrow-theme">COMPETITIVE DOSSIERS</span>
@@ -248,7 +248,7 @@ export default function MemoriesTodayFutureSection() {
             />
 
             {/* Right Side: Achievement Information Panel */}
-            <div className="achievement-narrative-side">
+            <div className="achievement-narrative-side reveal-from-right">
               <div className="ach-meta-strip">
                 <span className="ach-date-tag">ARCHIVE DATE // {currentAchievement.date}</span>
                 <span className="ach-status-indicator">VERIFIED RECORD</span>
@@ -279,7 +279,7 @@ export default function MemoriesTodayFutureSection() {
 
         <div className="future-core-message">
           {/* Logo slowly appears again */}
-          <div className="future-logo-wrapper">
+          <div className="future-logo-wrapper reveal-scale">
             <img
               src="/gwd-logo.png"
               alt="GWD Club Emblem"
@@ -288,9 +288,9 @@ export default function MemoriesTodayFutureSection() {
           </div>
 
           <div className="future-narrative-flow">
-            <p className="future-step step-one">THE FUTURE.</p>
-            <p className="future-step step-two">THE UNKNOWN AWAITS.</p>
-            <p className="future-step step-three">THE STORY IS STILL BEING WRITTEN.</p>
+            <p className="future-step step-one reveal-stagger" data-stagger="0">THE FUTURE.</p>
+            <p className="future-step step-two reveal-stagger" data-stagger="1">THE UNKNOWN AWAITS.</p>
+            <p className="future-step step-three reveal-stagger" data-stagger="2">THE STORY IS STILL BEING WRITTEN.</p>
           </div>
 
           <div className="future-final-brand">

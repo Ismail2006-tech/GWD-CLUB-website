@@ -225,11 +225,124 @@ a:focus-visible {
 }
 
 /* ------------------------------------------------------------
-   6. Accessibility & Reduced Motion
+   6. Cinematic Section Entrance — Directional Reveals
+   ------------------------------------------------------------ */
+
+/* Slide from left */
+.reveal-from-left {
+  opacity: 0;
+  transform: translateX(-32px);
+  transition:
+    opacity 0.85s var(--ease-cinematic),
+    transform 0.85s var(--ease-cinematic);
+  will-change: opacity, transform;
+}
+.reveal-from-left.is-revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Slide from right */
+.reveal-from-right {
+  opacity: 0;
+  transform: translateX(32px);
+  transition:
+    opacity 0.85s var(--ease-cinematic),
+    transform 0.85s var(--ease-cinematic);
+  will-change: opacity, transform;
+}
+.reveal-from-right.is-revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Scale up (for cards, glyphs, icons) */
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.88);
+  transition:
+    opacity 0.75s var(--ease-cinematic),
+    transform 0.75s var(--ease-cinematic);
+  will-change: opacity, transform;
+}
+.reveal-scale.is-revealed {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Chapter eyebrow: slides in from left with letter-spacing expand */
+.reveal-eyebrow {
+  opacity: 0;
+  transform: translateX(-18px);
+  letter-spacing: 0.02em;
+  transition:
+    opacity 0.65s var(--ease-cinematic),
+    transform 0.65s var(--ease-cinematic),
+    letter-spacing 0.65s var(--ease-cinematic);
+  will-change: opacity, transform;
+}
+.reveal-eyebrow.is-revealed {
+  opacity: 1;
+  transform: translateX(0);
+  letter-spacing: 0.15em;
+}
+
+/* Stagger item: generic entrance with data-stagger delay injected by JS */
+.reveal-stagger {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.65s var(--ease-cinematic),
+    transform 0.65s var(--ease-cinematic);
+  will-change: opacity, transform;
+}
+.reveal-stagger.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ------------------------------------------------------------
+   7. Cinematic Scroll Progress Bar
+   ------------------------------------------------------------ */
+.scroll-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 0%;
+  background: linear-gradient(to right, var(--color-red-dark), var(--color-red), rgba(255,27,60,0.7));
+  z-index: 9999;
+  pointer-events: none;
+  transition: width 0.15s linear;
+  box-shadow: 0 0 8px rgba(255, 27, 60, 0.7);
+}
+
+/* ------------------------------------------------------------
+   8. Cinematic Chapter Transition Separator
+   ------------------------------------------------------------ */
+.chapter-scan-line {
+  display: block;
+  width: 0;
+  height: 1px;
+  background: linear-gradient(to right, var(--color-red), transparent);
+  transition: width 1.2s var(--ease-cinematic);
+  margin: 0 auto;
+}
+.chapter-scan-line.is-revealed {
+  width: 100%;
+}
+
+/* ------------------------------------------------------------
+   9. Accessibility & Reduced Motion
    ------------------------------------------------------------ */
 @media (prefers-reduced-motion: reduce) {
   .reveal-title,
   .reveal-fade,
+  .reveal-eyebrow,
+  .reveal-from-left,
+  .reveal-from-right,
+  .reveal-scale,
+  .reveal-stagger,
   .system-station,
   .voice-card,
   .member-editorial-card,
@@ -240,7 +353,12 @@ a:focus-visible {
   .node-img {
     opacity: 1 !important;
     transform: none !important;
+    letter-spacing: inherit !important;
     transition: none !important;
+  }
+
+  .scroll-progress-bar {
+    display: none !important;
   }
 
   .leader-photo-viewport::after,

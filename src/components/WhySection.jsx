@@ -14,7 +14,7 @@ export default function WhySection() {
       <div className="section-container">
         {/* Header Block */}
         <header className="why-header">
-          <div className="chapter-eyebrow">
+          <div className="chapter-eyebrow reveal-eyebrow">
             <span className="eyebrow-idx">CHAPTER 02</span>
             <span className="eyebrow-divider">—</span>
             <span className="eyebrow-theme">PURPOSE & ETHOS</span>
@@ -49,7 +49,7 @@ export default function WhySection() {
 
           <div className="system-stations">
             {data.sections.map((item, idx) => (
-              <div key={item.tag} className={`system-station station-${idx + 1}`}>
+              <div key={item.tag} className={`system-station station-${idx + 1} reveal-stagger`} data-stagger={idx}>
                 {/* Station Vector Node Marker */}
                 <div className="station-node-anchor">
                   <div className="node-glow-ring" />

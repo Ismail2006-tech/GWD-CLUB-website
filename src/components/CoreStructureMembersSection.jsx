@@ -185,7 +185,7 @@ export default function CoreStructureMembersSection() {
       <div id="core-team" className="core-team-stage">
         <div className="section-container">
           <header className="core-team-header">
-            <div className="chapter-eyebrow center">
+            <div className="chapter-eyebrow center reveal-eyebrow">
               <span className="eyebrow-idx">CHAPTER 06</span>
               <span className="eyebrow-divider">—</span>
               <span className="eyebrow-theme">THE COLLECTIVE FORCE</span>
