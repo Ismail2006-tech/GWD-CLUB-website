@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import { onMouse, PARALLAX_GLOW } from '../animations/mouse';
 import '../styles/backgroundWorld.css';
 
 /**
@@ -516,6 +517,12 @@ export default function BackgroundWorld({ activeChapter }) {
     const titles = ['03 — THE PEOPLE', '06 — THE CORE TEAM', '08 — THE EVENTS', '10 — THE MEMORIES', '13 — THE FUTURE'];
 
     function frame(now) {
+      // Pause rendering when tab is hidden — saves GPU
+      if (document.hidden) {
+        animId = requestAnimationFrame(frame);
+        return;
+      }
+
       animId = requestAnimationFrame(frame);
       const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
       cur += (window.scrollY - cur) * (reduce ? 1 : 0.07);
@@ -557,7 +564,11 @@ export default function BackgroundWorld({ activeChapter }) {
         document.body.classList.add('open');
       }
 
-      // Cursor lag
+      // Cursor lag — feed global mouse coords into existing mxT/myT lerp system
+      if (window.__mouseClientX != null) {
+        mxT = (window.__mouseClientX / window.innerWidth)  * 2 - 1;
+        myT = (window.__mouseClientY / window.innerHeight) * 2 - 1;
+      }
       mx += (mxT - mx) * 0.05;
       my += (myT - my) * 0.05;
 

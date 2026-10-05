@@ -6,6 +6,8 @@ import MinimalNav from './components/MinimalNav';
 import CustomCursor from './components/CustomCursor';
 import useScrollReveal from './hooks/useScrollReveal';
 import { scrollStore } from './hooks/useScrollStore';
+import { initLenis, destroyLenis } from './animations/lenis-init';
+import { initMouse, destroyMouse } from './animations/mouse';
 
 // Chapter Sections
 import VoidSection from './components/VoidSection';
@@ -17,6 +19,7 @@ import JourneyEventsProjectsSection from './components/JourneyEventsProjectsSect
 import MemoriesTodayFutureSection from './components/MemoriesTodayFutureSection';
 
 import { CHAPTERS } from './data/gwdData';
+import MouseParallaxLayer from './components/MouseParallaxLayer';
 import './styles/variables.css';
 import './styles/microInteractions.css';
 import './App.css';
@@ -48,10 +51,21 @@ export default function App() {
 
   useScrollReveal(false);
 
+  // Init smooth scroll (Lenis) and mouse engine on mount
+  useEffect(() => {
+    initLenis();
+    initMouse();
+    return () => {
+      destroyLenis();
+      destroyMouse();
+    };
+  }, []);
+
   // Dynamic Scroll Spy across all chapters derived from CHAPTERS single source of truth
   useEffect(() => {
     const handleScroll = () => {
-      const scrollY = window.scrollY || window.pageYOffset;
+      // Prefer Lenis scroll position when available for consistency
+      const scrollY = window.__lenisScrollY ?? (window.scrollY || window.pageYOffset);
       const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
       const overallProgress = Math.min(1, Math.max(0, scrollY / maxScroll));
 
@@ -92,7 +106,12 @@ export default function App() {
     const chapterObj = CHAPTERS.find(c => c.id === chapterId);
     if (!chapterObj) return;
     const targetEl = document.getElementById(chapterObj.key);
-    if (targetEl) targetEl.scrollIntoView({ behavior: 'smooth' });
+    if (targetEl) {
+      // Use Lenis scroll-to if available, otherwise native
+      const lenis = window.__lenis;
+      if (lenis) lenis.scrollTo(targetEl, { duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+      else targetEl.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   const handleEnterFromVoid = () => scrollToChapter('01');
@@ -121,8 +140,8 @@ export default function App() {
         onSelectChapter={scrollToChapter}
       />
 
-      {/* Main Continuous Narrative Canvas — appears immediately */}
-      <main className="story-stream">
+      {/* Main Continuous Narrative Canvas — wrapped in subtle mouse parallax */}
+      <MouseParallaxLayer depth={8} as="main" className="story-stream">
         {/* 00 — THE VOID */}
         <VoidSection onEnter={handleEnterFromVoid} />
 
@@ -143,7 +162,7 @@ export default function App() {
 
         {/* 10 — THE MEMORIES, 11 — THE ACHIEVEMENTS, 13 — THE FUTURE */}
         <MemoriesTodayFutureSection />
-      </main>
+      </MouseParallaxLayer>
     </div>
   );
 }

@@ -48,14 +48,32 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  /* Lenis handles smooth scroll — native scroll-behavior is overridden */
+  scroll-behavior: auto;
   background-color: var(--color-void);
   color: var(--color-white);
   font-family: var(--font-body);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   overflow-x: clip;
 }
+
+/* ── Global image sharpness rules ─────────────────────────────────────────── */
+img {
+  /* Prevent shimmering on GPU-composited layers */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  image-rendering: auto;
+  /* Never scale above 1.05 — faces and text blur above this */
+  max-width: 100%;
+}
+
+img, video {
+  /* Prevent layout shift — kept as suggestion; containers use aspect-ratio */
+  display: block;
+}
+
 
 body {
   background-color: var(--color-void);

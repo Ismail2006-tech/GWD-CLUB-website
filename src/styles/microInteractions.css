@@ -301,6 +301,19 @@ a:focus-visible {
   transform: translateY(0);
 }
 
+/* ── Clean up will-change after all reveals settle ─────────────────────────
+   Prevents keeping 100+ elements on their own compositor layers.
+   The transition-delay gives the animation time to complete first.        */
+.reveal-title.is-revealed,
+.reveal-fade.is-revealed,
+.reveal-eyebrow.is-revealed,
+.reveal-from-left.is-revealed,
+.reveal-from-right.is-revealed,
+.reveal-scale.is-revealed,
+.reveal-stagger.is-revealed {
+  will-change: auto;
+}
+
 /* ------------------------------------------------------------
    7. Cinematic Scroll Progress Bar
    ------------------------------------------------------------ */

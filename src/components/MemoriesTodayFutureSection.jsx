@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { MEMORIES_DATA, ACHIEVEMENTS_DATA } from '../data/gwdData';
+import useTiltCard from '../hooks/useTiltCard';
 import '../styles/future.css';
 
 function MemoryPhoto({ memory, side }) {
   const itemRef = React.useRef(null);
   const [inView, setInView] = React.useState(false);
+  const [imgLoaded, setImgLoaded] = React.useState(false);
+  const { cardRef, glowStyle } = useTiltCard();
 
   React.useEffect(() => {
     const el = itemRef.current;
@@ -28,13 +31,22 @@ function MemoryPhoto({ memory, side }) {
       ref={itemRef}
       className={`memory-photo-cell side-${side} ${inView ? 'is-revealed' : ''}`}
     >
-      <div className="memory-image-container">
+      {/* Tilt wrapper — perspective applied by the hook */}
+      <div ref={cardRef} className="memory-image-container" style={{ position: 'relative' }}>
+        {/* Radial light glow overlay */}
+        <div style={glowStyle} />
         <img
           src={memory.photo}
           alt={memory.alt}
-          className="memory-real-photo"
+          className={`memory-real-photo ${imgLoaded ? 'is-loaded' : 'is-loading'}`}
           loading="lazy"
           decoding="async"
+          onLoad={() => setImgLoaded(true)}
+          style={{
+            backfaceVisibility: 'hidden',
+            transform: 'translateZ(0)',
+            imageRendering: 'auto',
+          }}
         />
       </div>
     </div>
