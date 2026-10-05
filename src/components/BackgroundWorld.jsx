@@ -1,255 +1,755 @@
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useRef } from 'react';
+import * as THREE from 'three';
 import '../styles/backgroundWorld.css';
 
 /**
- * BackgroundWorld — The Evolving Environmental System
- *
- * PERF OPTIMIZATIONS:
- * - Pre-computed particle colors (no Math.random() in render loop)
- * - Capped MAX_PARTICLES at 40 (was 60, often using 40 anyway)
- * - Connection line distance check with early-exit squared distance
- * - canvas.getContext caching (no repeated lookups)
- * - rAF throttled to ~30fps on mobile via frame-skip
- * - Removed shadowBlur from per-particle draw (only on single-signal)
+ * BackgroundWorld — Cinematic WebGL 3D Journey Engine
+ * Transferred directly from HTML Demo Source of Truth
  */
 
-const CHAPTER_ENVIRONMENTS = {
-  '00': { name:'void',              pointDensity:1,  connectionDensity:0,    movementSpeed:0.08, particleSize:1.2, colorMode:'pure-red',      geometryType:'single-signal', ambientIntensity:0.04 },
-  '01': { name:'archive-fragments', pointDensity:8,  connectionDensity:0,    movementSpeed:0.12, particleSize:1.5, colorMode:'warm-dust',      geometryType:'fragments',     ambientIntensity:0.08 },
-  '02': { name:'structure',         pointDensity:15, connectionDensity:0.3,  movementSpeed:0.15, particleSize:1.2, colorMode:'structure',      geometryType:'grid-sparse',   ambientIntensity:0.10 },
-  '03': { name:'signals',           pointDensity:20, connectionDensity:0.2,  movementSpeed:0.18, particleSize:1.4, colorMode:'signal',         geometryType:'dispersed-nodes',ambientIntensity:0.12 },
-  '04': { name:'darkroom',          pointDensity:5,  connectionDensity:0,    movementSpeed:0.06, particleSize:1.8, colorMode:'darkroom-red',   geometryType:'sparse-deep',   ambientIntensity:0.07 },
-  '05': { name:'editorial',         pointDensity:12, connectionDensity:0.15, movementSpeed:0.14, particleSize:1.3, colorMode:'warm-editorial', geometryType:'horizontal-drift',ambientIntensity:0.09 },
-  '06': { name:'cinematic',         pointDensity:6,  connectionDensity:0,    movementSpeed:0.05, particleSize:2.0, colorMode:'cinematic',      geometryType:'cinematic-depth',ambientIntensity:0.06 },
-  '07': { name:'network-forming',   pointDensity:24, connectionDensity:0.55, movementSpeed:0.20, particleSize:1.2, colorMode:'network',        geometryType:'constellation',  ambientIntensity:0.18 },
-  '08': { name:'living-archive',    pointDensity:28, connectionDensity:0.40, movementSpeed:0.16, particleSize:1.1, colorMode:'archive',        geometryType:'organic-scatter',ambientIntensity:0.14 },
-  '09': { name:'recovered-archive', pointDensity:18, connectionDensity:0.25, movementSpeed:0.22, particleSize:1.3, colorMode:'aged-archive',   geometryType:'trail',         ambientIntensity:0.12 },
-  '10': { name:'case-files',        pointDensity:14, connectionDensity:0.2,  movementSpeed:0.18, particleSize:1.2, colorMode:'file-system',    geometryType:'structural-grid',ambientIntensity:0.10 },
-  '11': { name:'photo-exhibition',  pointDensity:8,  connectionDensity:0.05, movementSpeed:0.08, particleSize:1.6, colorMode:'exhibition',     geometryType:'gallery-dust',  ambientIntensity:0.07 },
-  '13': { name:'convergence',       pointDensity:30, connectionDensity:0.60, movementSpeed:0.25, particleSize:1.1, colorMode:'convergence',    geometryType:'converging',    ambientIntensity:0.20 },
-  '14': { name:'minimal-unknown',   pointDensity:3,  connectionDensity:0,    movementSpeed:0.05, particleSize:1.5, colorMode:'void-future',    geometryType:'single-signal', ambientIntensity:0.04 },
-};
-
-function lerp(a, b, t) { return a + (b - a) * t; }
-
-// Pre-compute a fixed color string per particle (called once on init, not per frame)
-function makeParticleColors(colorMode, opacity, count) {
-  const colors = new Array(count);
-  for (let i = 0; i < count; i++) {
-    const r = Math.random();
-    let c;
-    switch (colorMode) {
-      case 'pure-red':      c = `rgba(255,27,60,${(opacity * 0.9).toFixed(3)})`; break;
-      case 'warm-dust':     c = `rgba(${200 + Math.floor(r * 42)},${160 + Math.floor(r * 30)},${100 + Math.floor(r * 30)},${(opacity * 0.35).toFixed(3)})`; break;
-      case 'structure':     c = r > 0.7 ? `rgba(255,27,60,${(opacity*0.6).toFixed(3)})` : `rgba(0,81,46,${(opacity*0.4).toFixed(3)})`; break;
-      case 'signal':        c = r > 0.85 ? `rgba(255,27,60,${(opacity*0.8).toFixed(3)})` : `rgba(242,242,242,${(opacity*0.25).toFixed(3)})`; break;
-      case 'darkroom-red':  c = `rgba(255,27,60,${(opacity*0.7).toFixed(3)})`; break;
-      case 'warm-editorial':c = `rgba(242,242,242,${(opacity*0.2).toFixed(3)})`; break;
-      case 'cinematic':     c = `rgba(255,27,60,${(opacity*0.5).toFixed(3)})`; break;
-      case 'network':       c = r > 0.6 ? `rgba(255,27,60,${(opacity*0.6).toFixed(3)})` : `rgba(0,81,46,${(opacity*0.4).toFixed(3)})`; break;
-      case 'archive':       c = `rgba(242,242,242,${(opacity*0.15).toFixed(3)})`; break;
-      case 'aged-archive':  c = `rgba(200,180,140,${(opacity*0.3).toFixed(3)})`; break;
-      case 'file-system':   c = `rgba(242,242,242,${(opacity*0.2).toFixed(3)})`; break;
-      case 'exhibition':    c = `rgba(200,190,175,${(opacity*0.25).toFixed(3)})`; break;
-      case 'evidence-red':  c = `rgba(255,27,60,${(opacity*0.65).toFixed(3)})`; break;
-      case 'convergence':   c = r > 0.5 ? `rgba(255,27,60,${(opacity*0.55).toFixed(3)})` : `rgba(0,81,46,${(opacity*0.35).toFixed(3)})`; break;
-      case 'void-future':   c = `rgba(255,27,60,${(opacity*0.8).toFixed(3)})`; break;
-      default:              c = `rgba(255,27,60,${(opacity*0.5).toFixed(3)})`; break;
-    }
-    colors[i] = c;
-  }
-  return colors;
-}
+const PHOTO_URLS = [
+  // Hub 0 (The People)
+  ['/photos/mohd-ismail.webp', '/photos/g-sravya.webp', '/photos/anvitha-reddy.webp'],
+  // Hub 1 (The Core Team)
+  ['/photos/core-team.jpg', '/photos/aldrin-paul.webp', '/photos/bhavya-chaudhary.webp'],
+  // Hub 2 (The Events)
+  ['/photos/event-01-01.jpg', '/photos/event-01-02.png', '/photos/event-02-01.png'],
+  // Hub 3 (The Memories)
+  ['/photos/memory-01.jpg', '/photos/memory-04.jpg', '/photos/memory-08.png'],
+  // Hub 4 (The Future / Achievements)
+  ['/photos/achievement-01-01.png', '/photos/achievement-02-01.jpg', '/photos/team-creative.jpg']
+];
 
 export default function BackgroundWorld({ activeChapter }) {
-  const canvasRef          = useRef(null);
-  const animRef            = useRef(null);
-  const particlesRef       = useRef([]);
-  const currentEnvRef      = useRef({ ...CHAPTER_ENVIRONMENTS['00'] });
-  const targetEnvRef       = useRef({ ...CHAPTER_ENVIRONMENTS['00'] });
-  const timeRef            = useRef(0);
-  const transitionRef      = useRef(1);
-  const isMobileRef        = useRef(window.innerWidth < 768);
-  const frameCountRef      = useRef(0);
-
-  const getEnv = useCallback((id) => CHAPTER_ENVIRONMENTS[id] || CHAPTER_ENVIRONMENTS['00'], []);
-
-  useEffect(() => {
-    targetEnvRef.current = getEnv(activeChapter);
-    transitionRef.current = 0;
-  }, [activeChapter, getEnv]);
+  const canvasRef = useRef(null);
+  const tagRef = useRef(null);
+  const orbitRef = useRef(null);
+  const loadRef = useRef(null);
+  const lnRef = useRef(null);
+  const lbfRef = useRef(null);
+  const hintRef = useRef(null);
+  const barRef = useRef(null);
+  const labRef = useRef(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
 
-    const isMobile = isMobileRef.current;
-    const MAX_PARTICLES = isMobile ? 28 : 40;
-    // Connection check max dist squared (avoid sqrt per pair)
-    const MAX_CONN_DIST_SQ = 160 * 160;
+    const reduce = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+    const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+    const sm = (t) => t * t * (3 - 2 * t);
 
-    let width  = canvas.width  = window.innerWidth;
-    let height = canvas.height = window.innerHeight;
+    let renderer;
+    try {
+      renderer = new THREE.WebGLRenderer({
+        canvas,
+        antialias: true,
+        alpha: false,
+        powerPreference: 'high-performance'
+      });
+    } catch (e) {
+      console.error('WebGL init error:', e);
+      return;
+    }
 
-    const initParticles = () => {
-      const baseOpacity = 0.5;
-      particlesRef.current = Array.from({ length: MAX_PARTICLES }, (_, i) => ({
-        x:     Math.random() * width,
-        y:     Math.random() * height,
-        vx:    (Math.random() - 0.5) * 0.4,
-        vy:    (Math.random() - 0.5) * 0.4,
-        size:  Math.random() * 1.5 + 0.5,
-        opacity: Math.random() * 0.6 + 0.1,
-        phase: Math.random() * Math.PI * 2,
-        // Pre-computed color (refreshed on chapter change)
-        color: `rgba(255,27,60,${baseOpacity})`,
-        active: i < 10,
-      }));
+    renderer.setClearColor(0x090506, 1);
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 900);
+
+    // Seeded PRNG
+    let seedVal = 11;
+    const rnd = () => {
+      seedVal = (seedVal + 0x6D2B79F5) | 0;
+      let t = Math.imul(seedVal ^ (seedVal >>> 15), 1 | seedVal);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
     };
 
-    initParticles();
+    const RED = [1, 0.1, 0.24];
+    const GRN = [0.08, 0.66, 0.39];
+    const pick = (c) => (c ? GRN : RED);
 
-    const handleResize = () => {
-      width  = canvas.width  = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-      isMobileRef.current = width < 768;
-      initParticles();
-    };
-    window.addEventListener('resize', handleResize, { passive: true });
+    /* ---------- network data ---------- */
+    const N = [];
+    const PT = { p: [], s: [], b: [], c: [] };
+    const LN = { p: [], b: [], t: [], c: [], w: [], br: [] };
 
-    // Connection line color cache (recreated on env change)
-    let lineColorRed   = 'rgba(255,27,60,0.18)';
-    let lineColorGreen = 'rgba(0,81,46,0.12)';
+    function node(x, y, z, s, col, b) {
+      const i = N.length;
+      N.push({ x, y, z });
+      PT.p.push(x, y, z);
+      PT.s.push(s);
+      PT.b.push(b);
+      PT.c.push(...pick(col));
+      return i;
+    }
 
-    const draw = () => {
-      timeRef.current += 0.016;
-      const t = timeRef.current;
+    function edge(a, b, birth, col, br, w) {
+      const A = N[a];
+      const B = N[b];
+      const c = pick(col);
+      LN.p.push(A.x, A.y, A.z, B.x, B.y, B.z);
+      LN.b.push(birth, birth);
+      LN.t.push(0, 1);
+      LN.c.push(c[0], c[1], c[2], c[0], c[1], c[2]);
+      LN.w.push(w, w);
+      LN.br.push(br, br);
+    }
 
-      // Mobile: skip every other frame → ~30fps
-      frameCountRef.current++;
-      if (isMobileRef.current && frameCountRef.current % 2 !== 0) {
-        animRef.current = requestAnimationFrame(draw);
-        return;
+    const root = node(0, 0, 0, 7, 0, 0);
+    const HX = [-30, 34, -26, 30, 0];
+    const HY = [8, -10, 12, -6, 0];
+    const H = [];
+    const kids = [];
+
+    for (let k = 0; k < 5; k++) {
+      const hb = 0.1 + k * 0.045;
+      const hi = node(HX[k], HY[k], -45 * (k + 1), 4.5, 0, hb);
+      H.push({ x: HX[k], y: HY[k], z: -45 * (k + 1), i: hi, b: hb });
+      edge(k ? H[k - 1].i : root, hi, hb, 0, -1, 1.2);
+      const m = 6 + Math.floor(rnd() * 3);
+      const mine = [];
+      for (let j = 0; j < m; j++) {
+        const cb = hb + 0.05 + j * 0.02;
+        const ci = node(
+          HX[k] + (rnd() - 0.5) * 50,
+          HY[k] + (rnd() - 0.5) * 30,
+          -45 * (k + 1) + (rnd() - 0.5) * 34,
+          2.2,
+          rnd() > 0.35 ? 1 : 0,
+          cb
+        );
+        edge(hi, ci, cb, PT.c[ci * 3] < 0.5 ? 1 : 0, k, 1);
+        mine.push(ci);
       }
+      kids.push(mine);
+    }
 
-      // Smooth environment interpolation
-      if (transitionRef.current < 1) {
-        transitionRef.current = Math.min(1, transitionRef.current + 0.006);
-        const tp   = transitionRef.current;
-        const curr = currentEnvRef.current;
-        const targ = targetEnvRef.current;
-        currentEnvRef.current = {
-          ...targ,
-          pointDensity:      lerp(curr.pointDensity,      targ.pointDensity,      tp),
-          connectionDensity: lerp(curr.connectionDensity, targ.connectionDensity, tp),
-          movementSpeed:     lerp(curr.movementSpeed,     targ.movementSpeed,     tp),
-          particleSize:      lerp(curr.particleSize,      targ.particleSize,      tp),
-          ambientIntensity:  lerp(curr.ambientIntensity,  targ.ambientIntensity,  tp),
-          colorMode: tp > 0.5 ? targ.colorMode : curr.colorMode,
-          geometryType: targ.geometryType,
-        };
-        // Refresh pre-computed colors when mode switches
-        if (tp > 0.5 && curr.colorMode !== targ.colorMode) {
-          const particles = particlesRef.current;
-          const newColors = makeParticleColors(targ.colorMode, 0.5, particles.length);
-          for (let i = 0; i < particles.length; i++) {
-            particles[i].color = newColors[i];
+    kids.forEach((arr, k) => {
+      for (let a = 0; a < arr.length; a++) {
+        for (let b = a + 1; b < arr.length; b++) {
+          const A = N[arr[a]];
+          const B = N[arr[b]];
+          if (Math.hypot(A.x - B.x, A.y - B.y, A.z - B.z) < 17) {
+            edge(arr[a], arr[b], 0.3 + k * 0.04, a % 2, k, 0.45);
           }
-          const isRedMode = targ.colorMode === 'network' || targ.colorMode === 'evidence-red' || targ.colorMode === 'convergence';
-          lineColorRed   = 'rgba(255,27,60,0.18)';
-          lineColorGreen = isRedMode ? 'rgba(255,27,60,0.12)' : 'rgba(0,81,46,0.12)';
         }
-      } else {
-        currentEnvRef.current = { ...targetEnvRef.current };
       }
+    });
 
-      const env       = currentEnvRef.current;
-      const particles = particlesRef.current;
+    for (let d = 0; d < 420; d++) {
+      node(
+        (rnd() - 0.5) * 190,
+        (rnd() - 0.5) * 110,
+        40 - rnd() * 330,
+        0.8,
+        rnd() > 0.5 ? 1 : 0,
+        0.05 + rnd() * 0.3
+      );
+    }
 
-      ctx.clearRect(0, 0, width, height);
+    const U = {
+      uP: { value: 0 },
+      uT: { value: 0 },
+      uPx: { value: 1 },
+      uF: { value: -1 },
+      uNet: { value: 0 },
+      uI: { value: 0 },
+      uD: { value: 0 }
+    };
 
-      const activeCount = Math.min(Math.floor(env.pointDensity), MAX_PARTICLES);
-      const speed       = env.movementSpeed;
-      const hasConns    = env.connectionDensity > 0 && !isMobileRef.current;
+    const pg = new THREE.BufferGeometry();
+    pg.setAttribute('position', new THREE.Float32BufferAttribute(PT.p, 3));
+    pg.setAttribute('aSize', new THREE.Float32BufferAttribute(PT.s, 1));
+    pg.setAttribute('aBirth', new THREE.Float32BufferAttribute(PT.b, 1));
+    pg.setAttribute('aColor', new THREE.Float32BufferAttribute(PT.c, 3));
 
-      for (let i = 0; i < particles.length; i++) {
-        const p = particles[i];
-
-        if (i >= activeCount) {
-          p.opacity = Math.max(0, p.opacity - 0.008);
-        } else {
-          p.opacity = Math.min(0.7, p.opacity + 0.004);
+    const pm = new THREE.ShaderMaterial({
+      uniforms: U,
+      transparent: true,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+      vertexShader: `
+        attribute float aSize;
+        attribute float aBirth;
+        attribute vec3 aColor;
+        uniform float uP, uT, uPx, uNet;
+        varying vec3 vC;
+        varying float vA;
+        void main() {
+          float a = clamp((uP - aBirth) / 0.05, 0.0, 1.0);
+          vec4 mv = modelViewMatrix * vec4(position, 1.0);
+          vA = a * exp(mv.z * 0.0042) * uNet;
+          vC = aColor;
+          gl_PointSize = aSize * a * uPx * (300.0 / -mv.z) * (1.0 + 0.14 * sin(uT * 2.0 + aBirth * 60.0));
+          gl_Position = projectionMatrix * mv;
         }
-        if (p.opacity <= 0.01) continue;
+      `,
+      fragmentShader: `
+        varying vec3 vC;
+        varying float vA;
+        void main() {
+          float d = length(gl_PointCoord - 0.5);
+          float g = smoothstep(0.5, 0.0, d);
+          g = g * g * 1.1 + smoothstep(0.1, 0.0, d) * 0.9;
+          gl_FragColor = vec4(vC * g * vA, g * vA);
+        }
+      `
+    });
+    scene.add(new THREE.Points(pg, pm));
 
-        // Organic drift
-        p.x += Math.sin(t * speed + p.phase) * 0.4 + p.vx * speed * 2;
-        p.y += Math.cos(t * speed * 0.7 + p.phase * 1.3) * 0.3 + p.vy * speed * 2;
+    const lg = new THREE.BufferGeometry();
+    lg.setAttribute('position', new THREE.Float32BufferAttribute(LN.p, 3));
+    lg.setAttribute('aBirth', new THREE.Float32BufferAttribute(LN.b, 1));
+    lg.setAttribute('aT', new THREE.Float32BufferAttribute(LN.t, 1));
+    lg.setAttribute('aColor', new THREE.Float32BufferAttribute(LN.c, 3));
+    lg.setAttribute('aW', new THREE.Float32BufferAttribute(LN.w, 1));
+    lg.setAttribute('aBr', new THREE.Float32BufferAttribute(LN.br, 1));
 
-        if (p.x < -50)         p.x = width  + 50;
-        if (p.x > width  + 50) p.x = -50;
-        if (p.y < -50)         p.y = height + 50;
-        if (p.y > height + 50) p.y = -50;
+    const lm = new THREE.ShaderMaterial({
+      uniforms: U,
+      transparent: true,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+      vertexShader: `
+        attribute float aBirth, aT, aW, aBr;
+        attribute vec3 aColor;
+        varying float vB, vT, vW, vBr, vF;
+        varying vec3 vC;
+        void main() {
+          vec4 mv = modelViewMatrix * vec4(position, 1.0);
+          vB = aBirth;
+          vT = aT;
+          vW = aW;
+          vBr = aBr;
+          vC = aColor;
+          vF = exp(mv.z * 0.0042);
+          gl_Position = projectionMatrix * mv;
+        }
+      `,
+      fragmentShader: `
+        uniform float uP, uF;
+        varying float vB, vT, vW, vBr, vF;
+        varying vec3 vC;
+        void main() {
+          float g = clamp((uP - vB) / 0.08, 0.0, 1.0);
+          if (vT > g) discard;
+          float boost = abs(vBr - uF) < 0.5 ? 2.4 : 1.0;
+          float a = min(0.95, 0.34 * vW * boost) * vF;
+          gl_FragColor = vec4(vC * a, a);
+        }
+      `
+    });
+    scene.add(new THREE.LineSegments(lg, lm));
 
-        const size  = env.particleSize * p.size;
-        const alpha = p.opacity * env.ambientIntensity * 8;
+    /* ---------- photo frames (real photos texture loading) ---------- */
+    const textureLoader = new THREE.TextureLoader();
+    function createFallbackTexture(k, w, h) {
+      const c = document.createElement('canvas');
+      c.width = w;
+      c.height = h;
+      const g = c.getContext('2d');
+      const bg = g.createLinearGradient(0, 0, w, h);
+      bg.addColorStop(0, k % 2 ? '#0d1a14' : '#1d0d11');
+      bg.addColorStop(1, '#080405');
+      g.fillStyle = bg;
+      g.fillRect(0, 0, w, h);
+      g.strokeStyle = 'rgba(255,27,60,.55)';
+      g.lineWidth = 4;
+      g.strokeRect(4, 4, w - 8, h - 8);
+      return new THREE.CanvasTexture(c);
+    }
 
-        // Connection lines — check only next 4 particles, use squared dist
-        if (hasConns && i < activeCount - 1) {
-          const limit = Math.min(i + 5, activeCount);
-          for (let j = i + 1; j < limit; j++) {
-            const p2 = particles[j];
-            const dx = p2.x - p.x;
-            const dy = p2.y - p.y;
-            const d2 = dx * dx + dy * dy;
-            if (d2 < MAX_CONN_DIST_SQ) {
-              const lineAlpha = (1 - Math.sqrt(d2) / 160) * env.connectionDensity * 0.25 * env.ambientIntensity * 6;
-              ctx.beginPath();
-              ctx.moveTo(p.x, p.y);
-              ctx.lineTo(p2.x, p2.y);
-              ctx.strokeStyle = lineColorRed.replace('0.18)', `${lineAlpha.toFixed(3)})`);
-              ctx.lineWidth   = 0.5;
-              ctx.stroke();
+    const frames = [];
+    const layout = [
+      [[-12, 3, 6], [0, -4, 11], [12, 4, 3]],
+      [[-13, -2, 5], [1, 5, 10], [13, -3, 4]],
+      [[-14, 2, 4], [0, -3, 10], [14, 3, 5]],
+      [[-12, 4, 5], [2, -2, 11], [13, -4, 3]],
+      [[-10, 0, 6], [4, 3, 9], [12, -3, 4]]
+    ];
+
+    H.forEach((h, k) => {
+      layout[k].forEach((o, i) => {
+        const land = k >= 2;
+        const sz = land ? [15, 10.3] : [10, 12.5];
+        const photoUrl = (PHOTO_URLS[k] && PHOTO_URLS[k][i]) || null;
+        let mat;
+
+        if (photoUrl) {
+          const texMap = textureLoader.load(
+            photoUrl,
+            undefined,
+            undefined,
+            () => {
+              // fallback if failed to load
+              mat.map = createFallbackTexture(k, 600, 400);
+              mat.needsUpdate = true;
             }
-          }
+          );
+          mat = new THREE.MeshBasicMaterial({
+            map: texMap,
+            transparent: true,
+            opacity: 0,
+            depthWrite: false
+          });
+        } else {
+          mat = new THREE.MeshBasicMaterial({
+            map: createFallbackTexture(k, 600, 400),
+            transparent: true,
+            opacity: 0,
+            depthWrite: false
+          });
         }
 
-        // Draw particle — no shadowBlur (expensive)
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
-        ctx.globalAlpha = Math.min(alpha, 0.9);
-        ctx.fillStyle   = p.color;
-        ctx.fill();
-        ctx.globalAlpha = 1;
+        const m = new THREE.Mesh(new THREE.PlaneGeometry(sz[0], sz[1]), mat);
+        const ox = (k % 2 ? -1 : 1) * (o[0] * 0.6 + 5);
+        m.position.set(h.x + ox, h.y + o[1], h.z + o[2]);
+        m.rotation.y = (k % 2 ? 1 : -1) * 0.18 * (i - 1);
+        scene.add(m);
+        frames.push({ m, k, base: m.position.clone() });
+      });
+    });
+
+    /* ---------- opening wordmark particles ---------- */
+    let wordPts = null;
+    let tStart = null;
+    const tagEl = tagRef.current;
+    if (tagEl) {
+      tagEl.innerHTML = 'EVERY STORY HAS A BEGINNING.'
+        .split('')
+        .map((c, i) => `<span style="transition-delay:${i * 45}ms">${c === ' ' ? '&nbsp;' : c}</span>`)
+        .join('');
+    }
+
+    function fitWord() {
+      if (wordPts) {
+        wordPts.scale.setScalar(Math.min(1, camera.aspect * 1.55));
+      }
+    }
+
+    function initWord() {
+      const cv = document.createElement('canvas');
+      cv.width = 1400;
+      cv.height = 760;
+      const g = cv.getContext('2d');
+      g.fillStyle = '#fff';
+      g.textAlign = 'center';
+      g.textBaseline = 'middle';
+      g.font = '900 340px Orbitron, sans-serif';
+      g.fillText('GWD', 700, 250);
+      g.font = '900 150px Orbitron, sans-serif';
+      if ('letterSpacing' in g) g.letterSpacing = '28px';
+      g.fillText('CLUB', 714, 560);
+      g.font = '600 62px Rajdhani, sans-serif';
+      if ('letterSpacing' in g) g.letterSpacing = '34px';
+      g.fillText('GET WORK DONE', 717, 704);
+
+      const d = g.getImageData(0, 0, 1400, 760).data;
+      const cand = [];
+      for (let y = 0; y < 760; y += 2) {
+        for (let x = 0; x < 1400; x += 2) {
+          if ((y > 650 || (x % 4 === 0 && y % 4 === 0)) && d[(y * 1400 + x) * 4 + 3] > 140) {
+            cand.push(x, y);
+          }
+        }
       }
 
-      // Single red signal — kept, minimal cost
-      if (env.geometryType === 'single-signal') {
-        const pulse = (Math.sin(t * 1.2) + 1) / 2;
-        ctx.beginPath();
-        ctx.arc(width * 0.5, height * 0.5, 3 + pulse * 2, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255,27,60,${0.6 + pulse * 0.3})`;
-        ctx.shadowColor = '#ff1b3c';
-        ctx.shadowBlur  = 16;
-        ctx.fill();
-        ctx.shadowBlur  = 0;
+      const n = Math.min(7000, Math.floor(cand.length / 2));
+      const pos = new Float32Array(n * 3);
+      const from = new Float32Array(n * 3);
+      const seed = new Float32Array(n);
+      const col = new Float32Array(n * 3);
+
+      for (let i = 0; i < n; i++) {
+        const j = Math.floor(rnd() * (cand.length / 2)) * 2;
+        const px = cand[j];
+        const py = cand[j + 1];
+        pos[i * 3] = ((px - 700) / 700) * 17;
+        pos[i * 3 + 1] = -((py - 404) / 700) * 17;
+        pos[i * 3 + 2] = (rnd() - 0.5) * 0.6;
+
+        const a = rnd() * 6.283;
+        const b = Math.acos(2 * rnd() - 1);
+        const r = 90 + rnd() * 160;
+        from[i * 3] = r * Math.sin(b) * Math.cos(a);
+        from[i * 3 + 1] = r * Math.sin(b) * Math.sin(a) * 0.7;
+        from[i * 3 + 2] = r * Math.cos(b) + 20;
+
+        seed[i] = rnd();
+        const c = py > 650 ? [0.62, 0.62, 0.66] : py > 470 ? RED : rnd() < 0.18 ? RED : [1, 0.93, 0.94];
+        col[i * 3] = c[0];
+        col[i * 3 + 1] = c[1];
+        col[i * 3 + 2] = c[2];
       }
 
-      animRef.current = requestAnimationFrame(draw);
+      const wg = new THREE.BufferGeometry();
+      wg.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      wg.setAttribute('aFrom', new THREE.BufferAttribute(from, 3));
+      wg.setAttribute('aSeed', new THREE.BufferAttribute(seed, 1));
+      wg.setAttribute('aCol', new THREE.BufferAttribute(col, 3));
+
+      const wm = new THREE.ShaderMaterial({
+        uniforms: U,
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+        vertexShader: `
+          attribute vec3 aFrom;
+          attribute float aSeed;
+          attribute vec3 aCol;
+          uniform float uI, uD, uT, uPx;
+          varying vec3 vC;
+          varying float vA;
+          void main() {
+            float e = clamp(uI * 1.5 - aSeed * 0.5, 0.0, 1.0);
+            e = 1.0 - pow(1.0 - e, 4.0);
+            vec3 m = mix(aFrom, position, e);
+            float s = (1.0 - e) * (1.0 - e);
+            m.x += sin(aSeed * 20.0 + e * 6.0) * s * 14.0;
+            m.y += cos(aSeed * 17.0 + e * 5.0) * s * 14.0;
+            m += vec3(sin(uT * 1.3 + aSeed * 40.0), cos(uT * 1.1 + aSeed * 33.0), sin(uT * 0.9 + aSeed * 21.0)) * 0.07 * e;
+            vec3 dir = normalize(position + vec3((aSeed - 0.5) * 8.0, (fract(aSeed * 7.0) - 0.5) * 8.0, 3.0));
+            m += dir * uD * uD * (30.0 + aSeed * 50.0);
+            vec4 mv = modelViewMatrix * vec4(m, 1.0);
+            gl_PointSize = (1.1 + aSeed * 1.4) * uPx * (55.0 / -mv.z) * (1.0 + (1.0 - e) * 0.6);
+            vA = (0.25 + 0.75 * e) * (1.0 - smoothstep(0.3, 1.0, uD)) * clamp(uI * 20.0, 0.0, 1.0);
+            vC = aCol;
+            gl_Position = projectionMatrix * mv;
+          }
+        `,
+        fragmentShader: `
+          varying vec3 vC;
+          varying float vA;
+          void main() {
+            float d = length(gl_PointCoord - 0.5);
+            float g = smoothstep(0.5, 0.0, d);
+            gl_FragColor = vec4(vC * g * vA, g * vA);
+          }
+        `
+      });
+
+      wordPts = new THREE.Points(wg, wm);
+      wordPts.frustumCulled = false;
+      scene.add(wordPts);
+      fitWord();
+    }
+
+    const t0 = performance.now();
+    function begin() {
+      initWord();
+      tStart = Math.max(performance.now(), t0 + 1500) - (reduce ? 9000 : 0);
+    }
+
+    Promise.race([
+      document.fonts && document.fonts.load
+        ? Promise.all([document.fonts.load('900 100px Orbitron'), document.fonts.load('600 60px Rajdhani')])
+        : Promise.resolve(),
+      new Promise((r) => setTimeout(r, 1800))
+    ]).then(begin, begin);
+
+    // Fast-forward on click
+    const fastForward = () => {
+      if (tStart == null) {
+        begin();
+      }
+      tStart = Math.min(tStart, performance.now() - 6200);
     };
+    window.addEventListener('click', fastForward, { passive: true });
+    window.addEventListener('keydown', fastForward, { passive: true });
+    window.addEventListener('touchstart', fastForward, { passive: true });
 
-    animRef.current = requestAnimationFrame(draw);
+    let mx = 0, my = 0, mxT = 0, myT = 0;
+    const onMouseMove = (e) => {
+      mxT = e.clientX / window.innerWidth - 0.5;
+      myT = -(e.clientY / window.innerHeight - 0.5);
+    };
+    window.addEventListener('mousemove', onMouseMove, { passive: true });
+
+    /* ---------- background nebula sky ---------- */
+    const SU = { uT: { value: 0 }, uTint: { value: new THREE.Vector3(1, 0.1, 0.24) } };
+    const tintT = [RED, GRN, RED, GRN, [0.6, 0.2, 0.3]];
+    const sky = new THREE.Mesh(
+      new THREE.SphereGeometry(500, 32, 16),
+      new THREE.ShaderMaterial({
+        uniforms: SU,
+        side: THREE.BackSide,
+        depthWrite: false,
+        depthTest: false,
+        vertexShader: `
+          varying vec3 vD;
+          void main() {
+            vD = position;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          }
+        `,
+        fragmentShader: `
+          varying vec3 vD;
+          uniform float uT;
+          uniform vec3 uTint;
+          float h(vec3 p) {
+            p = fract(p * 0.3183099 + 0.1);
+            p *= 17.0;
+            return fract(p.x * p.y * p.z * (p.x + p.y + p.z));
+          }
+          float n(vec3 x) {
+            vec3 i = floor(x), f = fract(x);
+            f = f * f * (3.0 - 2.0 * f);
+            return mix(
+              mix(mix(h(i), h(i + vec3(1,0,0)), f.x), mix(h(i + vec3(0,1,0)), h(i + vec3(1,1,0)), f.x), f.y),
+              mix(mix(h(i + vec3(0,0,1)), h(i + vec3(1,0,1)), f.x), mix(h(i + vec3(0,1,1)), h(i + vec3(1,1,1)), f.x), f.y),
+              f.z
+            );
+          }
+          float fbm(vec3 p) {
+            float a = 0.5, s = 0.0;
+            for (int i = 0; i < 4; i++) {
+              s += a * n(p);
+              p *= 2.02;
+              a *= 0.5;
+            }
+            return s;
+          }
+          void main() {
+            vec3 d = normalize(vD);
+            float c = smoothstep(0.34, 0.86, fbm(d * 2.3 + vec3(uT * 0.012, 0.0, uT * 0.007)));
+            float c2 = smoothstep(0.4, 0.9, fbm(d * 5.0 + 7.0 + uT * 0.01));
+            vec3 col = vec3(0.032, 0.015, 0.019) + uTint * (c * 0.2 + c2 * 0.07);
+            vec3 g = d * 650.0;
+            float st = h(floor(g));
+            float dd = length(fract(g) - 0.5);
+            st = step(0.992, st) * smoothstep(0.38, 0.0, dd) * (0.55 + 0.45 * sin(uT * 2.0 + st * 90.0));
+            col += vec3(st) * 0.7;
+            gl_FragColor = vec4(col, 1.0);
+          }
+        `
+      })
+    );
+    sky.renderOrder = -1;
+    sky.frustumCulled = false;
+    scene.add(sky);
+
+    /* ---------- camera path ---------- */
+    const kf = [
+      [0, [0, 0, 26], [0, 0, 0]],
+      [0.1, [0, 0, 26], [0, 0, 0]],
+      [0.32, [58, 32, 62], [0, 0, -120]]
+    ];
+    let SH = 9;
+    H.forEach((h, k) => {
+      const c = 0.4175 + k * 0.115;
+      const s = k % 2 ? 1 : -1;
+      const cp = [h.x, h.y + 2, h.z + 36];
+      const lk = [h.x, h.y, h.z];
+      kf.push([c - 0.035, cp, lk, s], [c + 0.035, cp, lk, s]);
+    });
+    kf.push([0.95, [0, 26, 250], [0, 0, -120]], [1, [0, 26, 250], [0, 0, -120]]);
+
+    const cpos = new THREE.Vector3();
+    const clook = new THREE.Vector3();
+
+    function path(p) {
+      for (let i = 0; i < kf.length - 1; i++) {
+        const A = kf[i];
+        const B = kf[i + 1];
+        if (p >= A[0] && p <= B[0]) {
+          const t = sm((p - A[0]) / (B[0] - A[0] || 1));
+          cpos.set(
+            A[1][0] + (B[1][0] - A[1][0]) * t,
+            A[1][1] + (B[1][1] - A[1][1]) * t,
+            A[1][2] + (B[1][2] - A[1][2]) * t
+          );
+          clook.set(
+            A[2][0] + (B[2][0] - A[2][0]) * t,
+            A[2][1] + (B[2][1] - A[2][1]) * t,
+            A[2][2] + (B[2][2] - A[2][2]) * t
+          );
+          const sx = (A[3] || 0) + ((B[3] || 0) - (A[3] || 0)) * t;
+          cpos.x += sx * SH;
+          clook.x += sx * SH;
+          return;
+        }
+      }
+    }
+
+    function handleResize() {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      renderer.setPixelRatio(dpr);
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.fov = w / h < 1 ? 78 : 55;
+      camera.updateProjectionMatrix();
+      U.uPx.value = (dpr * h) / 900;
+      SH = w / h < 1 ? 0 : 9;
+      fitWord();
+    }
+    handleResize();
+    window.addEventListener('resize', handleResize);
+
+    // Initial lock for cinematic opening
+    document.documentElement.classList.add('lock');
+
+    let cur = 0;
+    let igDone = false;
+    let unlocked = false;
+    let animId = null;
+    const titles = ['03 — THE PEOPLE', '06 — THE CORE TEAM', '08 — THE EVENTS', '10 — THE MEMORIES', '13 — THE FUTURE'];
+
+    function frame(now) {
+      animId = requestAnimationFrame(frame);
+      const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      cur += (window.scrollY - cur) * (reduce ? 1 : 0.07);
+      const p = clamp(cur / max, 0, 1);
+      const t = reduce ? 0 : (now - t0) / 1000;
+
+      const ti = tStart == null ? 0 : Math.max(0, (now - tStart) / 1000);
+      U.uI.value = clamp((ti - 0.5) / 3.8, 0, 1);
+      U.uD.value = sm(clamp(p / 0.1, 0, 1));
+      const ee = clamp((p - 0.955) / 0.04, 0, 1);
+      U.uNet.value = clamp((p - 0.02) / 0.08, 0, 1) * (1 - 0.55 * ee);
+
+      // Loading counter & progress bar
+      const lp = clamp((now - t0) / 1500, 0, 1);
+      if (lnRef.current) lnRef.current.textContent = ('00' + Math.round(lp * 100)).slice(-3);
+      if (lbfRef.current) lbfRef.current.style.transform = `scaleX(${lp})`;
+      if (lp >= 1 && loadRef.current) loadRef.current.classList.add('done');
+
+      // Ignition bursts
+      if (tStart != null && ti > 0.5 && !igDone) {
+        igDone = true;
+        document.body.classList.add('ig');
+      }
+
+      // Tagline typewriter & orbit
+      if (tagRef.current) {
+        if (ti > 4.4) tagRef.current.classList.add('on');
+        tagRef.current.classList.toggle('gone', p > 0.06);
+      }
+      if (orbitRef.current) {
+        orbitRef.current.classList.toggle('on', ti > 2.2 && p < 0.04);
+        orbitRef.current.classList.toggle('gone', p >= 0.04);
+      }
+
+      // Unlock scroll
+      if (ti > 6 && !unlocked) {
+        unlocked = true;
+        document.documentElement.classList.remove('lock');
+        document.body.classList.add('open');
+      }
+
+      // Cursor lag
+      mx += (mxT - mx) * 0.05;
+      my += (myT - my) * 0.05;
+
+      // Update camera
+      path(p);
+      camera.position.copy(cpos);
+      if (!reduce) {
+        camera.position.x += Math.sin(t * 0.4) * 0.35;
+        camera.position.y += Math.cos(t * 0.33) * 0.25;
+      }
+      const mw = 1 - clamp(p / 0.1, 0, 1);
+      camera.position.x += mx * 1.8 * mw;
+      camera.position.y += my * 1.1 * mw;
+      camera.lookAt(clook);
+
+      // Uniforms
+      let fb = -1;
+      for (let k = 0; k < 5; k++) {
+        if (Math.abs(p - (0.4175 + k * 0.115)) < 0.0575) fb = k;
+      }
+      U.uP.value = p;
+      U.uT.value = t;
+      U.uF.value = fb;
+
+      // Sky nebula tint
+      const tg = fb >= 0 ? tintT[fb] : RED;
+      const tv = SU.uTint.value;
+      tv.x += (tg[0] - tv.x) * 0.03;
+      tv.y += (tg[1] - tv.y) * 0.03;
+      tv.z += (tg[2] - tv.z) * 0.03;
+      SU.uT.value = t;
+      sky.position.copy(camera.position);
+
+      // Photo frames opacity and float
+      frames.forEach((f) => {
+        const d = Math.abs(p - (0.4175 + f.k * 0.115));
+        const a = clamp(1 - (d - 0.035) / 0.04, 0, 1);
+        const e = sm(a);
+        f.m.material.opacity = e;
+        f.m.scale.setScalar(0.88 + 0.12 * e);
+        f.m.position.y = f.base.y + Math.sin(t * 0.6 + f.base.x) * 0.35;
+        f.m.visible = e > 0.01;
+      });
+
+      // HUD elements
+      if (hintRef.current) {
+        hintRef.current.style.opacity = `${(ti > 5.8 ? 1 : 0) * (1 - clamp(p / 0.05, 0, 1))}`;
+      }
+      if (barRef.current) {
+        barRef.current.style.transform = `scaleX(${p})`;
+      }
+      if (labRef.current) {
+        labRef.current.textContent =
+          p < 0.13
+            ? '00 — THE VOID'
+            : p < 0.36
+            ? '01 — THE BEGINNING'
+            : p >= 0.945
+            ? 'GWD CLUB'
+            : titles[Math.min(4, Math.floor((p - 0.36) / 0.115))];
+      }
+
+      renderer.render(scene, camera);
+    }
+
+    animId = requestAnimationFrame(frame);
 
     return () => {
+      if (animId) cancelAnimationFrame(animId);
       window.removeEventListener('resize', handleResize);
-      if (animRef.current) cancelAnimationFrame(animRef.current);
+      window.removeEventListener('click', fastForward);
+      window.removeEventListener('keydown', fastForward);
+      window.removeEventListener('mousemove', onMouseMove);
+      document.documentElement.classList.remove('lock');
+      document.body.classList.remove('ig', 'open');
+      renderer.dispose();
     };
   }, []);
 
   return (
-    <div className="background-world" aria-hidden="true">
-      <canvas ref={canvasRef} className="world-canvas" />
-    </div>
+    <>
+      <canvas ref={canvasRef} className="gl-background-canvas" aria-hidden="true" />
+      <div className="vig" aria-hidden="true" />
+      <div className="grain" aria-hidden="true" />
+      <div className="bar" ref={barRef} aria-hidden="true" />
+      <div className="flash" aria-hidden="true" />
+      <div className="flare" aria-hidden="true" />
+      <div className="shock" aria-hidden="true" />
+      <div className="dot" aria-hidden="true" />
+      <div className="tag" ref={tagRef} aria-hidden="true" />
+      <div className="orbit" ref={orbitRef} aria-hidden="true" />
+      <div className="lbx t" aria-hidden="true" />
+      <div className="lbx b" aria-hidden="true" />
+      <div className="load" ref={loadRef} aria-hidden="true">
+        <span className="lt">LOADING ARCHIVE</span>
+        <span className="ln" ref={lnRef}>000</span>
+        <div className="lp">
+          <i ref={lbfRef} />
+        </div>
+      </div>
+      <header className="hud" aria-hidden="true">
+        <span>GWD // ARCHIVE</span>
+        <span ref={labRef}>00 — THE VOID</span>
+      </header>
+      <div className="hint" ref={hintRef} aria-hidden="true">
+        <div className="mouse">
+          <i />
+        </div>
+        SCROLL TO ENTER
+      </div>
+    </>
   );
 }
