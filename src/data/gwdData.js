@@ -372,6 +372,38 @@ export const MEMORIES_DATA = [
     photo: "/photos/memory-new-09.jpg",
     alt: "GWD Archive Memory 09",
     position: "left"
+  },
+  {
+    id: "mem-10",
+    label: "MEMORY 10",
+    sub: "GWD / ARCHIVE",
+    photo: "/photos/memory-new-10.jpg",
+    alt: "GWD Archive Memory 10",
+    position: "right"
+  },
+  {
+    id: "mem-11",
+    label: "MEMORY 11",
+    sub: "GWD / ARCHIVE",
+    photo: "/photos/memory-new-11.jpg",
+    alt: "GWD Archive Memory 11",
+    position: "left"
+  },
+  {
+    id: "mem-12",
+    label: "MEMORY 12",
+    sub: "GWD / ARCHIVE",
+    photo: "/photos/memory-new-12.jpg",
+    alt: "GWD Archive Memory 12",
+    position: "right"
+  },
+  {
+    id: "mem-13",
+    label: "MEMORY 13",
+    sub: "GWD / ARCHIVE",
+    photo: "/photos/memory-new-13.jpg",
+    alt: "GWD Archive Memory 13",
+    position: "left"
   }
 ];
 
