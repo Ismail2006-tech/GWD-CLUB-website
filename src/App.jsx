@@ -3,8 +3,8 @@ import AtmosphericFog from './components/AtmosphericFog';
 import BackgroundWorld from './components/BackgroundWorld';
 import Atmosphere from './components/Atmosphere';
 import MinimalNav from './components/MinimalNav';
-import CustomCursor from './components/CustomCursor';
 import useScrollReveal from './hooks/useScrollReveal';
+import { scrollStore } from './hooks/useScrollStore';
 
 // Chapter Sections
 import VoidSection from './components/VoidSection';
@@ -25,37 +25,39 @@ export default function App() {
 
   useScrollReveal(false);
 
-  // Dynamic Scroll Spy across all 16 chapters
+  // Dynamic Scroll Spy across all chapters derived from CHAPTERS single source of truth
   useEffect(() => {
-    const sections = [
-      { id: '00', el: document.getElementById('void') },
-      { id: '01', el: document.getElementById('beginning') },
-      { id: '02', el: document.getElementById('why') },
-      { id: '03', el: document.getElementById('people') },
-      { id: '04', el: document.getElementById('leaders') },
-      { id: '05', el: document.getElementById('voices') },
-      { id: '06', el: document.getElementById('core-team') },
-      { id: '07', el: document.getElementById('members') },
-      { id: '08', el: document.getElementById('events') },
-      { id: '09', el: document.getElementById('journey') },
-      { id: '10', el: document.getElementById('memories') },
-      { id: '11', el: document.getElementById('projects') },
-      { id: 'achievements', el: document.getElementById('achievements') },
-      { id: 'future', el: document.getElementById('future') },
-    ];
-
     const handleScroll = () => {
+      const scrollY = window.scrollY || window.pageYOffset;
+      const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      const overallProgress = Math.min(1, Math.max(0, scrollY / maxScroll));
+
+      let currentActiveId = '00';
+      let currentChapterProgress = 0;
       const windowHeight = window.innerHeight;
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const item = sections[i];
-        if (item.el) {
-          const rect = item.el.getBoundingClientRect();
+
+      for (let i = CHAPTERS.length - 1; i >= 0; i--) {
+        const item = CHAPTERS[i];
+        const el = document.getElementById(item.key);
+        if (el) {
+          const rect = el.getBoundingClientRect();
           if (rect.top <= windowHeight * 0.45) {
-            setActiveChapter(item.id);
+            currentActiveId = item.id;
+            const elHeight = Math.max(1, rect.height);
+            const relativeTop = windowHeight * 0.45 - rect.top;
+            currentChapterProgress = Math.min(1, Math.max(0, relativeTop / elHeight));
             break;
           }
         }
       }
+
+      setActiveChapter(currentActiveId);
+      scrollStore.updateState({
+        scrollY,
+        overallProgress,
+        activeChapter: currentActiveId,
+        chapterProgress: currentChapterProgress,
+      });
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -64,23 +66,9 @@ export default function App() {
   }, []);
 
   const scrollToChapter = (chapterId) => {
-    const idMap = {
-      '00': 'void',
-      '01': 'beginning',
-      '02': 'why',
-      '03': 'people',
-      '04': 'leaders',
-      '05': 'voices',
-      '06': 'core-team',
-      '07': 'members',
-      '08': 'events',
-      '09': 'journey',
-      '10': 'memories',
-      '11': 'projects',
-      'achievements': 'achievements',
-      'future': 'future',
-    };
-    const targetEl = document.getElementById(idMap[chapterId]);
+    const chapterObj = CHAPTERS.find(c => c.id === chapterId);
+    if (!chapterObj) return;
+    const targetEl = document.getElementById(chapterObj.key);
     if (targetEl) targetEl.scrollIntoView({ behavior: 'smooth' });
   };
 
