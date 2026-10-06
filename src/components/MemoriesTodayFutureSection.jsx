@@ -1,66 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { MEMORIES_DATA, ACHIEVEMENTS_DATA } from '../data/gwdData';
-import useTiltCard from '../hooks/useTiltCard';
+import MemoriesMasonryGallery from './MemoriesMasonryGallery';
+import AchievementsWall from './AchievementsWall';
+import JoinClubModal from './JoinClubModal';
+import CinematicEnding from './CinematicEnding';
 import '../styles/future.css';
-
-function MemoryPhoto({ memory, side }) {
-  const itemRef = React.useRef(null);
-  const [inView, setInView] = React.useState(false);
-  const [imgLoaded, setImgLoaded] = React.useState(false);
-  const { cardRef, glowStyle } = useTiltCard();
-
-  React.useEffect(() => {
-    const el = itemRef.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setInView(true);
-        } else {
-          if (entry.boundingClientRect.top > 0) setInView(false);
-        }
-      },
-      { threshold: 0.12, rootMargin: '0px 0px -5% 0px' }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  return (
-    <div
-      ref={itemRef}
-      className={`memory-photo-cell side-${side} ${inView ? 'is-revealed' : ''}`}
-    >
-      {/* Tilt wrapper — perspective applied by the hook */}
-      <div ref={cardRef} className="memory-image-container" style={{ position: 'relative' }}>
-        {/* Radial light glow overlay */}
-        <div style={glowStyle} />
-        <img
-          src={memory.photo}
-          alt={memory.alt}
-          className={`memory-real-photo ${imgLoaded ? 'is-loaded' : 'is-loading'}`}
-          loading="lazy"
-          decoding="async"
-          onLoad={() => setImgLoaded(true)}
-          style={{
-            backfaceVisibility: 'hidden',
-            transform: 'translateZ(0)',
-            imageRendering: 'auto',
-          }}
-        />
-      </div>
-    </div>
-  );
-}
-
-function MemoryPairRow({ left, right }) {
-  return (
-    <div className="memory-pair-row">
-      {left && <MemoryPhoto memory={left} side="left" />}
-      {right && <MemoryPhoto memory={right} side="right" />}
-    </div>
-  );
-}
 
 function AchievementPhotoCarousel({ photos, title }) {
   const [photoIdx, setPhotoIdx] = useState(0);
@@ -68,61 +12,46 @@ function AchievementPhotoCarousel({ photos, title }) {
   const [touchEnd, setTouchEnd] = useState(null);
   const total = photos?.length || 0;
 
-  // Reset photo index when photos change
   React.useEffect(() => {
     setPhotoIdx(0);
   }, [photos]);
 
-  const handlePrev = (e) => {
-    e.stopPropagation();
+  const handlePrev = () => {
     if (total <= 1) return;
     setPhotoIdx((prev) => (prev === 0 ? total - 1 : prev - 1));
   };
 
-  const handleNext = (e) => {
-    e.stopPropagation();
+  const handleNext = () => {
     if (total <= 1) return;
     setPhotoIdx((prev) => (prev === total - 1 ? 0 : prev + 1));
   };
 
-  // Touch handlers for mobile swipe
-  const minSwipeDistance = 45;
-  const onTouchStart = (e) => {
-    setTouchEnd(null);
-    setTouchStart(e.targetTouches[0].clientX);
-  };
-  const onTouchMove = (e) => {
-    setTouchEnd(e.targetTouches[0].clientX);
-  };
-  const onTouchEnd = () => {
+  const handleTouchStart = (e) => setTouchStart(e.targetTouches[0].clientX);
+  const handleTouchMove = (e) => setTouchEnd(e.targetTouches[0].clientX);
+  const handleTouchEnd = () => {
     if (!touchStart || !touchEnd) return;
     const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > minSwipeDistance;
-    const isRightSwipe = distance < -minSwipeDistance;
-    if (isLeftSwipe) {
-      if (total > 1) setPhotoIdx((prev) => (prev === total - 1 ? 0 : prev + 1));
-    }
-    if (isRightSwipe) {
-      if (total > 1) setPhotoIdx((prev) => (prev === 0 ? total - 1 : prev - 1));
-    }
+    if (distance > 40) handleNext();
+    else if (distance < -40) handlePrev();
+    setTouchStart(null);
+    setTouchEnd(null);
   };
 
   const currentPhoto = photos && photos[photoIdx] ? photos[photoIdx] : null;
 
   return (
-    <div className="achievement-visual-side reveal-from-left">
-      <div
-        className="achievement-photo-box"
-        onTouchStart={onTouchStart}
-        onTouchMove={onTouchMove}
-        onTouchEnd={onTouchEnd}
-        aria-label={`Photo ${photoIdx + 1} of ${total} for ${title}`}
-      >
-        <div className="doc-photo-corner tl" />
-        <div className="doc-photo-corner br" />
-        <div className="archive-stamp-overlay">AUTHENTICATED ARCHIVE // EVIDENCE</div>
+    <div
+      className="achievement-carousel-container"
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
+      <div className="achievement-photo-frame">
+        <div className="achievement-photo-corner tl" />
+        <div className="achievement-photo-corner br" />
+        <div className="archive-stamp-overlay">VERIFIED EVIDENCE // ARCHIVE</div>
 
-        {currentPhoto ? (
+        {currentPhoto && (
           <img
             key={currentPhoto}
             src={currentPhoto}
@@ -131,14 +60,9 @@ function AchievementPhotoCarousel({ photos, title }) {
             loading="lazy"
             decoding="async"
           />
-        ) : (
-          <div className="achievement-photo-placeholder">
-            <span>[ACHIEVEMENT PHOTOGRAPH]</span>
-          </div>
         )}
       </div>
 
-      {/* Photo Carousel Navigation Bar */}
       {total > 0 && (
         <div className="achievement-carousel-bar">
           <button
@@ -149,17 +73,9 @@ function AchievementPhotoCarousel({ photos, title }) {
           >
             ← PREV
           </button>
-
-          <div className="ach-counter-display">
-            <span className="ach-counter-current">
-              {String(photoIdx + 1).padStart(2, '0')}
-            </span>
-            <span className="ach-counter-sep">/</span>
-            <span className="ach-counter-total">
-              {String(total).padStart(2, '0')}
-            </span>
-          </div>
-
+          <span className="ach-carousel-counter">
+            {String(photoIdx + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
+          </span>
           <button
             className="ach-nav-arrow ach-nav-next"
             onClick={handleNext}
@@ -170,32 +86,19 @@ function AchievementPhotoCarousel({ photos, title }) {
           </button>
         </div>
       )}
-
-      {/* Pagination Dots */}
-      {total > 1 && (
-        <div className="achievement-carousel-dots" role="tablist" aria-label="Photo pagination">
-          {photos.map((_, i) => (
-            <button
-              key={i}
-              className={`ach-dot ${i === photoIdx ? 'active' : ''}`}
-              onClick={() => setPhotoIdx(i)}
-              aria-label={`Jump to photo ${i + 1}`}
-              aria-selected={i === photoIdx}
-            />
-          ))}
-        </div>
-      )}
     </div>
   );
 }
 
 export default function MemoriesTodayFutureSection() {
   const [activeAchIdx, setActiveAchIdx] = useState(0);
+  const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
   const currentAchievement = ACHIEVEMENTS_DATA[activeAchIdx] || ACHIEVEMENTS_DATA[0];
+
 
   return (
     <section id="memories-today-future" className="future-flow" aria-label="Chapters 10, 11, 13: Memories, Achievements, and The Future">
-      {/* 10 — THE MEMORIES (Cinematic Photo Archive) */}
+      {/* 10 — THE MEMORIES (Balanced Masonry Photo Gallery) */}
       <div id="memories" className="memories-archive-stage">
         <div className="section-container">
           <header className="memories-header">
@@ -209,20 +112,12 @@ export default function MemoriesTodayFutureSection() {
             <p className="memories-sub">An archive of moments from the GWD journey. Preserved in quiet space.</p>
           </header>
 
-          {/* Cinematic Paired Memory Sequence — two photos side by side per row */}
-          <div className="memories-cinematic-stream">
-            {Array.from({ length: Math.ceil(MEMORIES_DATA.length / 2) }, (_, i) => (
-              <MemoryPairRow
-                key={i}
-                left={MEMORIES_DATA[i * 2]}
-                right={MEMORIES_DATA[i * 2 + 1]}
-              />
-            ))}
-          </div>
+          {/* Balanced Masonry Gallery with Fullscreen Lightbox */}
+          <MemoriesMasonryGallery memories={MEMORIES_DATA} />
         </div>
       </div>
 
-      {/* THE ACHIEVEMENTS (Premium Digital Archive Dossiers) */}
+      {/* THE ACHIEVEMENTS (Premium Digital Archive Dossiers + Achievements Wall) */}
       <div id="achievements" className="achievements-stage">
         <div className="section-container">
           <header className="achievements-header">
@@ -253,13 +148,11 @@ export default function MemoriesTodayFutureSection() {
 
           {/* Achievement Dossier Feature (Two-Column Layout) */}
           <article className="achievement-dossier-feature">
-            {/* Left Side: Photo Archive with Multi-Photo Carousel */}
             <AchievementPhotoCarousel
               photos={currentAchievement.photos}
               title={currentAchievement.title}
             />
 
-            {/* Right Side: Achievement Information Panel */}
             <div className="achievement-narrative-side reveal-from-right">
               <div className="ach-meta-strip">
                 <span className="ach-date-tag">ARCHIVE DATE // {currentAchievement.date}</span>
@@ -279,89 +172,20 @@ export default function MemoriesTodayFutureSection() {
               ))}
             </div>
           </article>
+
+          {/* Medal-Style Achievements Wall */}
+          <AchievementsWall />
         </div>
       </div>
 
+      {/* 11 — THE FUTURE (Cinematic Multi-Scene Ending Experience) */}
+      <CinematicEnding onOpenJoinModal={() => setIsJoinModalOpen(true)} />
 
-      {/* THE FUTURE (Minimal Void + Expanding Network Canvas) */}
-      <div id="future" className="the-future-stage">
-        <div className="future-abyss-aura" />
-        <div className="future-red-beacon" />
-        <div className="future-emerald-refraction" />
-
-        <div className="future-core-message">
-          {/* Logo slowly appears again */}
-          <div className="future-logo-wrapper reveal-scale">
-            <img
-              src="/gwd-logo.png"
-              alt="GWD Club Emblem"
-              className="future-gwd-emblem"
-            />
-          </div>
-
-          <div className="future-narrative-flow">
-            <p className="future-step step-one reveal-stagger" data-stagger="0">THE FUTURE.</p>
-            <p className="future-step step-two reveal-stagger" data-stagger="1">THE UNKNOWN AWAITS.</p>
-            <p className="future-step step-three reveal-stagger" data-stagger="2">THE STORY IS STILL BEING WRITTEN.</p>
-          </div>
-
-          <div className="future-final-brand">
-            <h2 className="final-gwd-name">
-              <span className="f-gwd">GWD</span>
-              <span className="f-club">CLUB</span>
-            </h2>
-            <span className="final-manifesto-sub">GET WORK DONE</span>
-          </div>
-
-          <div className="terminal-silence-marker">
-            <span className="silence-dot" />
-            <span className="silence-code">END OF CURRENT ARCHIVE // HORIZON ACTIVE</span>
-          </div>
-
-          {/* Social & Contact Information — Existing Final Ending */}
-          <div className="final-connect-section">
-            <span className="connect-kicker">STAY CONNECTED</span>
-
-            <p className="connect-message">
-              THE JOURNEY CONTINUES<br />
-              BEYOND THIS SCREEN.
-            </p>
-
-            <div className="connect-links-group">
-              <a
-                href="https://www.instagram.com/gwdclub.vjit"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="connect-link-item"
-                aria-label="Instagram: GWD CLUB VJIT"
-              >
-                <span className="connect-platform">INSTAGRAM</span>
-                <span className="connect-handle">GWD CLUB VJIT</span>
-              </a>
-
-              <a
-                href="https://www.linkedin.com/showcase/gwd-club-vjit/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="connect-link-item"
-                aria-label="LinkedIn: GWD CLUB VJIT"
-              >
-                <span className="connect-platform">LINKEDIN</span>
-                <span className="connect-handle">GWD CLUB VJIT</span>
-              </a>
-
-              <a
-                href="mailto:gwdclubvjit@gmail.com"
-                className="connect-link-item"
-                aria-label="Email: gwdclubvjit@gmail.com"
-              >
-                <span className="connect-platform">EMAIL</span>
-                <span className="connect-handle">gwdclubvjit@gmail.com</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* Join the Club Modal Form */}
+      <JoinClubModal
+        isOpen={isJoinModalOpen}
+        onClose={() => setIsJoinModalOpen(false)}
+      />
     </section>
   );
 }

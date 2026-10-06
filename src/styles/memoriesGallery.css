@@ -1,0 +1,297 @@
+/* ============================================================
+   CHAPTER 10 — BALANCED MASONRY GALLERY & LIGHTBOX STYLES
+   ============================================================ */
+
+.memories-masonry-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin: 32px 0 0 0; /* Aligned with left edge of container */
+  z-index: 2; /* Foreground above background network canvas */
+}
+
+/* CSS Multi-Column Masonry Grid */
+.memories-masonry-grid {
+  column-count: 3;
+  column-gap: 20px;
+  width: 100%;
+}
+
+@media (max-width: 900px) {
+  .memories-masonry-grid {
+    column-count: 2;
+    column-gap: 16px;
+  }
+}
+
+@media (max-width: 520px) {
+  .memories-masonry-grid {
+    column-count: 2;
+    column-gap: 12px;
+  }
+}
+
+/* Sibling dimming when hovering the gallery */
+.memories-masonry-grid:hover .memory-masonry-item:not(:hover) {
+  opacity: 0.65;
+  transition: opacity 0.3s ease;
+}
+
+/* Individual Card */
+.memory-masonry-item {
+  break-inside: avoid;
+  margin-bottom: 20px;
+  display: block;
+  cursor: pointer;
+  outline: none;
+  background: rgba(14, 16, 20, 0.7);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  opacity: 0;
+  transform: translateY(30px);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s ease,
+              box-shadow 0.3s ease;
+  will-change: transform, opacity;
+}
+
+.memory-masonry-item.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Hover: Lift 4px, Red Border, Deep Shadow */
+.memory-masonry-item:hover,
+.memory-masonry-item:focus-visible {
+  transform: translateY(-4px) !important;
+  border-color: #ff1f3d !important;
+  box-shadow: 0 16px 40px rgba(255, 31, 61, 0.22), 0 0 0 1px #ff1f3d;
+}
+
+.memory-card-inner {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.memory-img-frame {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+}
+
+/* Image fills width, height: auto, no stretching or cropping */
+.memory-masonry-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  transform: scale(1);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.4s ease;
+}
+
+/* Inner zoom 1.03 on hover */
+.memory-masonry-item:hover .memory-masonry-img {
+  transform: scale(1.03);
+}
+
+/* Blur-up: starts softly blurred, sharpens in 0.4s once loaded */
+.memory-masonry-img.is-blur {
+  filter: blur(8px);
+  opacity: 0.85;
+}
+
+.memory-masonry-img.is-crisp {
+  filter: blur(0px);
+  opacity: 1;
+}
+
+/* Overlay Badge & Meta */
+.memory-card-overlay {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 24px 14px 10px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 60%, transparent 100%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+  opacity: 0.85;
+  transition: opacity 0.3s ease;
+}
+
+.memory-masonry-item:hover .memory-card-overlay {
+  opacity: 1;
+}
+
+.overlay-badge {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #ff1f3d;
+}
+
+.overlay-sub {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  color: #c9c9c9;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   FULLSCREEN LIGHTBOX MODAL
+   ============================================================ */
+
+.memories-lightbox-backdrop {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(4, 5, 8, 0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: lbFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes lbFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.memories-lightbox-dialog {
+  position: relative;
+  width: 100%;
+  max-width: 1100px;
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  background: #090a0d;
+  border: 1px solid rgba(255, 31, 61, 0.35);
+  border-radius: 8px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.9), 0 0 50px rgba(255, 31, 61, 0.15);
+  overflow: hidden;
+}
+
+.lightbox-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(14, 16, 22, 0.6);
+}
+
+.lightbox-index {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  color: #ff1f3d;
+  font-weight: 700;
+}
+
+.lightbox-close-btn {
+  background: transparent;
+  border: none;
+  color: #b0b0b0;
+  font-size: 1.25rem;
+  line-height: 1;
+  padding: 6px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: color 0.2s, background 0.2s;
+}
+
+.lightbox-close-btn:hover {
+  color: #ffffff;
+  background: rgba(255, 31, 61, 0.2);
+}
+
+.lightbox-stage {
+  position: relative;
+  flex: 1;
+  min-height: 280px;
+  max-height: 72vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 60px;
+}
+
+@media (max-width: 600px) {
+  .lightbox-stage {
+    padding: 10px 40px;
+  }
+}
+
+.lightbox-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(18, 20, 26, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-size: 2.4rem;
+  line-height: 1;
+  width: 44px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 4px;
+  z-index: 5;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.lightbox-arrow:hover {
+  background: #ff1f3d;
+  border-color: #ff1f3d;
+  color: #fff;
+}
+
+.lightbox-arrow.prev { left: 14px; }
+.lightbox-arrow.next { right: 14px; }
+
+.lightbox-img-wrapper {
+  max-width: 100%;
+  max-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox-main-img {
+  max-width: 100%;
+  max-height: 68vh;
+  object-fit: contain;
+  border-radius: 4px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8);
+}
+
+.lightbox-footer {
+  padding: 12px 20px;
+  background: rgba(14, 16, 22, 0.6);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.lightbox-caption {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  color: #c9c9c9;
+  margin: 0;
+  text-align: center;
+  text-transform: uppercase;
+}

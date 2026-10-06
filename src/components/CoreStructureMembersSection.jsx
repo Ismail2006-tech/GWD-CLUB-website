@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useCallback } from 'react';
 import LivingSystemSection from './LivingSystemSection';
+import TeamNetworkMap from './TeamNetworkMap';
 import '../styles/structure.css';
 
 export default function CoreStructureMembersSection() {
@@ -219,6 +220,9 @@ export default function CoreStructureMembersSection() {
               <div ref={rightGlowRef} className="reveal-light-bar right" aria-hidden="true" />
             </div>
           </div>
+
+          {/* Interactive Team Network Synapse Map */}
+          <TeamNetworkMap />
         </div>
       </div>
 

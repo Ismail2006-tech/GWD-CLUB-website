@@ -11,12 +11,14 @@ import { initMouse, destroyMouse } from './animations/mouse';
 
 // Chapter Sections
 import VoidSection from './components/VoidSection';
+import LiveCounters from './components/LiveCounters';
 import BeginningSection from './components/BeginningSection';
 import WhySection from './components/WhySection';
 import PeopleLeadersSection from './components/PeopleLeadersSection';
 import CoreStructureMembersSection from './components/CoreStructureMembersSection';
 import JourneyEventsProjectsSection from './components/JourneyEventsProjectsSection';
 import MemoriesTodayFutureSection from './components/MemoriesTodayFutureSection';
+import Preloader from './components/Preloader';
 
 import { CHAPTERS } from './data/gwdData';
 import MouseParallaxLayer from './components/MouseParallaxLayer';
@@ -118,6 +120,9 @@ export default function App() {
 
   return (
     <div className="gwd-journey-experience">
+      {/* Cinematic 1.5s Preloader */}
+      <Preloader />
+
       {/* Crimson Scroll Progress Bar — fixed at top */}
       <ScrollProgressBar />
 
@@ -144,6 +149,9 @@ export default function App() {
       <MouseParallaxLayer depth={8} as="main" className="story-stream">
         {/* 00 — THE VOID */}
         <VoidSection onEnter={handleEnterFromVoid} />
+
+        {/* Live Verified Counters Strip */}
+        <LiveCounters />
 
         {/* 01 — THE BEGINNING */}
         <BeginningSection />

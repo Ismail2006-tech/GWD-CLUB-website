@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { EVENTS_DATA, JOURNEY_DATA, PROJECTS_DATA } from '../data/gwdData';
+import { SHOW_PLACEHOLDER_SECTIONS } from '../data/config';
+import InteractiveTimeline from './InteractiveTimeline';
 import '../styles/journey.css';
 
 function EventPhotoCarousel({ photos, title }) {
@@ -199,7 +201,9 @@ export default function JourneyEventsProjectsSection() {
 
             <div className="documentary-narrative-side reveal-from-right">
               <div className="doc-meta-strip">
-                <span className="doc-date-tag">ARCHIVE DATE // {currentEvent.date}</span>
+                {currentEvent.date && (!currentEvent.date.includes('[ADD') || SHOW_PLACEHOLDER_SECTIONS) && (
+                  <span className="doc-date-tag">ARCHIVE DATE // {currentEvent.date}</span>
+                )}
                 <span className="doc-status-indicator">VERIFIED RECORD</span>
               </div>
 
@@ -327,6 +331,9 @@ export default function JourneyEventsProjectsSection() {
               A visible path through the growing story of GWD. From the first spark to competitive execution.
             </p>
           </header>
+
+          {/* Interactive Milestone Timeline */}
+          <InteractiveTimeline />
 
           <div className="vertical-timeline-track">
             {/* The Physical Red Travelling Line */}

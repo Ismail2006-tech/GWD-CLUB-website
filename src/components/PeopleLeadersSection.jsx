@@ -1,6 +1,41 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { onMouse, getTiltFromMouse, TILT_MAX_DEG, TILT_PERSPECTIVE } from '../animations/mouse';
 import { LEADERSHIP, VOICES_OF_GWD } from '../data/gwdData';
 import '../styles/leaders.css';
+
+/** Wraps the leader monolith card and applies mouse-reactive 3D tilt via the shared engine. */
+function LeaderCardWithMouseTilt({ children }) {
+  const cardRef = useRef(null);
+
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) return;
+
+    el.style.willChange = 'transform';
+    el.style.transformStyle = 'preserve-3d';
+
+    const unsub = onMouse((mx, my) => {
+      const rect = el.getBoundingClientRect();
+      const { rx, ry } = getTiltFromMouse(mx, my, rect);
+      el.style.transform = `perspective(${TILT_PERSPECTIVE}px) rotateX(${rx * 0.6}deg) rotateY(${ry * 0.6}deg)`;
+    });
+
+    return () => {
+      unsub();
+      el.style.willChange = '';
+      el.style.transform = '';
+    };
+  }, []);
+
+  return (
+    <div ref={cardRef} className="leader-monolith-card">
+      {children}
+    </div>
+  );
+}
+
 
 export default function PeopleLeadersSection() {
   const [activeLeaderIdx, setActiveLeaderIdx] = useState(0);
@@ -101,7 +136,7 @@ export default function PeopleLeadersSection() {
           </header>
 
           {/* Large Visual Composition Stage for Single Leader Reveal */}
-          <div className="leader-monolith-card">
+          <LeaderCardWithMouseTilt>
             <div className="leader-card-glow" />
 
             {/* Left/Main: Exact Photo Placeholder with Strict Label */}
@@ -228,8 +263,8 @@ export default function PeopleLeadersSection() {
                 ))}
               </div>
             </div>
+          </LeaderCardWithMouseTilt>
           </div>
-        </div>
       </div>
 
       {/* 05 — VOICES OF GWD (Recurring Storytelling Element) */}

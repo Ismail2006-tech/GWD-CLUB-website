@@ -129,6 +129,9 @@
   border-radius: 0;
   align-items: center;
   overflow: visible;
+  /* Smooth mouse-reactive 3D tilt */
+  transform-style: preserve-3d;
+  will-change: transform;
 }
 
 .leader-card-glow {

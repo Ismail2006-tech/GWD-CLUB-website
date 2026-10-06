@@ -1,45 +1,53 @@
 import React, { useEffect, useState } from 'react';
 import './Preloader.css';
 
+// Preload priority hero assets so nothing pops in blurry
+const PRIORITY_ASSETS = [
+  '/gwd-logo.png',
+  '/photos/aldrin-paul.webp',
+  '/photos/mohd-ismail.webp',
+  '/photos/core-team.png',
+];
+
 export default function Preloader({ onComplete }) {
-  const [progress, setProgress] = useState(0);
-  const [isFading, setIsFading] = useState(false);
+  const [phase, setPhase] = useState('dot'); // 'dot' -> 'ring' -> 'expand' -> 'done'
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          setTimeout(() => setIsFading(true), 300);
-          setTimeout(() => onComplete(), 1100);
-          return 100;
-        }
-        // Organic cinematic progression
-        const increment = Math.floor(Math.random() * 8) + 3;
-        return Math.min(prev + increment, 100);
-      });
-    }, 45);
+    // 1. Kick off image preloading in background
+    PRIORITY_ASSETS.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
 
-    return () => clearInterval(interval);
+    // 2. Exact choreographed timing (Total: 1400ms <= 1.5s max)
+    // 0ms - 400ms: Red dot emerges
+    // 400ms - 950ms: Dot expands into Orbit Ring
+    // 950ms - 1350ms: Ring expands outward to reveal hero
+    // 1400ms: Complete
+    const tRing = setTimeout(() => setPhase('ring'), 380);
+    const tExpand = setTimeout(() => setPhase('expand'), 920);
+    const tDone = setTimeout(() => {
+      setPhase('done');
+      if (onComplete) onComplete();
+    }, 1380);
+
+    return () => {
+      clearTimeout(tRing);
+      clearTimeout(tExpand);
+      clearTimeout(tDone);
+    };
   }, [onComplete]);
 
-  return (
-    <div className={`preloader-overlay ${isFading ? 'fade-out' : ''}`}>
-      <div className="preloader-content">
-        <div className="preloader-monogram">
-          <div className="bracket bracket-tl" />
-          <div className="monogram-text">GWD</div>
-          <div className="bracket bracket-br" />
-        </div>
-        
-        <div className="preloader-bar-wrap">
-          <div className="preloader-bar" style={{ width: `${progress}%` }} />
-        </div>
+  if (phase === 'done') return null;
 
-        <div className="preloader-meta">
-          <span className="meta-label">INITIALIZING ARCHIVE</span>
-          <span className="meta-val">{progress.toString().padStart(3, '0')}%</span>
-        </div>
+  return (
+    <div className={`preloader-cinematic-stage ${phase === 'expand' ? 'stage-expand' : ''}`} aria-hidden="true">
+      <div className="preloader-orbit-system">
+        <div className={`preloader-dot ${phase !== 'dot' ? 'dot-into-ring' : ''}`} />
+        <div className={`preloader-ring ${phase === 'ring' || phase === 'expand' ? 'ring-active' : ''}`} />
+      </div>
+      <div className={`preloader-label ${phase === 'expand' ? 'label-fade' : ''}`}>
+        GWD // INITIALIZING ARCHIVE
       </div>
     </div>
   );

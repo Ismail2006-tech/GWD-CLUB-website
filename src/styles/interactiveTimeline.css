@@ -1,0 +1,231 @@
+/* ============================================================
+   INTERACTIVE TIMELINE STYLES
+   ============================================================ */
+
+.interactive-timeline-module {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin: 50px auto 40px;
+  padding: 30px 20px;
+  box-sizing: border-box;
+}
+
+.timeline-header {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.timeline-eyebrow {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  color: #ff1f3d;
+  font-weight: 700;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.timeline-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(1.4rem, 3.2vw, 2.2rem);
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  color: #ffffff;
+  margin: 0;
+}
+
+.timeline-track-container {
+  position: relative;
+  width: 100%;
+  padding: 30px 0;
+}
+
+.timeline-rail {
+  position: absolute;
+  top: 42px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  z-index: 1;
+}
+
+.timeline-rail-progress {
+  position: absolute;
+  top: 42px;
+  left: 0;
+  height: 2px;
+  background: #ff1f3d;
+  box-shadow: 0 0 10px rgba(255, 31, 61, 0.8);
+  z-index: 2;
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.timeline-nodes-bar {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+@media (max-width: 768px) {
+  .timeline-rail,
+  .timeline-rail-progress {
+    display: none;
+  }
+
+  .timeline-nodes-bar {
+    flex-direction: column;
+    gap: 14px;
+  }
+}
+
+.timeline-node-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  outline: none;
+  padding: 6px;
+  transition: transform 0.25s ease;
+}
+
+@media (max-width: 768px) {
+  .timeline-node-btn {
+    flex-direction: row;
+    width: 100%;
+    background: rgba(14, 16, 22, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    padding: 10px 14px;
+  }
+}
+
+.timeline-node-btn:hover,
+.timeline-node-btn.active {
+  transform: translateY(-2px);
+}
+
+.node-indicator {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #090a0d;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.node-pulse-circle {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #b0b0b0;
+  transition: background 0.3s, transform 0.3s;
+}
+
+.timeline-node-btn.active .node-indicator {
+  border-color: #ff1f3d;
+  box-shadow: 0 0 14px rgba(255, 31, 61, 0.7);
+}
+
+.timeline-node-btn.active .node-pulse-circle {
+  background: #ff1f3d;
+  transform: scale(1.3);
+}
+
+.node-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .node-meta {
+    align-items: flex-start;
+    text-align: left;
+  }
+}
+
+.node-phase {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: #ff1f3d;
+  font-weight: 700;
+}
+
+.node-short-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #c9c9c9;
+  letter-spacing: 0.05em;
+  margin-top: 2px;
+}
+
+/* Expanded Dossier Card */
+.timeline-active-dossier {
+  margin-top: 28px;
+  background: rgba(14, 16, 22, 0.85);
+  border: 1px solid rgba(255, 31, 61, 0.3);
+  border-radius: 8px;
+  padding: 24px 30px;
+  animation: dossierFade 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
+}
+
+@keyframes dossierFade {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.dossier-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.dossier-tag {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #ff1f3d;
+}
+
+.dossier-period {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+  color: #b0b0b0;
+  text-transform: uppercase;
+}
+
+.dossier-heading {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(1.15rem, 2.5vw, 1.6rem);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #fff;
+  margin: 4px 0 10px;
+}
+
+.dossier-summary {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: #c9c9c9;
+  margin: 0;
+}

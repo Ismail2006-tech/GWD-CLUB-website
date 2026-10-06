@@ -9,6 +9,11 @@ import '../styles/backgroundWorld.css';
  */
 
 export default function BackgroundWorld({ activeChapter }) {
+  const activeChapterRef = useRef(activeChapter);
+  useEffect(() => {
+    activeChapterRef.current = activeChapter;
+  }, [activeChapter]);
+
   const canvasRef = useRef(null);
   const tagRef = useRef(null);
   const orbitRef = useRef(null);
@@ -531,7 +536,16 @@ export default function BackgroundWorld({ activeChapter }) {
 
       const ti = tStart == null ? 0 : Math.max(0, (now - tStart) / 1000);
       U.uI.value = clamp((ti - 0.5) / 3.8, 0, 1);
-      U.uD.value = sm(clamp(p / 0.1, 0, 1));
+
+      // Hero scroll dissolution: dissolves swiftly as user leaves hero so no text overlap occurs
+      const heroDissolve = clamp(cur / (window.innerHeight * 0.42), 0, 1);
+      U.uD.value = sm(heroDissolve);
+
+      // Stop rendering hero particle points completely when dissolved (cull geometry)
+      if (wordPts) {
+        wordPts.visible = (heroDissolve < 0.98);
+      }
+
       const ee = clamp((p - 0.955) / 0.04, 0, 1);
       U.uNet.value = clamp((p - 0.02) / 0.08, 0, 1) * (1 - 0.55 * ee);
 
@@ -547,14 +561,14 @@ export default function BackgroundWorld({ activeChapter }) {
         document.body.classList.add('ig');
       }
 
-      // Tagline typewriter & orbit
+      // Tagline typewriter & orbit ring shrink
       if (tagRef.current) {
         if (ti > 4.4) tagRef.current.classList.add('on');
-        tagRef.current.classList.toggle('gone', p > 0.06);
+        tagRef.current.classList.toggle('gone', heroDissolve > 0.12);
       }
       if (orbitRef.current) {
-        orbitRef.current.classList.toggle('on', ti > 2.2 && p < 0.04);
-        orbitRef.current.classList.toggle('gone', p >= 0.04);
+        orbitRef.current.classList.toggle('on', ti > 2.2 && heroDissolve < 0.08);
+        orbitRef.current.classList.toggle('gone', heroDissolve >= 0.08);
       }
 
       // Unlock scroll
@@ -593,12 +607,25 @@ export default function BackgroundWorld({ activeChapter }) {
       U.uT.value = t;
       U.uF.value = fb;
 
-      // Sky nebula tint
-      const tg = fb >= 0 ? tintT[fb] : RED;
+      // Sky nebula tint based on activeChapterRef
+      let targetTint = RED;
+      const ch = activeChapterRef.current;
+      if (ch === '06' || ch === '07' || ch === 'core-team' || ch === 'members') {
+        targetTint = GRN;
+      } else if (ch === '10' || ch === 'memories') {
+        targetTint = [0.18, 0.32, 0.68];
+      } else if (ch === 'future' || ch === 'achievements') {
+        targetTint = [0.90, 0.12, 0.26];
+      } else if (fb >= 0) {
+        targetTint = tintT[fb];
+      } else {
+        targetTint = RED;
+      }
+
       const tv = SU.uTint.value;
-      tv.x += (tg[0] - tv.x) * 0.03;
-      tv.y += (tg[1] - tv.y) * 0.03;
-      tv.z += (tg[2] - tv.z) * 0.03;
+      tv.x += (targetTint[0] - tv.x) * 0.03;
+      tv.y += (targetTint[1] - tv.y) * 0.03;
+      tv.z += (targetTint[2] - tv.z) * 0.03;
       SU.uT.value = t;
       sky.position.copy(camera.position);
 

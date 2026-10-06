@@ -365,6 +365,21 @@
   outline-offset: 4px;
 }
 
+/* Low contrast side rail on desktop to prevent competing with main content */
+.hud-rail {
+  opacity: 0.45;
+  transition: opacity 0.3s ease;
+}
+.hud-rail:hover {
+  opacity: 1;
+}
+
+@media (max-width: 1024px) {
+  .hud-rail {
+    display: none !important;
+  }
+}
+
 @media (max-width: 900px) {
   .hud-telemetry {
     left: 16px;
@@ -375,9 +390,6 @@
     top: 16px;
     font-size: 0.75rem;
     padding: 4px 10px;
-  }
-  .hud-rail {
-    display: none;
   }
 }
 

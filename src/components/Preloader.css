@@ -1,90 +1,89 @@
-.preloader-overlay {
+/* ============================================================
+   PRELOADER — ORBIT RING REVEAL STYLES (Max 1.5s)
+   ============================================================ */
+
+.preloader-cinematic-stage {
   position: fixed;
   inset: 0;
-  background-color: var(--color-void-deep);
-  z-index: 10000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: opacity 0.8s var(--ease-cinematic), visibility 0.8s ease;
-}
-
-.preloader-overlay.fade-out {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-.preloader-content {
+  width: 100vw;
+  height: 100vh;
+  background: #030406;
+  z-index: 9999999;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 28px;
-  position: relative;
+  justify-content: center;
+  pointer-events: all;
+  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+              visibility 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.preloader-monogram {
-  position: relative;
-  padding: 16px 28px;
+.preloader-cinematic-stage.stage-expand {
+  opacity: 0;
+  pointer-events: none;
 }
 
-.monogram-text {
-  font-family: var(--font-display);
-  font-size: 2.8rem;
-  font-weight: 900;
-  letter-spacing: 0.35em;
-  color: var(--color-white);
-  text-shadow: 0 0 25px var(--color-red-glow);
+.preloader-orbit-system {
   position: relative;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.bracket {
-  position: absolute;
+/* Red Dot Center */
+.preloader-dot {
   width: 14px;
   height: 14px;
-  border-color: var(--color-red);
+  border-radius: 50%;
+  background: #ff1f3d;
+  box-shadow: 0 0 24px #ff1f3d, 0 0 50px rgba(255, 31, 61, 0.8);
+  transform: scale(1);
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.4s ease;
 }
 
-.bracket-tl {
-  top: 0;
-  left: 0;
-  border-top: 2px solid var(--color-red);
-  border-left: 2px solid var(--color-red);
+.preloader-dot.dot-into-ring {
+  transform: scale(0.6);
 }
 
-.bracket-br {
-  bottom: 0;
-  right: 0;
-  border-bottom: 2px solid var(--color-red);
-  border-right: 2px solid var(--color-red);
+/* Orbit Ring */
+.preloader-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid #ff1f3d;
+  box-shadow: 0 0 28px rgba(255, 31, 61, 0.5), inset 0 0 20px rgba(255, 31, 61, 0.3);
+  transform: scale(0.1);
+  opacity: 0;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.4s ease;
 }
 
-.preloader-bar-wrap {
-  width: 220px;
-  height: 1.5px;
-  background: rgba(242, 242, 242, 0.08);
-  position: relative;
-  overflow: hidden;
+.preloader-ring.ring-active {
+  transform: scale(1);
+  opacity: 1;
 }
 
-.preloader-bar {
-  height: 100%;
-  background: linear-gradient(90deg, var(--color-red), #ff526d);
-  box-shadow: 0 0 10px var(--color-red);
-  transition: width 0.15s ease-out;
+/* Ring expands to reveal hero */
+.preloader-cinematic-stage.stage-expand .preloader-ring {
+  transform: scale(15);
+  opacity: 0;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.45s ease;
 }
 
-.preloader-meta {
-  display: flex;
-  justify-content: space-between;
-  width: 220px;
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  letter-spacing: 0.2em;
-  color: var(--color-grey-muted);
+.preloader-label {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.76rem;
+  letter-spacing: 0.22em;
+  color: #c9c9c9;
+  margin-top: 32px;
+  text-transform: uppercase;
+  transition: opacity 0.3s ease;
 }
 
-.meta-val {
-  color: var(--color-red);
-  font-weight: 600;
+.preloader-label.label-fade {
+  opacity: 0;
 }

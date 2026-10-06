@@ -1,0 +1,744 @@
+/**
+ * GWD CLUB — CINEMATIC ENDING STYLESHEET
+ *
+ * File: src/styles/ending.css
+ * Description: Design system tokens, layout structures, masked typographic reveals,
+ * chromatic split effects, text glint sweeps, magnetic buttons, and responsive breakpoints.
+ */
+
+/* ============================================================
+   ENDING DESIGN CONSTANTS & TOKENS
+   ============================================================ */
+:root {
+  --ending-bg: #09050a;
+  --ending-red: #ff2d46;
+  --ending-red-title: #e84054;
+  --ending-red-glow: rgba(255, 45, 70, 0.45);
+  --ending-green: #2dff8a;
+  --ending-white: #f2f2f4;
+  --ending-grey-muted: #9a9aa2;
+  --ending-grey-sub: #b9b9c0;
+  --ending-border-dim: #3c282e;
+  --ending-border-btn: #5f464c;
+}
+
+/* Base Stage Container */
+.cinematic-ending-root {
+  position: relative;
+  width: 100%;
+  background-color: var(--ending-bg);
+  color: var(--ending-white);
+  overflow: hidden;
+  font-family: var(--font-body);
+}
+
+.ending-viewport-stage {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-height: 680px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 45, 70, 0.08) 0%, rgba(9, 5, 10, 0.98) 75%);
+}
+
+/* Ambient Grain & Vignette Overlay */
+.ending-vignette-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 50%, transparent 40%, rgba(4, 2, 5, 0.85) 100%);
+  z-index: 2;
+}
+
+/* Background Network & Recap Canvas */
+.ending-network-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.ending-recap-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.ending-particles-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 4;
+}
+
+/* Persistent Ending HUD */
+.ending-hud-layer {
+  position: absolute;
+  top: 24px;
+  left: 32px;
+  right: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.ending-hud-telemetry {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  color: #afafb6;
+}
+
+.ending-hud-chapter {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  color: var(--ending-red);
+  text-shadow: 0 0 10px rgba(255, 45, 70, 0.4);
+  transition: opacity 0.4s ease;
+}
+
+/* Skip Autoplay Button (Bottom Right) */
+.ending-skip-btn {
+  position: absolute;
+  bottom: 24px;
+  right: 32px;
+  z-index: 30;
+  background: rgba(18, 9, 13, 0.6);
+  border: 1px solid var(--ending-border-dim);
+  color: var(--ending-grey-muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  padding: 8px 14px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(8px);
+}
+
+.ending-skip-btn:hover {
+  color: var(--ending-white);
+  border-color: var(--ending-red);
+  box-shadow: 0 0 12px var(--ending-red-glow);
+}
+
+/* Sound Toggle Button (Bottom Left) */
+.ending-sound-toggle {
+  position: absolute;
+  bottom: 24px;
+  left: 32px;
+  z-index: 30;
+  background: rgba(18, 9, 13, 0.6);
+  border: 1px solid var(--ending-border-dim);
+  color: var(--ending-grey-muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  padding: 8px 14px;
+  border-radius: 3px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(8px);
+}
+
+.ending-sound-toggle:hover {
+  color: var(--ending-white);
+  border-color: var(--ending-red);
+}
+
+.sound-indicator-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #555555;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.ending-sound-toggle.active .sound-indicator-dot {
+  background-color: var(--ending-green);
+  box-shadow: 0 0 8px var(--ending-green);
+}
+
+/* Scene A: Recap Overlay Titles & Labels */
+.ending-recap-dom-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: opacity 0.5s ease;
+}
+
+.ending-recap-title {
+  margin-top: 80px;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: 9px;
+  color: var(--ending-grey-sub);
+  text-align: center;
+  animation: recapFadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes recapFadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.ending-recap-counter {
+  position: absolute;
+  bottom: 50px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 5px;
+  color: #a0a0a8;
+  text-transform: uppercase;
+}
+
+/* Scene C: Main Content Typography Container */
+.ending-main-content-flow {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 900px;
+  width: 90%;
+  margin: 0 auto;
+}
+
+/* 4.1 Masked Headline Lines */
+.ending-masked-headline {
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.headline-text-line {
+  font-family: var(--font-heading);
+  font-size: clamp(20px, 3.2vw, 30px);
+  font-weight: 700;
+  letter-spacing: clamp(6px, 1.2vw, 12px);
+  text-transform: uppercase;
+  color: var(--ending-white);
+  line-height: 1.3;
+  transform: translateY(90%);
+  opacity: 0;
+}
+
+.headline-text-line.accent-red {
+  color: var(--ending-red-title);
+  letter-spacing: clamp(6px, 1.1vw, 11px);
+}
+
+/* 4.2 Big Title GWD CLUB with Chromatic Aberration & Glint Sweep */
+.ending-big-title-container {
+  position: relative;
+  margin-top: 14px;
+  margin-bottom: 12px;
+  opacity: 0;
+}
+
+.ending-big-title {
+  font-family: var(--font-display);
+  font-size: clamp(48px, 9vw, 104px);
+  font-weight: 900;
+  letter-spacing: clamp(10px, 2.4vw, 26px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(20px, 5vw, 60px);
+  text-transform: uppercase;
+  position: relative;
+  user-select: none;
+}
+
+.title-word-gwd {
+  color: var(--ending-white);
+}
+
+.title-word-club {
+  color: var(--ending-red-title);
+  animation: breathingGlow 2.9s infinite ease-in-out;
+}
+
+@keyframes breathingGlow {
+  0%, 100% {
+    text-shadow: 0 0 15px rgba(232, 64, 84, 0.4), 0 0 35px rgba(232, 64, 84, 0.2);
+  }
+  50% {
+    text-shadow: 0 0 28px rgba(232, 64, 84, 0.8), 0 0 55px rgba(232, 64, 84, 0.45);
+  }
+}
+
+/* Chromatic Ghost Layers */
+.chromatic-ghost {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(20px, 5vw, 60px);
+  font-family: var(--font-display);
+  font-size: clamp(48px, 9vw, 104px);
+  font-weight: 900;
+  letter-spacing: clamp(10px, 2.4vw, 26px);
+  pointer-events: none;
+  opacity: 0;
+}
+
+.chromatic-ghost.red {
+  color: #ff2d46;
+  mix-blend-mode: screen;
+}
+
+.chromatic-ghost.cyan {
+  color: #00f0ff;
+  mix-blend-mode: screen;
+}
+
+/* Glint Sweep Across Letters */
+.title-glint-mask {
+  position: absolute;
+  inset: -10px;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.glint-sweep-band {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 90px;
+  height: 100%;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.9) 50%, transparent 100%);
+  transform: skewX(-25deg);
+  opacity: 0;
+}
+
+/* 4.3 Sub-line GET WORK DONE */
+.ending-sub-manifesto {
+  font-family: var(--font-mono);
+  font-size: clamp(12px, 1.4vw, 15px);
+  font-weight: 500;
+  letter-spacing: clamp(5px, 0.8vw, 9px);
+  color: var(--ending-grey-sub);
+  text-transform: uppercase;
+  margin-top: 8px;
+  opacity: 0;
+}
+
+/* 4.4 Interactive Buttons Group */
+.ending-buttons-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 36px;
+  margin-bottom: 24px;
+  width: 100%;
+  position: relative;
+}
+
+.ending-primary-btn {
+  position: relative;
+  width: min(250px, 100%);
+  height: 52px;
+  background-color: var(--ending-red-title);
+  color: var(--ending-white);
+  border: none;
+  border-radius: 3px;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  box-shadow: 0 0 25px rgba(232, 64, 84, 0.35);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.ending-primary-btn:hover {
+  transform: translateY(-4px);
+  background-color: #ff4d63;
+  box-shadow: 0 0 35px rgba(255, 77, 99, 0.6);
+}
+
+.ending-primary-btn:focus-visible {
+  outline: 2px solid var(--ending-white);
+  outline-offset: 4px;
+}
+
+.btn-diagonal-shine {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60px;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+  transform: skewX(-25deg);
+  transition: left 0.6s ease;
+}
+
+.ending-primary-btn:hover .btn-diagonal-shine {
+  left: 200%;
+}
+
+.ending-secondary-btn {
+  position: relative;
+  width: min(270px, 100%);
+  height: 52px;
+  background: transparent;
+  color: #e1e1e6;
+  border: 1px solid var(--ending-border-btn);
+  border-radius: 3px;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  opacity: 0;
+}
+
+.ending-secondary-btn:hover {
+  border-color: var(--ending-red);
+  color: var(--ending-white);
+  box-shadow: 0 0 20px rgba(255, 45, 70, 0.25);
+  transform: translateY(-2px);
+}
+
+.ending-secondary-btn:focus-visible {
+  outline: 2px solid var(--ending-red);
+  outline-offset: 4px;
+}
+
+/* 4.5 Status Line */
+.ending-status-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #78787f;
+  min-height: 20px;
+}
+
+.ending-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--ending-red);
+  box-shadow: 0 0 8px var(--ending-red);
+  flex-shrink: 0;
+}
+
+.ending-status-text.status-success {
+  color: var(--ending-red);
+  text-shadow: 0 0 10px var(--ending-red-glow);
+}
+
+/* Join Click Ripple Shockwaves */
+.ending-ripple-shockwave {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 15;
+}
+
+.ending-ripple-shockwave.red-ring {
+  border: 2px solid var(--ending-red);
+  box-shadow: 0 0 20px var(--ending-red);
+}
+
+.ending-ripple-shockwave.white-ring {
+  border: 1px solid var(--ending-white);
+}
+
+@keyframes rippleExpand {
+  0% {
+    transform: translate(-50%, -50%) scale(0.05);
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
+}
+
+/* ============================================================
+   7. STAY CONNECTED BLOCK (Normal Scroll Section Below Buttons)
+   ============================================================ */
+.ending-stay-connected-section {
+  position: relative;
+  width: 100%;
+  padding: 100px 32px 60px;
+  background-color: #070308;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  z-index: 20;
+  border-top: 1px solid rgba(255, 45, 70, 0.12);
+}
+
+.connected-kicker-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: #ff465f;
+  margin-bottom: 16px;
+}
+
+.connected-main-heading {
+  font-family: var(--font-heading);
+  font-size: clamp(24px, 4vw, 32px);
+  font-weight: 700;
+  letter-spacing: 7px;
+  text-transform: uppercase;
+  color: var(--ending-white);
+  line-height: 1.35;
+  margin-bottom: 48px;
+}
+
+.connected-columns-grid {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 16px;
+  max-width: 900px;
+  width: 100%;
+  margin-bottom: 60px;
+}
+
+.connected-card-column {
+  flex: 1;
+  min-width: 240px;
+  background: rgba(18, 9, 13, 0.45);
+  border: 1px solid rgba(255, 45, 70, 0.12);
+  border-radius: 4px;
+  padding: 32px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  position: relative;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.connected-card-column:hover {
+  transform: translateY(-6px);
+  background: rgba(26, 12, 18, 0.7);
+  border-color: rgba(255, 45, 70, 0.35);
+  box-shadow: 0 10px 30px rgba(255, 45, 70, 0.15);
+}
+
+.connected-card-column:focus-visible {
+  outline: 2px solid var(--ending-red);
+  outline-offset: 4px;
+}
+
+.connected-icon-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 45, 70, 0.08);
+  border: 1px solid rgba(255, 45, 70, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ending-red);
+  margin-bottom: 16px;
+  transition: all 0.3s ease;
+}
+
+.connected-card-column:hover .connected-icon-wrap {
+  background: var(--ending-red);
+  color: var(--ending-white);
+  box-shadow: 0 0 15px var(--ending-red-glow);
+}
+
+.connected-label-tag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--ending-grey-muted);
+  margin-bottom: 8px;
+}
+
+.connected-value-tag {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: var(--ending-white);
+}
+
+/* Expanding Underline */
+.connected-card-underline {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0%;
+  height: 2px;
+  background-color: var(--ending-red);
+  transform: translateX(-50%);
+  transition: width 0.35s ease;
+}
+
+.connected-card-column:hover .connected-card-underline {
+  width: 100%;
+}
+
+.connected-footer-brand {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  color: #82828a;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 28px;
+  width: 100%;
+  max-width: 600px;
+}
+
+/* ============================================================
+   RESPONSIVE DESIGN BREAKPOINTS
+   ============================================================ */
+@media (max-width: 768px) {
+  .ending-viewport-stage {
+    min-height: 600px;
+  }
+
+  .ending-hud-layer {
+    top: 16px;
+    left: 20px;
+    right: 20px;
+  }
+
+  .ending-hud-telemetry {
+    font-size: 11px;
+    letter-spacing: 2px;
+  }
+
+  .ending-hud-chapter {
+    font-size: 11px;
+    letter-spacing: 2px;
+  }
+
+  .ending-skip-btn,
+  .ending-sound-toggle {
+    bottom: 16px;
+    padding: 6px 10px;
+    font-size: 10px;
+    letter-spacing: 2px;
+  }
+
+  .ending-sound-toggle { left: 20px; }
+  .ending-skip-btn { right: 20px; }
+
+  .ending-big-title {
+    flex-direction: column;
+    gap: 4px;
+    line-height: 1.1;
+  }
+
+  .chromatic-ghost {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .ending-buttons-group {
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
+  }
+
+  .ending-primary-btn,
+  .ending-secondary-btn {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .connected-columns-grid {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .connected-card-column {
+    width: 100%;
+    max-width: 320px;
+  }
+}
+
+/* ============================================================
+   PREFERS-REDUCED-MOTION SUPPORT
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .ending-network-canvas,
+  .ending-recap-canvas,
+  .ending-particles-canvas,
+  .title-glint-mask,
+  .chromatic-ghost {
+    display: none !important;
+  }
+
+  .headline-text-line,
+  .ending-big-title-container,
+  .ending-sub-manifesto,
+  .ending-primary-btn,
+  .ending-secondary-btn {
+    transform: none !important;
+    opacity: 1 !important;
+    transition: none !important;
+  }
+
+  .title-word-club {
+    animation: none !important;
+    text-shadow: 0 0 20px rgba(232, 64, 84, 0.6);
+  }
+}

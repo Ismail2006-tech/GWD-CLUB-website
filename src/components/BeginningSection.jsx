@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { STAGE_1_DATA } from '../data/gwdData';
+import { SHOW_PLACEHOLDER_SECTIONS } from '../data/config';
 import '../styles/beginning.css';
 
 // ─────────────────────────────────────────────
@@ -268,7 +269,7 @@ export default function BeginningSection() {
           timersRef.current.push(tStart);
         }
       },
-      { threshold: 0.15 }
+      { threshold: 0.35 }
     );
 
     observer.observe(sectionEl);
@@ -430,28 +431,30 @@ export default function BeginningSection() {
         </div>
 
         {/* ── CHAPTER 01: FOUNDING ARCHIVE DOSSIER (§12) ── */}
-        <div ref={archiveRef} className={`founding-archive-dossier stage-${archiveStage}`}>
-          <div className="archive-dossier-header">
-            <div className="archive-doc-tag">DOC // GWD-FOUNDING-ARCHIVE</div>
-            <div className="archive-status-tag">
-              <span className="status-blink-dot" />
-              STATUS: ARCHIVE INCOMPLETE
+        {SHOW_PLACEHOLDER_SECTIONS && (
+          <div ref={archiveRef} className={`founding-archive-dossier stage-${archiveStage}`}>
+            <div className="archive-dossier-header">
+              <div className="archive-doc-tag">DOC // GWD-FOUNDING-ARCHIVE</div>
+              <div className="archive-status-tag">
+                <span className="status-blink-dot" />
+                STATUS: ARCHIVE INCOMPLETE
+              </div>
+            </div>
+
+            <h3 className="archive-dossier-title">THE BEGINNING OF GWD</h3>
+
+            <div className="archive-dossier-body">
+              <p className="archive-verified-placeholder">[ADD VERIFIED GWD CLUB FOUNDING STORY]</p>
+              <p className="archive-verified-note">
+                FOUNDING DETAILS, ORIGINAL PURPOSE, IMPORTANT DATES, AND EARLY MILESTONES WILL BE ADDED HERE ONCE VERIFIED.
+              </p>
+            </div>
+
+            <div className="archive-stamp-footer">
+              <span className="stamp-code">SEC-GWD-ORIGIN // CLASSIFIED RECORD</span>
             </div>
           </div>
-
-          <h3 className="archive-dossier-title">THE BEGINNING OF GWD</h3>
-
-          <div className="archive-dossier-body">
-            <p className="archive-verified-placeholder">[ADD VERIFIED GWD CLUB FOUNDING STORY]</p>
-            <p className="archive-verified-note">
-              FOUNDING DETAILS, ORIGINAL PURPOSE, IMPORTANT DATES, AND EARLY MILESTONES WILL BE ADDED HERE ONCE VERIFIED.
-            </p>
-          </div>
-
-          <div className="archive-stamp-footer">
-            <span className="stamp-code">SEC-GWD-ORIGIN // CLASSIFIED RECORD</span>
-          </div>
-        </div>
+        )}
       </div>
     </section>
   );
